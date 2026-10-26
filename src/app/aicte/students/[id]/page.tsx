@@ -191,11 +191,17 @@ export default async function StudentRiskPage({ params }: PageProps) {
 
           <div className="bg-white border border-[#D8DEE6] p-4 rounded-[2px] space-y-2 text-xs">
             <div className="font-bold text-[#17365D] uppercase text-[11px] tracking-wider">
-              Third-Party Verification
+              Statutory Credential & Verification
             </div>
             <p className="text-[#5B6573] text-[11px] leading-relaxed">
-              Employers verifying this student must query through the DPDP Act 2023 consent terminal using candidate token.
+              Generate an official verifiable academic certificate displaying student roll ID and masked APAAR with offline signed QR (AICTE Requirement 10).
             </p>
+            <Link
+              href={`/verify/certificate/${student.id}`}
+              className="inline-block w-full py-2 text-center font-bold text-white bg-[#17365D] hover:bg-[#102A43] rounded-[2px] transition-colors text-xs"
+            >
+              Generate Verifiable Certificate &rarr;
+            </Link>
             <Link
               href={`/verify?code=SATYA-${student.institutional_student_id}`}
               className="inline-block w-full py-2 text-center font-semibold text-[#17365D] bg-[#F4F6F8] border border-[#D8DEE6] hover:bg-slate-100 rounded-[2px] transition-colors text-xs"

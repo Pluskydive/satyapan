@@ -30,9 +30,11 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { href: "/aicte", label: "National Control Tower" },
-    { href: "/institution", label: "Institution Seat Ledgers" },
-    { href: "/institution/upload", label: "CSV Data Ingestion" },
+    { href: "/aicte", label: "Control Tower" },
+    { href: "/aicte/reports", label: "NIRF/NAAC Reports" },
+    { href: "/institution", label: "Seat Ledgers" },
+    { href: "/institution/upload", label: "CSV Ingestion" },
+    { href: "/institution/api", label: "ERP API Gateway" },
     { href: "/verify", label: "Employer Verification" },
     { href: "/audit", label: "Audit Ledger" },
   ];
@@ -87,7 +89,7 @@ export default function Navbar() {
         <nav className="bg-[#17365D] text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-8 flex overflow-x-auto">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href || pathname.startsWith(link.href + "/");
+              const isActive = pathname === link.href || (link.href !== "/aicte" && pathname.startsWith(link.href));
               return (
                 <Link
                   key={link.href}
