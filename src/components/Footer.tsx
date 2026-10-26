@@ -1,101 +1,77 @@
 import Link from "next/link";
-import { Shield, Lock, Database, Award, ArrowUpRight } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-slate-800 bg-slate-950 text-slate-400 text-xs py-10 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* Brand info */}
-          <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-black text-white tracking-wider">SATYAPAN (सत्यापन)</span>
-              <span className="px-2 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-400 font-semibold border border-amber-500/30">
-                SIH 2026
-              </span>
+    <footer className="w-full bg-[#102A43] text-slate-300 text-xs border-t border-[#17365D] mt-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-6 border-b border-slate-700/60">
+          <div className="md:col-span-2 space-y-2">
+            <div className="font-semibold text-white tracking-wide uppercase text-[11px]">
+              All India Council for Technical Education (AICTE)
             </div>
-            <p className="text-slate-400 leading-relaxed max-w-lg text-xs">
-              AICTE Enrolment Integrity & APAAR Continuous Verification System. Developed for the
-              Smart India Hackathon 2026 to eliminate ghost admissions, detect seat ceiling breaches,
-              and empower employers with consent-based digital credential verification.
+            <p className="text-slate-300 leading-relaxed text-[11px] max-w-lg">
+              Satyapan is the central technical education regulatory ledger for continuous student
+              enrolment integrity, sanctioned seat quota compliance, and APAAR ID validation.
+              Developed for the Smart India Hackathon 2026.
             </p>
-            <div className="flex items-center space-x-4 pt-1 text-[11px] text-slate-500">
-              <span className="flex items-center space-x-1">
-                <Lock className="w-3.5 h-3.5 text-emerald-400" />
-                <span>DPDP Act 2023 Gated</span>
-              </span>
-              <span>•</span>
-              <span className="flex items-center space-x-1">
-                <Shield className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Zero-Trust APAAR Verification</span>
-              </span>
-              <span>•</span>
-              <span className="flex items-center space-x-1">
-                <Database className="w-3.5 h-3.5 text-amber-400" />
-                <span>Tamper-Evident Ledger</span>
-              </span>
+            <div className="text-[10px] text-slate-400 pt-1 font-mono">
+              Statutory Mandate: Section 10 of the AICTE Act, 1987 | DPDP Act, 2023 Compliant
             </div>
           </div>
 
-          {/* Quick Portals */}
           <div>
-            <h4 className="text-slate-200 font-semibold mb-3 tracking-wide uppercase text-[11px]">System Portals</h4>
-            <ul className="space-y-2">
+            <div className="font-semibold text-white tracking-wide uppercase text-[11px] mb-2">
+              Administrative Portals
+            </div>
+            <ul className="space-y-1.5 text-[11px] text-slate-300">
               <li>
-                <Link href="/aicte" className="hover:text-amber-400 transition-colors flex items-center space-x-1">
-                  <span>AICTE National Control Tower</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-60" />
+                <Link href="/aicte" className="hover:text-white hover:underline">
+                  National Control Tower
                 </Link>
               </li>
               <li>
-                <Link href="/institution" className="hover:text-amber-400 transition-colors flex items-center space-x-1">
-                  <span>Institution Seat Ledger</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-60" />
+                <Link href="/institution" className="hover:text-white hover:underline">
+                  Institution Seat Ledgers
                 </Link>
               </li>
               <li>
-                <Link href="/institution/upload" className="hover:text-amber-400 transition-colors flex items-center space-x-1">
-                  <span>Bulk CSV Data Ingestion</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-60" />
+                <Link href="/institution/upload" className="hover:text-white hover:underline">
+                  CSV Data Ingestion
                 </Link>
               </li>
               <li>
-                <Link href="/verify" className="hover:text-amber-400 transition-colors flex items-center space-x-1">
-                  <span>Employer QR Verification</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-60" />
+                <Link href="/verify" className="hover:text-white hover:underline">
+                  Employer Verification Portal
+                </Link>
+              </li>
+              <li>
+                <Link href="/audit" className="hover:text-white hover:underline">
+                  System Audit Ledger
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Compliance & Standards */}
           <div>
-            <h4 className="text-slate-200 font-semibold mb-3 tracking-wide uppercase text-[11px]">Compliance & Stack</h4>
-            <ul className="space-y-2 text-slate-400">
-              <li className="flex items-center space-x-1.5">
-                <Award className="w-3 h-3 text-amber-400" />
-                <span>AICTE Approval Process Handbook</span>
-              </li>
-              <li className="flex items-center space-x-1.5">
-                <Shield className="w-3 h-3 text-emerald-400" />
-                <span>APAAR / ABC / DigiLocker Standard</span>
-              </li>
-              <li className="flex items-center space-x-1.5">
-                <Database className="w-3 h-3 text-blue-400" />
-                <span>PostgreSQL & PL/pgSQL Engine</span>
-              </li>
-              <li className="flex items-center space-x-1.5">
-                <Lock className="w-3 h-3 text-purple-400" />
-                <span>CWE-1236 Formula Injection Shield</span>
-              </li>
+            <div className="font-semibold text-white tracking-wide uppercase text-[11px] mb-2">
+              Compliance & Standards
+            </div>
+            <ul className="space-y-1.5 text-[11px] text-slate-400">
+              <li>AICTE Approval Process Handbook (APH)</li>
+              <li>Automated Permanent Academic Account Registry (APAAR)</li>
+              <li>Academic Bank of Credits (ABC) Framework</li>
+              <li>CWE-1236 Spreadsheet Security Standard</li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom copyright line */}
-        <div className="pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-slate-500 text-[11px] gap-2">
-          <p>© 2026 SATYAPAN — Smart India Hackathon Submission. All Rights Reserved.</p>
-          <p className="font-mono text-slate-600">Built with Next.js 16, Supabase, TypeScript & Tailwind CSS</p>
+        <div className="pt-4 flex flex-col sm:flex-row items-center justify-between text-[10px] text-slate-400 gap-2">
+          <div>
+            Copyright 2026 All India Council for Technical Education. All rights reserved.
+          </div>
+          <div className="font-mono">
+            System Environment: Production (Node.js / Next.js / PostgreSQL)
+          </div>
         </div>
       </div>
     </footer>

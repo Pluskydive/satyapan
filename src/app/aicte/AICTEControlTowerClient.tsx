@@ -3,28 +3,12 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import {
-  Users,
-  ShieldCheck,
-  AlertTriangle,
-  Building2,
-  RefreshCw,
-  Search,
-  ExternalLink,
-  ChevronRight,
-  Filter,
-  Globe,
-  Award,
-} from "lucide-react";
-import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
 } from "recharts";
 import { NationalSummary, StateSummary, ValidationFlag } from "@/lib/types";
 import { formatMaskedApaar, getSeverityStyle } from "@/lib/security";
@@ -34,8 +18,6 @@ interface Props {
   initialStates: StateSummary[];
   initialFlags: ValidationFlag[];
 }
-
-const PIE_COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#ec4899"];
 
 export default function AICTEControlTowerClient({
   initialNational,
@@ -48,7 +30,7 @@ export default function AICTEControlTowerClient({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSeverity, setSelectedSeverity] = useState<string>("ALL");
   const [isRunning, setIsRunning] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const handleRefresh = async () => {
     try {
@@ -81,7 +63,6 @@ export default function AICTEControlTowerClient({
     }
   };
 
-  // Filter flags
   const filteredFlags = flags.filter((f) => {
     const matchesSeverity =
       selectedSeverity === "ALL" || f.severity.toUpperCase() === selectedSeverity;
@@ -99,339 +80,329 @@ export default function AICTEControlTowerClient({
     return matchesSeverity && matchesSearch;
   });
 
-  const nationalityData = [
-    { name: "Indian Domestic", value: national.total_students - (national.nri_students + national.oci_students + national.fn_students) },
-    { name: "NRI Quota", value: national.nri_students },
-    { name: "OCI Students", value: national.oci_students },
-    { name: "Foreign Nationals", value: national.fn_students },
-  ].filter((d) => d.value > 0);
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 space-y-6">
+      {/* Page Title & Action Bar */}
+      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center space-x-2">
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              AICTE National Control Tower
-            </h1>
-            <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">
-              LIVE SURVEILLANCE
-            </span>
+          <div className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">
+            Central Regulatory Oversight
           </div>
-          <p className="text-slate-400 text-xs sm:text-sm mt-1">
-            Real-time cross-institutional enrolment monitoring & anomaly detection system.
+          <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-0.5">
+            AICTE National Enrolment Control Tower
+          </h1>
+          <p className="text-xs text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
+            Real-time surveillance console for verifying multi-institution enrolment duplicates, sanctioned seat intake compliance, and APAAR identifiers.
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 self-start sm:self-auto">
           <button
             onClick={handleRefresh}
             disabled={isRunning}
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold transition-all cursor-pointer"
+            className="px-3 py-1.5 bg-white border border-[#D8DEE6] hover:bg-[#F4F6F8] text-[#202B36] text-xs font-semibold rounded-[2px] transition-colors cursor-pointer"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isRunning ? "animate-spin" : ""}`} />
-            <span>Refresh</span>
+            {isRunning ? "Refreshing..." : "Refresh Data"}
           </button>
-
           <button
             onClick={handleRunIntegrity}
             disabled={isRunning}
-            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
+            className="px-3.5 py-1.5 bg-[#C87524] hover:bg-[#a65f1a] text-white text-xs font-semibold rounded-[2px] transition-colors cursor-pointer disabled:opacity-50"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isRunning ? "animate-spin" : ""}`} />
-            <span>{isRunning ? "Verifying..." : "Run Integrity Checks"}</span>
+            {isRunning ? "Executing..." : "Execute Integrity Engine"}
           </button>
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg">
-          <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold uppercase">Total Students</span>
-            <Users className="w-4 h-4 text-blue-400" />
+      {/* Operational Metric Ledger Strip */}
+      <div className="bg-white border border-[#D8DEE6] rounded-[2px] overflow-hidden">
+        <div className="grid grid-cols-2 lg:grid-cols-5 divide-y lg:divide-y-0 lg:divide-x divide-[#D8DEE6]">
+          <div className="p-4">
+            <div className="text-[11px] font-semibold text-[#5B6573] uppercase tracking-wide">
+              Total Enrolments
+            </div>
+            <div className="text-2xl font-bold text-[#17365D] mt-1 font-mono">
+              {national.total_students}
+            </div>
+            <div className="text-[11px] text-[#5B6573] mt-0.5">
+              Across all reporting technical institutes
+            </div>
           </div>
-          <p className="text-2xl font-black text-white mt-2">{national.total_students}</p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Across all institutions</p>
-        </div>
 
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg">
-          <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold uppercase">Verified</span>
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+          <div className="p-4">
+            <div className="text-[11px] font-semibold text-[#5B6573] uppercase tracking-wide">
+              Verified Compliant
+            </div>
+            <div className="text-2xl font-bold text-[#237A52] mt-1 font-mono">
+              {national.verified_students}
+            </div>
+            <div className="text-[11px] text-[#237A52] mt-0.5">
+              {Math.round((national.verified_students / (national.total_students || 1)) * 100)}% verified with APAAR
+            </div>
           </div>
-          <p className="text-2xl font-black text-emerald-400 mt-2">{national.verified_students}</p>
-          <p className="text-[11px] text-emerald-400/80 mt-0.5">
-            {Math.round((national.verified_students / (national.total_students || 1)) * 100)}% Compliance
-          </p>
-        </div>
 
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg">
-          <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold uppercase">Flagged</span>
-            <AlertTriangle className="w-4 h-4 text-rose-400" />
+          <div className="p-4">
+            <div className="text-[11px] font-semibold text-[#5B6573] uppercase tracking-wide">
+              Flagged Discrepancies
+            </div>
+            <div className="text-2xl font-bold text-[#B42318] mt-1 font-mono">
+              {national.flagged_students}
+            </div>
+            <div className="text-[11px] text-[#B42318] mt-0.5">
+              Identified regulatory anomalies
+            </div>
           </div>
-          <p className="text-2xl font-black text-rose-400 mt-2">{national.flagged_students}</p>
-          <p className="text-[11px] text-rose-400/80 mt-0.5">Under investigation</p>
-        </div>
 
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg">
-          <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold uppercase">Colleges</span>
-            <Building2 className="w-4 h-4 text-amber-400" />
+          <div className="p-4">
+            <div className="text-[11px] font-semibold text-[#5B6573] uppercase tracking-wide">
+              Reporting Colleges
+            </div>
+            <div className="text-2xl font-bold text-[#17365D] mt-1 font-mono">
+              {national.institutions_reporting}
+            </div>
+            <div className="text-[11px] text-[#5B6573] mt-0.5">
+              Institutions with active data feed
+            </div>
           </div>
-          <p className="text-2xl font-black text-amber-400 mt-2">{national.institutions_reporting}</p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Active data feeds</p>
-        </div>
 
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-lg col-span-2 lg:col-span-1">
-          <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold uppercase">Integrity Index</span>
-            <Award className="w-4 h-4 text-emerald-400" />
+          <div className="p-4 col-span-2 lg:col-span-1">
+            <div className="text-[11px] font-semibold text-[#5B6573] uppercase tracking-wide">
+              Council Integrity Score
+            </div>
+            <div className="text-2xl font-bold text-[#17365D] mt-1 font-mono">
+              {national.avg_integrity_score} / 100
+            </div>
+            <div className="text-[11px] text-[#5B6573] mt-0.5">
+              National statutory threshold: 70.0
+            </div>
           </div>
-          <p className="text-2xl font-black text-emerald-400 mt-2">{national.avg_integrity_score}</p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Out of 100 benchmark</p>
         </div>
       </div>
 
-      {/* Analytics Charts Grid */}
+      {/* State Distribution & Category Ledgers */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* State Wise Distribution */}
-        <div className="lg:col-span-2 p-5 rounded-2xl bg-slate-900/70 border border-slate-800 shadow-xl space-y-4">
-          <div className="flex items-center justify-between">
+        {/* State Admissions Chart */}
+        <div className="lg:col-span-2 bg-white border border-[#D8DEE6] rounded-[2px] p-5 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#D8DEE6]">
             <div>
-              <h3 className="text-sm font-bold text-white">Student Admissions by State</h3>
-              <p className="text-slate-400 text-xs">Total reporting enrolments across regional jurisdictions</p>
+              <h2 className="text-sm font-bold text-[#17365D] uppercase tracking-wider">
+                State-Wise Admission Distribution
+              </h2>
+              <p className="text-xs text-[#5B6573]">
+                Total reporting student enrolments grouped by state jurisdiction
+              </p>
             </div>
-            <span className="text-xs font-mono text-slate-500">{states.length} States</span>
+            <span className="text-[11px] font-mono text-[#5B6573] bg-[#F4F6F8] px-2 py-0.5 border border-[#D8DEE6]">
+              {states.length} Jurisdictions
+            </span>
           </div>
 
-          <div className="h-64 w-full">
+          <div className="h-60 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={states} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
                 <XAxis
                   dataKey="state"
-                  stroke="#64748b"
+                  stroke="#5B6573"
                   fontSize={11}
                   tickLine={false}
                   angle={-15}
                   textAnchor="end"
                 />
-                <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
+                <YAxis stroke="#5B6573" fontSize={11} tickLine={false} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#0f172a",
-                    border: "1px solid #334155",
-                    borderRadius: "8px",
+                    backgroundColor: "#FFFFFF",
+                    border: "1px solid #D8DEE6",
+                    borderRadius: "2px",
                     fontSize: "12px",
+                    color: "#202B36",
                   }}
-                  itemStyle={{ color: "#f8fafc" }}
                 />
-                <Bar dataKey="students" fill="#f59e0b" radius={[4, 4, 0, 0]} name="Students" />
+                <Bar dataKey="students" fill="#17365D" radius={[0, 0, 0, 0]} name="Students" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Nationality / Quota Breakdown */}
-        <div className="p-5 rounded-2xl bg-slate-900/70 border border-slate-800 shadow-xl space-y-4">
-          <div>
-            <h3 className="text-sm font-bold text-white">Nationality & Quota Breakdown</h3>
-            <p className="text-slate-400 text-xs">Domestic vs Supernumerary Quota Distribution</p>
+        {/* Quota & Nationality Table */}
+        <div className="bg-white border border-[#D8DEE6] rounded-[2px] p-5 space-y-4">
+          <div className="pb-3 border-b border-[#D8DEE6]">
+            <h2 className="text-sm font-bold text-[#17365D] uppercase tracking-wider">
+              Enrolment Quota Breakdown
+            </h2>
+            <p className="text-xs text-[#5B6573]">
+              Supernumerary and domestic category distribution
+            </p>
           </div>
 
-          <div className="h-44 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={nationalityData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={45}
-                  outerRadius={65}
-                  paddingAngle={4}
-                  dataKey="value"
-                >
-                  {nationalityData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#0f172a",
-                    border: "1px solid #334155",
-                    borderRadius: "8px",
-                    fontSize: "11px",
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="space-y-1.5 pt-2 border-t border-slate-800 text-xs">
-            <div className="flex items-center justify-between text-slate-300">
-              <span className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <span>Indian Domestic</span>
-              </span>
-              <span className="font-semibold">
-                {national.total_students - (national.nri_students + national.oci_students + national.fn_students)}
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-slate-300">
-              <span className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-                <span>NRI Quota</span>
-              </span>
-              <span className="font-semibold">{national.nri_students}</span>
-            </div>
-            <div className="flex items-center justify-between text-slate-300">
-              <span className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                <span>OCI Students</span>
-              </span>
-              <span className="font-semibold">{national.oci_students}</span>
-            </div>
-            <div className="flex items-center justify-between text-slate-300">
-              <span className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-pink-500" />
-                <span>Foreign Nationals</span>
-              </span>
-              <span className="font-semibold">{national.fn_students}</span>
-            </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="bg-[#F4F6F8] text-[#5B6573] text-[10px] uppercase font-semibold border-b border-[#D8DEE6]">
+                <tr>
+                  <th className="py-2 px-3">Quota Category</th>
+                  <th className="py-2 px-3 text-right">Admitted</th>
+                  <th className="py-2 px-3 text-right">Ratio</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#D8DEE6] font-mono text-[11px]">
+                <tr>
+                  <td className="py-2.5 px-3 font-sans text-xs">Indian Domestic</td>
+                  <td className="py-2.5 px-3 text-right font-bold text-[#17365D]">
+                    {national.total_students - (national.nri_students + national.oci_students + national.fn_students)}
+                  </td>
+                  <td className="py-2.5 px-3 text-right text-[#5B6573]">
+                    {Math.round(((national.total_students - (national.nri_students + national.oci_students + national.fn_students)) / (national.total_students || 1)) * 100)}%
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-2.5 px-3 font-sans text-xs">NRI Quota</td>
+                  <td className="py-2.5 px-3 text-right font-bold text-[#17365D]">
+                    {national.nri_students}
+                  </td>
+                  <td className="py-2.5 px-3 text-right text-[#5B6573]">
+                    {((national.nri_students / (national.total_students || 1)) * 100).toFixed(1)}%
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-2.5 px-3 font-sans text-xs">OCI Enrolments</td>
+                  <td className="py-2.5 px-3 text-right font-bold text-[#17365D]">
+                    {national.oci_students}
+                  </td>
+                  <td className="py-2.5 px-3 text-right text-[#5B6573]">
+                    {((national.oci_students / (national.total_students || 1)) * 100).toFixed(1)}%
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-2.5 px-3 font-sans text-xs">Foreign Nationals (FN)</td>
+                  <td className="py-2.5 px-3 text-right font-bold text-[#17365D]">
+                    {national.fn_students}
+                  </td>
+                  <td className="py-2.5 px-3 text-right text-[#5B6573]">
+                    {((national.fn_students / (national.total_students || 1)) * 100).toFixed(1)}%
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
 
-      {/* Flag Queue */}
-      <div className="rounded-2xl bg-slate-900/70 border border-slate-800 shadow-xl overflow-hidden space-y-4 p-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Active Flag Queue Table */}
+      <div className="bg-white border border-[#D8DEE6] rounded-[2px] overflow-hidden">
+        {/* Table Header & Controls */}
+        <div className="p-4 border-b border-[#D8DEE6] flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#F4F6F8]">
           <div>
-            <div className="flex items-center space-x-2">
-              <h3 className="text-base font-bold text-white">Active Anomaly & Flag Queue</h3>
-              <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
-                {flags.length} Open
-              </span>
-            </div>
-            <p className="text-slate-400 text-xs mt-0.5">
-              Identified violations requiring administrative sanction, institutional inquiry, or remediation.
+            <h2 className="text-sm font-bold text-[#17365D] uppercase tracking-wider">
+              Regulatory Discrepancy Queue ({flags.length} Active Records)
+            </h2>
+            <p className="text-xs text-[#5B6573] mt-0.5">
+              Enrolment cases requiring inquiry, institutional explanation, or AICTE administrative action
             </p>
           </div>
 
-          {/* Controls: Search and Severity Filters */}
           <div className="flex flex-wrap items-center gap-2">
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Search student, APAAR, college..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 pr-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-amber-500 transition-colors w-48 sm:w-64"
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Search by Student, APAAR, or College..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="px-3 py-1.5 bg-white border border-[#D8DEE6] text-xs text-[#202B36] rounded-[2px] focus:outline-none focus:border-[#17365D] w-56 sm:w-64"
+            />
 
-            <div className="flex items-center space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-[11px]">
-              {["ALL", "CRITICAL", "HIGH", "MEDIUM"].map((sev) => (
-                <button
-                  key={sev}
-                  onClick={() => setSelectedSeverity(sev)}
-                  className={`px-2.5 py-1 rounded-lg font-medium transition-all cursor-pointer ${
-                    selectedSeverity === sev
-                      ? "bg-slate-800 text-amber-400 font-bold"
-                      : "text-slate-400 hover:text-slate-200"
-                  }`}
-                >
-                  {sev}
-                </button>
-              ))}
-            </div>
+            <select
+              value={selectedSeverity}
+              onChange={(e) => setSelectedSeverity(e.target.value)}
+              className="px-3 py-1.5 bg-white border border-[#D8DEE6] text-xs text-[#202B36] rounded-[2px] focus:outline-none focus:border-[#17365D] cursor-pointer"
+            >
+              <option value="ALL">All Severities</option>
+              <option value="CRITICAL">Critical Severity</option>
+              <option value="HIGH">High Severity</option>
+              <option value="MEDIUM">Medium Severity</option>
+            </select>
           </div>
         </div>
 
-        {/* Flag Table */}
-        <div className="overflow-x-auto border border-slate-800 rounded-xl">
-          <table className="w-full text-left text-xs text-slate-300">
-            <thead className="bg-slate-950/80 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+        {/* Data Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead className="bg-[#F4F6F8] text-[#5B6573] uppercase text-[10px] tracking-wider font-semibold border-b border-[#D8DEE6]">
               <tr>
-                <th className="py-3 px-4">Severity</th>
-                <th className="py-3 px-4">Rule Violation</th>
-                <th className="py-3 px-4">Student Details</th>
-                <th className="py-3 px-4">Reporting College</th>
-                <th className="py-3 px-4">Integrity Score</th>
-                <th className="py-3 px-4 text-right">Action</th>
+                <th className="py-2.5 px-4 w-28">Severity</th>
+                <th className="py-2.5 px-4">Violation Rule</th>
+                <th className="py-2.5 px-4">Student Name & Roll</th>
+                <th className="py-2.5 px-4">Masked APAAR ID</th>
+                <th className="py-2.5 px-4">Reporting Institution</th>
+                <th className="py-2.5 px-4 text-center">Score</th>
+                <th className="py-2.5 px-4 text-right">Administrative Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 font-sans">
+            <tbody className="divide-y divide-[#D8DEE6] text-[#202B36]">
               {filteredFlags.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-slate-500">
-                    No open flags match your search criteria.
+                  <td colSpan={7} className="py-8 text-center text-[#5B6573]">
+                    No discrepancy flags match the current filter parameters.
                   </td>
                 </tr>
               ) : (
                 filteredFlags.map((flag) => {
                   const sevStyle = getSeverityStyle(flag.severity);
                   return (
-                    <tr
-                      key={flag.id}
-                      className="hover:bg-slate-800/40 transition-colors group"
-                    >
-                      <td className="py-3.5 px-4 whitespace-nowrap">
+                    <tr key={flag.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-3 px-4 whitespace-nowrap">
                         <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider ${sevStyle.badge}`}
+                          className={`px-2 py-0.5 text-[10px] font-mono font-bold uppercase rounded-[2px] ${sevStyle.badge}`}
                         >
                           {flag.severity}
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-4">
-                        <p className="font-semibold text-slate-200">{flag.title}</p>
-                        <p className="text-[11px] text-slate-500 font-mono mt-0.5">
+                      <td className="py-3 px-4">
+                        <div className="font-semibold text-[#17365D]">{flag.title}</div>
+                        <div className="text-[10px] font-mono text-[#5B6573] mt-0.5">
                           {flag.rule_code}
-                        </p>
-                      </td>
-
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        <p className="font-semibold text-white">
-                          {flag.students?.full_name || "Unknown"}
-                        </p>
-                        <p className="text-[11px] text-slate-400 font-mono">
-                          APAAR: {formatMaskedApaar(flag.students?.apaar_id)}
-                        </p>
-                      </td>
-
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        <p className="font-medium text-slate-200">
-                          {flag.institutions?.name || "AICTE Institute"}
-                        </p>
-                        <p className="text-[11px] text-slate-500">
-                          {flag.institutions?.state || "India"}
-                        </p>
-                      </td>
-
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        <div className="flex items-center space-x-2">
-                          <span
-                            className={`font-mono font-bold ${
-                              (flag.students?.integrity_score || 0) < 70
-                                ? "text-rose-400"
-                                : "text-amber-400"
-                            }`}
-                          >
-                            {flag.students?.integrity_score ?? 100} / 100
-                          </span>
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <div className="font-semibold text-[#202B36]">
+                          {flag.students?.full_name || "Unknown"}
+                        </div>
+                        <div className="text-[11px] font-mono text-[#5B6573]">
+                          Roll: {flag.students?.institutional_student_id || flag.student_id}
+                        </div>
+                      </td>
+
+                      <td className="py-3 px-4 whitespace-nowrap font-mono text-[#5B6573]">
+                        {formatMaskedApaar(flag.students?.apaar_id)}
+                      </td>
+
+                      <td className="py-3 px-4">
+                        <div className="font-medium text-[#202B36]">
+                          {flag.institutions?.name || "AICTE Institution"}
+                        </div>
+                        <div className="text-[10px] text-[#5B6573]">
+                          {flag.institutions?.state || "State Jurisdiction"}
+                        </div>
+                      </td>
+
+                      <td className="py-3 px-4 text-center whitespace-nowrap font-mono font-bold">
+                        <span
+                          className={
+                            (flag.students?.integrity_score || 0) < 70
+                              ? "text-[#B42318]"
+                              : "text-[#986500]"
+                          }
+                        >
+                          {flag.students?.integrity_score ?? 100}
+                        </span>
+                      </td>
+
+                      <td className="py-3 px-4 text-right whitespace-nowrap">
                         <Link
                           href={`/aicte/students/${flag.student_id}`}
-                          className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[11px] font-semibold transition-all group-hover:bg-amber-500 group-hover:text-slate-950"
+                          className="px-2.5 py-1 text-[11px] font-semibold text-[#17365D] bg-white border border-[#17365D] hover:bg-[#17365D] hover:text-white rounded-[2px] transition-colors"
                         >
-                          <span>Risk Dossier</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
+                          Inspect Dossier &rarr;
                         </Link>
                       </td>
                     </tr>

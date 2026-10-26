@@ -1,21 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Papa from "papaparse";
-import {
-  UploadCloud,
-  FileSpreadsheet,
-  CheckCircle2,
-  AlertTriangle,
-  Download,
-  Building2,
-  ArrowLeft,
-  RefreshCw,
-  ShieldCheck,
-  FileCheck,
-} from "lucide-react";
 import { sanitizeRecordRow, isValidApaar } from "@/lib/security";
 
 const SAMPLE_CSV_CONTENT = `apaar_id,institutional_student_id,full_name,dob_year,gender,social_category,nationality_type,program,admission_year,admission_date
@@ -27,7 +15,6 @@ const SAMPLE_CSV_CONTENT = `apaar_id,institutional_student_id,full_name,dob_year
 
 function UploadContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [institutions, setInstitutions] = useState<any[]>([]);
@@ -72,7 +59,6 @@ function UploadContent() {
     let invalidApaars = 0;
 
     const cleaned = rows.map((r) => {
-      // Check for formula injection triggers
       for (const val of Object.values(r)) {
         if (typeof val === "string" && /^[=+\-@\t\r]/.test(val.trim())) {
           formulaCount++;
@@ -101,7 +87,7 @@ function UploadContent() {
     if (!file) return;
 
     if (!file.name.endsWith(".csv")) {
-      setErrorMessage("Please select a standard CSV (.csv) file.");
+      setErrorMessage("Format rejected: Only RFC-4180 compliant CSV (.csv) files are permitted.");
       return;
     }
 
@@ -110,13 +96,13 @@ function UploadContent() {
       skipEmptyLines: true,
       complete: (result) => {
         if (!result.data || result.data.length === 0) {
-          setErrorMessage("The uploaded CSV file is empty.");
+          setErrorMessage("Uploaded file contains no student records.");
           return;
         }
         processCsvRows(result.data, file.name);
       },
       error: (error) => {
-        setErrorMessage("CSV parse error: " + error.message);
+        setErrorMessage("CSV parse failure: " + error.message);
       },
     });
   };
@@ -136,7 +122,7 @@ function UploadContent() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", "satyapan_admission_template.csv");
+    link.setAttribute("download", "aicte_satyapan_admission_template.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -160,90 +146,87 @@ function UploadContent() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Upload failed");
+        throw new Error(data.error || "Ingestion transaction failed.");
       }
 
       setUploadResult(data);
     } catch (err: any) {
-      setErrorMessage(err.message || "Failed to submit admission records");
+      setErrorMessage(err.message || "Failed to commit admission records.");
     } finally {
       setIsUploading(false);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Breadcrumb */}
+    <div className="max-w-4xl mx-auto px-4 sm:px-8 py-6 space-y-6">
+      {/* Back link */}
       <div>
         <Link
           href="/institution"
-          className="inline-flex items-center space-x-1.5 text-xs text-slate-400 hover:text-amber-400 transition-colors"
+          className="text-xs font-semibold text-[#17365D] hover:underline"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to Institution Seat Ledger</span>
+          &larr; Return to Institution Seat Ledgers
         </Link>
       </div>
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+      {/* Page Title & Action Bar */}
+      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Bulk Admission CSV Ingestion
+          <div className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">
+            Data Ingestion Terminal
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-0.5">
+            Bulk Student Admission CSV Ingestion
           </h1>
-          <p className="text-slate-400 text-xs sm:text-sm mt-1">
-            Secure, client-side sanitized ingestion pipeline with APAAR syntax validation and formula shielding.
+          <p className="text-xs text-[#5B6573] mt-1 max-w-xl leading-relaxed">
+            Ingest official technical admission batches. Includes automated CWE-1236 spreadsheet formula sanitization and APAAR ID syntax validation.
           </p>
         </div>
 
         <button
           onClick={handleDownloadTemplate}
-          className="inline-flex items-center space-x-2 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold transition-all cursor-pointer self-start sm:self-auto"
+          className="px-3 py-1.5 bg-white border border-[#D8DEE6] hover:bg-[#F4F6F8] text-[#17365D] text-xs font-semibold rounded-[2px] transition-colors cursor-pointer self-start sm:self-auto"
         >
-          <Download className="w-3.5 h-3.5 text-amber-400" />
-          <span>Download CSV Template</span>
+          Download Standard CSV Template
         </button>
       </div>
 
-      {/* Step 1: Select Target Institution */}
-      <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
-        <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
-          1. Select Target Institution
+      {/* Step 1: Target Institution */}
+      <div className="bg-white border border-[#D8DEE6] p-4 rounded-[2px] space-y-2">
+        <label className="text-xs font-bold text-[#17365D] uppercase tracking-wider block">
+          Step 1: Select Target Reporting Institution
         </label>
-        <div className="flex items-center space-x-3 bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-          <Building2 className="w-4 h-4 text-amber-400 flex-shrink-0" />
-          <select
-            value={selectedInstId}
-            onChange={(e) => setSelectedInstId(e.target.value)}
-            className="w-full bg-transparent text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer"
-          >
-            {institutions.map((inst) => (
-              <option key={inst.id} value={inst.id} className="bg-slate-900 text-slate-200">
-                {inst.name} ({inst.aicte_code}) — {inst.state}
-              </option>
-            ))}
-          </select>
-        </div>
+        <select
+          value={selectedInstId}
+          onChange={(e) => setSelectedInstId(e.target.value)}
+          className="w-full px-3 py-2 bg-white border border-[#D8DEE6] text-xs font-semibold text-[#202B36] rounded-[2px] focus:outline-none focus:border-[#17365D] cursor-pointer"
+        >
+          {institutions.map((inst) => (
+            <option key={inst.id} value={inst.id}>
+              {inst.name} ({inst.aicte_code}) - {inst.state} (Sanctioned Intake: {inst.approved_intake})
+            </option>
+          ))}
+        </select>
       </div>
 
-      {/* Step 2: Upload or Dropzone */}
-      <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+      {/* Step 2: Upload Dropzone */}
+      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] space-y-4">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
-            2. Ingest Admission Data
+          <label className="text-xs font-bold text-[#17365D] uppercase tracking-wider block">
+            Step 2: Upload Structured Admission File
           </label>
           <button
-            onClick={handleLoadSample}
             type="button"
-            className="text-xs text-amber-400 hover:underline font-semibold cursor-pointer"
+            onClick={handleLoadSample}
+            className="text-xs font-semibold text-[#17365D] hover:underline cursor-pointer"
           >
-            Load Demo Hackathon Batch (5 Rows with Anomalies)
+            Load Sample Verification Batch (5 Records with Anomalies)
           </button>
         </div>
 
-        {/* Drag and drop box */}
         <div
           onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-slate-700 hover:border-amber-500/60 rounded-2xl p-8 text-center bg-slate-950/50 hover:bg-slate-900/50 transition-all cursor-pointer space-y-3 group"
+          className="border border-dashed border-[#D8DEE6] hover:border-[#17365D] p-8 text-center bg-[#F4F6F8] hover:bg-slate-100 transition-colors cursor-pointer rounded-[2px] space-y-1"
         >
           <input
             type="file"
@@ -252,139 +235,125 @@ function UploadContent() {
             accept=".csv"
             className="hidden"
           />
-          <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
-            <UploadCloud className="w-6 h-6" />
+          <div className="text-sm font-semibold text-[#17365D]">
+            Click to select admission CSV file, or drag and drop file here
           </div>
-          <div>
-            <p className="text-sm font-bold text-white">Click or drag & drop student admission CSV</p>
-            <p className="text-xs text-slate-500 mt-1">
-              Supports standard UTF-8 CSVs up to 10,000 records per upload batch
-            </p>
+          <div className="text-xs text-[#5B6573]">
+            Accepts UTF-8 encoded CSV files conforming to AICTE APH data specification
           </div>
           {fileName && (
-            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-medium">
-              <FileSpreadsheet className="w-3.5 h-3.5" />
-              <span>Loaded: {fileName}</span>
+            <div className="inline-block mt-2 px-2.5 py-0.5 bg-white border border-[#17365D] text-[#17365D] font-mono text-xs font-semibold">
+              Selected File: {fileName}
             </div>
           )}
         </div>
       </div>
 
-      {/* Error Banner */}
+      {/* Error state */}
       {errorMessage && (
-        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center space-x-3">
-          <AlertTriangle className="w-5 h-5 flex-shrink-0" />
-          <span>{errorMessage}</span>
+        <div className="p-3 bg-white border-l-4 border-[#B42318] text-xs text-[#B42318]">
+          <strong>Validation Error:</strong> {errorMessage}
         </div>
       )}
 
-      {/* Pre-flight Validation Summary */}
+      {/* Pre-flight inspection & Preview */}
       {validationStats && (
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
-          <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>Pre-Flight Cyber & Integrity Inspection</span>
-          </h3>
+        <div className="bg-white border border-[#D8DEE6] rounded-[2px] p-5 space-y-4">
+          <div className="pb-3 border-b border-[#D8DEE6] flex items-center justify-between">
+            <h3 className="text-sm font-bold text-[#17365D] uppercase tracking-wider">
+              Pre-Flight Cybersecurity & Syntax Audit
+            </h3>
+            <span className="text-xs font-mono text-[#237A52] font-semibold">
+              Security Inspection Cleared
+            </span>
+          </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-slate-500 block">Total Records</span>
-              <span className="text-lg font-black text-white">{validationStats.total}</span>
+            <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
+              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">Total Records</div>
+              <div className="text-lg font-bold font-mono text-[#17365D] mt-0.5">{validationStats.total}</div>
             </div>
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-slate-500 block">Valid APAARs</span>
-              <span className="text-lg font-black text-emerald-400">{validationStats.validApaar}</span>
+            <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
+              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">Valid APAARs</div>
+              <div className="text-lg font-bold font-mono text-[#237A52] mt-0.5">{validationStats.validApaar}</div>
             </div>
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-slate-500 block">Invalid APAARs</span>
-              <span className="text-lg font-black text-amber-400">{validationStats.invalidApaar}</span>
+            <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
+              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">Invalid APAARs</div>
+              <div className="text-lg font-bold font-mono text-[#B42318] mt-0.5">{validationStats.invalidApaar}</div>
             </div>
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-slate-500 block">Formulas Neutralized</span>
-              <span className="text-lg font-black text-indigo-400 font-mono">
-                {validationStats.sanitizedFormulas} (CWE-1236 Safe)
-              </span>
+            <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
+              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">CWE-1236 Neutralized</div>
+              <div className="text-lg font-bold font-mono text-[#17365D] mt-0.5">{validationStats.sanitizedFormulas}</div>
             </div>
           </div>
 
-          {/* Preview Table */}
-          <div className="border border-slate-800 rounded-xl overflow-x-auto max-h-56">
-            <table className="w-full text-left text-[11px] text-slate-300">
-              <thead className="bg-slate-950 text-slate-400 uppercase tracking-wider sticky top-0">
+          {/* Record table preview */}
+          <div className="border border-[#D8DEE6] overflow-x-auto max-h-52">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="bg-[#F4F6F8] text-[#5B6573] uppercase text-[10px] font-semibold sticky top-0 border-b border-[#D8DEE6]">
                 <tr>
-                  <th className="py-2 px-3">Roll ID</th>
+                  <th className="py-2 px-3 font-mono">Roll ID</th>
                   <th className="py-2 px-3">Student Name</th>
-                  <th className="py-2 px-3">APAAR ID</th>
+                  <th className="py-2 px-3 font-mono">APAAR ID</th>
                   <th className="py-2 px-3">Program</th>
-                  <th className="py-2 px-3">Category</th>
-                  <th className="py-2 px-3">Date</th>
+                  <th className="py-2 px-3">Admission Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-[#D8DEE6] text-[#202B36] font-mono text-[11px]">
                 {parsedRows.map((r, i) => (
-                  <tr key={i} className="hover:bg-slate-800/30">
-                    <td className="py-2 px-3 font-mono">{r.institutional_student_id}</td>
-                    <td className="py-2 px-3 font-medium text-white">{r.full_name}</td>
-                    <td className="py-2 px-3 font-mono">
+                  <tr key={i} className="hover:bg-slate-50">
+                    <td className="py-2 px-3 font-semibold text-[#17365D]">{r.institutional_student_id}</td>
+                    <td className="py-2 px-3 font-sans text-xs">{r.full_name}</td>
+                    <td className="py-2 px-3">
                       {isValidApaar(r.apaar_id) ? (
-                        <span className="text-emerald-400">{r.apaar_id}</span>
+                        <span className="text-[#237A52]">{r.apaar_id}</span>
                       ) : (
-                        <span className="text-rose-400">{r.apaar_id || "EMPTY"}</span>
+                        <span className="text-[#B42318]">{r.apaar_id || "MISSING"}</span>
                       )}
                     </td>
-                    <td className="py-2 px-3">{r.program}</td>
-                    <td className="py-2 px-3">{r.social_category || "—"}</td>
-                    <td className="py-2 px-3 font-mono">{r.admission_date || "—"}</td>
+                    <td className="py-2 px-3 font-sans text-xs">{r.program}</td>
+                    <td className="py-2 px-3 text-[#5B6573]">{r.admission_date || "—"}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          {/* Submit Ingestion Button */}
-          <div className="pt-2">
-            <button
-              onClick={handleUploadSubmit}
-              disabled={isUploading}
-              className="w-full flex items-center justify-center space-x-2 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-xl shadow-amber-500/20 transition-all cursor-pointer active:scale-98 disabled:opacity-60"
-            >
-              <RefreshCw className={`w-4 h-4 ${isUploading ? "animate-spin" : ""}`} />
-              <span>
-                {isUploading
-                  ? "Ingesting & Executing Integrity Engine..."
-                  : `Ingest ${parsedRows.length} Admission Records`}
-              </span>
-            </button>
-          </div>
+          <button
+            onClick={handleUploadSubmit}
+            disabled={isUploading}
+            className="w-full py-2.5 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-bold rounded-[2px] transition-colors cursor-pointer disabled:opacity-50"
+          >
+            {isUploading ? "Ingesting & Executing Integrity Engine..." : `Commit Ingestion of ${parsedRows.length} Records`}
+          </button>
         </div>
       )}
 
-      {/* Success Modal / Banner */}
+      {/* Success notification */}
       {uploadResult && (
-        <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 space-y-4">
-          <div className="flex items-center space-x-3">
-            <CheckCircle2 className="w-6 h-6 text-emerald-400 flex-shrink-0" />
-            <div>
-              <h3 className="text-base font-bold text-white">Ingestion Completed Successfully</h3>
-              <p className="text-xs text-slate-300 mt-0.5">
-                {uploadResult.inserted} records synchronized into the admission ledger.
-                Autonomous Integrity Checks triggered.
-              </p>
+        <div className="bg-white border-l-4 border-[#237A52] p-4 border border-[#D8DEE6] rounded-[2px] space-y-3">
+          <div>
+            <div className="text-xs font-bold text-[#237A52] uppercase">
+              Batch Ingestion Completed Successfully
+            </div>
+            <div className="text-xs text-[#5B6573] mt-1">
+              Synchronized {uploadResult.inserted} admission records into the institutional roster.
+              The autonomous Integrity Engine was triggered and updated all compliance scores.
             </div>
           </div>
-
-          <div className="flex flex-wrap items-center gap-3 pt-2">
+          <div className="flex items-center space-x-3 pt-1">
             <Link
               href="/institution"
-              className="px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors"
+              className="text-xs font-semibold text-[#17365D] hover:underline"
             >
-              View Updated Institution Roster
+              &rarr; View Updated Seat Ledger
             </Link>
+            <span className="text-[#D8DEE6]">|</span>
             <Link
               href="/aicte"
-              className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 font-semibold text-xs hover:bg-slate-800 transition-colors"
+              className="text-xs font-semibold text-[#17365D] hover:underline"
             >
-              Inspect AICTE National Control Tower
+              &rarr; Inspect National Control Tower
             </Link>
           </div>
         </div>
@@ -395,7 +364,7 @@ function UploadContent() {
 
 export default function UploadPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-slate-400 text-xs">Loading Ingestion Center...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#5B6573]">Loading Ingestion Terminal...</div>}>
       <UploadContent />
     </Suspense>
   );

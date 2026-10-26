@@ -3,21 +3,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
-import {
-  QrCode,
-  ShieldCheck,
-  Lock,
-  CheckCircle2,
-  AlertCircle,
-  Building2,
-  GraduationCap,
-  Calendar,
-  ExternalLink,
-  RefreshCw,
-  Search,
-  UserCheck,
-  EyeOff,
-} from "lucide-react";
 
 export default function VerifyClient() {
   const searchParams = useSearchParams();
@@ -44,11 +29,11 @@ export default function VerifyClient() {
       const res = await fetch(`/api/verify?code=${encodeURIComponent(codeToLookup)}`);
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Verification record not found");
+        throw new Error(data.error || "Verification record not found.");
       }
       setVerificationResult(data);
     } catch (err: any) {
-      setError(err.message || "Failed to lookup verification record");
+      setError(err.message || "Failed to locate verification record.");
       setVerificationResult(null);
     } finally {
       setIsLoading(false);
@@ -79,7 +64,7 @@ export default function VerifyClient() {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Failed to grant consent");
+        throw new Error(data.error || "Consent authorization transaction failed.");
       }
       setVerificationResult((prev: any) => ({
         ...prev,
@@ -98,64 +83,57 @@ export default function VerifyClient() {
     : `https://satyapan.gov.in/verify?code=${encodeURIComponent(code)}`;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Header */}
-      <div className="text-center max-w-2xl mx-auto space-y-3">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
-          <Lock className="w-3.5 h-3.5" />
-          <span>DPDP Act 2023 Consent-Gated Verification</span>
+    <div className="max-w-4xl mx-auto px-4 sm:px-8 py-6 space-y-6">
+      {/* Page Title & Context */}
+      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px]">
+        <div className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">
+          Third-Party Background Check
         </div>
-        <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-          Third-Party Employer Credential Verification
+        <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-0.5">
+          Employer Academic Credential Verification Terminal
         </h1>
-        <p className="text-slate-400 text-xs sm:text-sm">
-          Privacy-preserving academic credentials verification. Students retain full ownership of
-          personal data; sensitive PII is shielded from unconsented queries.
+        <p className="text-xs text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
+          In conformity with the Digital Personal Data Protection (DPDP) Act, 2023. Verification requests require candidate authorization before credential disclosure. Sensitive personal attributes are strictly withheld.
         </p>
       </div>
 
-      {/* Verification Code Input Bar */}
-      <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl space-y-4">
+      {/* Query Bar */}
+      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] space-y-3">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleLookup(code);
           }}
-          className="flex flex-col sm:flex-row items-center gap-3"
+          className="flex flex-col sm:flex-row items-center gap-2"
         >
-          <div className="relative flex-1 w-full">
-            <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Enter Verification Token or Student Roll (e.g., SATYA-2026-TCS, STU-1)"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs sm:text-sm focus:outline-none focus:border-amber-500 transition-colors uppercase"
-            />
-          </div>
-
+          <input
+            type="text"
+            placeholder="Enter Verification Token or Candidate Roll (e.g., SATYA-2026-TCS, STU-1)"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            className="flex-1 w-full px-3 py-2 bg-white border border-[#D8DEE6] text-xs font-mono uppercase text-[#202B36] rounded-[2px] focus:outline-none focus:border-[#17365D]"
+          />
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center space-x-2 whitespace-nowrap"
+            className="w-full sm:w-auto px-4 py-2 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-semibold rounded-[2px] transition-colors cursor-pointer disabled:opacity-50"
           >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
-            <span>Verify Token</span>
+            {isLoading ? "Querying..." : "Verify Token"}
           </button>
         </form>
 
-        {/* Quick Demo Pre-sets */}
-        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
-          <span>Quick Demo Presets:</span>
+        {/* Demo Token Presets */}
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[#D8DEE6] text-[11px] text-[#5B6573]">
+          <span className="font-semibold text-[#202B36]">Verification Presets:</span>
           <button
             type="button"
             onClick={() => {
               setCode("SATYA-2026-TCS");
               handleLookup("SATYA-2026-TCS");
             }}
-            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 font-mono font-semibold transition-colors cursor-pointer"
+            className="px-2 py-0.5 bg-[#F4F6F8] hover:bg-slate-200 border border-[#D8DEE6] text-[#17365D] font-mono cursor-pointer"
           >
-            TCS Campus Token (STU-1)
+            SATYA-2026-TCS (Candidate STU-1)
           </button>
           <button
             type="button"
@@ -163,7 +141,7 @@ export default function VerifyClient() {
               setCode("STU-10");
               handleLookup("STU-10");
             }}
-            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition-colors cursor-pointer"
+            className="px-2 py-0.5 bg-[#F4F6F8] hover:bg-slate-200 border border-[#D8DEE6] text-[#5B6573] font-mono cursor-pointer"
           >
             STU-10 (Invalid APAAR)
           </button>
@@ -173,155 +151,143 @@ export default function VerifyClient() {
               setCode("STU-20");
               handleLookup("STU-20");
             }}
-            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition-colors cursor-pointer"
+            className="px-2 py-0.5 bg-[#F4F6F8] hover:bg-slate-200 border border-[#D8DEE6] text-[#5B6573] font-mono cursor-pointer"
           >
-            STU-20 (Ghost Double Admission)
+            STU-20 (Duplicate Admission)
           </button>
         </div>
       </div>
 
       {/* Error state */}
       {error && (
-        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center space-x-3">
-          <AlertCircle className="w-5 h-5 flex-shrink-0" />
-          <span>{error}</span>
+        <div className="p-3 bg-white border-l-4 border-[#B42318] text-xs text-[#B42318] border border-[#D8DEE6] rounded-[2px]">
+          <strong>Verification Notice:</strong> {error}
         </div>
       )}
 
-      {/* Verification Card & QR flow */}
+      {/* Verification Result Card */}
       {verificationResult && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* QR Code Container */}
-          <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col items-center justify-center text-center space-y-4">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+          <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] flex flex-col items-center justify-center text-center space-y-3">
+            <div className="text-[10px] font-bold text-[#5B6573] uppercase tracking-wider">
               Verification QR Token
-            </span>
-            <div className="p-3 bg-white rounded-2xl shadow-xl">
-              <QRCodeSVG value={currentQrUrl} size={150} level="M" />
             </div>
-            <p className="text-[11px] font-mono text-amber-400 bg-slate-950 px-3 py-1 rounded-lg border border-slate-800">
+            <div className="p-2 border border-[#D8DEE6] bg-white">
+              <QRCodeSVG value={currentQrUrl} size={140} level="M" />
+            </div>
+            <div className="font-mono text-xs font-bold text-[#17365D] bg-[#F4F6F8] px-2 py-1 border border-[#D8DEE6]">
               {verificationResult.request.verification_code}
-            </p>
-            <p className="text-[10px] text-slate-500">
-              Scan with phone camera or DigiLocker verifier app to authenticate
-            </p>
+            </div>
+            <div className="text-[10px] text-[#5B6573]">
+              Scan with verified digital reader to authenticate record
+            </div>
           </div>
 
-          {/* Verification Details & Consent Gate */}
-          <div className="md:col-span-2 p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+          {/* Details & DPDP Consent Gate */}
+          <div className="md:col-span-2 bg-white border border-[#D8DEE6] p-5 rounded-[2px] space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#D8DEE6]">
               <div>
-                <h3 className="text-base font-bold text-white">Verification Status</h3>
-                <p className="text-xs text-slate-400">
-                  Verifier: <strong className="text-slate-200">{verificationResult.request.verifier_type}</strong>
-                </p>
+                <h3 className="text-sm font-bold text-[#17365D] uppercase tracking-wider">
+                  Verification Authorization Status
+                </h3>
+                <div className="text-xs text-[#5B6573]">
+                  Requesting Entity: <strong className="text-[#202B36]">{verificationResult.request.verifier_type}</strong>
+                </div>
               </div>
 
               <span
-                className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                className={`px-2.5 py-0.5 text-xs font-mono font-bold uppercase rounded-[2px] border ${
                   verificationResult.request.consent_granted
-                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-                    : "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                    ? "bg-white text-[#237A52] border-[#237A52]"
+                    : "bg-white text-[#986500] border-[#986500]"
                 }`}
               >
-                {verificationResult.request.consent_granted ? "Consent Granted" : "Awaiting Student Consent"}
+                {verificationResult.request.consent_granted ? "Consent Authorized" : "Pending Consent"}
               </span>
             </div>
 
-            {/* If Consent Not Yet Granted: Show Privacy Masked Gate */}
+            {/* Privacy Shielded state */}
             {!verificationResult.request.consent_granted ? (
               <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-                  <div className="flex items-center space-x-2 text-slate-400 text-xs">
-                    <EyeOff className="w-4 h-4 text-amber-400" />
-                    <span>Candidate PII Protected under DPDP Act 2023</span>
+                <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6] text-xs text-[#5B6573] space-y-1">
+                  <div className="font-bold text-[#202B36] uppercase text-[10px] tracking-wider">
+                    Statutory Privacy Notice (DPDP Act, 2023)
                   </div>
-                  <p className="text-xs text-slate-300">
-                    Preview: Candidate <strong className="text-white font-mono">{verificationResult.student_preview?.masked_name}</strong> has
-                    applied for verification. Full academic validation is withheld until the student explicitly authorizes disclosure.
+                  <p className="text-[11px] leading-relaxed">
+                    Personal identifying data for candidate <strong>{verificationResult.student_preview?.masked_name}</strong> is
+                    withheld until explicit digital consent is transmitted.
                   </p>
                 </div>
 
-                {/* Consent Simulator Button */}
-                <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 space-y-3">
-                  <div className="flex items-center space-x-2 text-xs font-bold text-amber-400">
-                    <UserCheck className="w-4 h-4" />
-                    <span>Candidate Digital Consent Simulator</span>
+                <div className="p-3 border border-[#D8DEE6] space-y-2">
+                  <div className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
+                    Candidate Digital Consent Simulation
                   </div>
-                  <p className="text-[11px] text-slate-400 leading-relaxed">
-                    In production, the student approves this consent request via their registered mobile DigiLocker or SMS OTP.
-                    For SIH evaluation, click below to simulate the student granting digital consent.
+                  <p className="text-[11px] text-[#5B6573] leading-relaxed">
+                    In live deployment, the candidate confirms consent via registered mobile SMS or DigiLocker authorization. For evaluation, click below to execute consent transaction.
                   </p>
                   <button
                     onClick={handleGrantConsent}
                     disabled={isGrantingConsent}
-                    className="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-md transition-all cursor-pointer active:scale-98 disabled:opacity-60 flex items-center justify-center space-x-2"
+                    className="w-full py-2 bg-[#237A52] hover:bg-[#1b5e3f] text-white text-xs font-bold rounded-[2px] transition-colors cursor-pointer disabled:opacity-50"
                   >
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>
-                      {isGrantingConsent
-                        ? "Transacting Consent Grant..."
-                        : "Grant Student Consent & Unlock Credentials"}
-                    </span>
+                    {isGrantingConsent ? "Processing Consent Grant..." : "Authorize Candidate Consent & Unlock Credential"}
                   </button>
                 </div>
               </div>
             ) : (
-              /* If Consent Granted: Show Disclosed Selective Credential Card */
-              <div className="space-y-4 animate-fadeIn">
-                <div className="p-5 rounded-xl bg-emerald-500/5 border border-emerald-500/30 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center space-x-1.5">
-                      <ShieldCheck className="w-4 h-4" />
-                      <span>AICTE Verified Academic Credential</span>
+              /* Disclosed Credential Certificate */
+              <div className="space-y-3">
+                <div className="border border-[#237A52] p-4 bg-[#F4F6F8] space-y-3">
+                  <div className="flex items-center justify-between pb-2 border-b border-[#D8DEE6]">
+                    <span className="text-xs font-bold text-[#237A52] uppercase tracking-wider">
+                      AICTE Verified Academic Credential
                     </span>
-                    <span className="text-[10px] text-slate-500 font-mono">
-                      Selective Disclosure v2.4
+                    <span className="text-[10px] font-mono text-[#5B6573]">
+                      Standard APH v2.4
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 text-xs pt-1">
-                    <div>
-                      <span className="text-slate-500 block">Candidate Name</span>
-                      <span className="text-sm font-bold text-white">
-                        {verificationResult.disclosed_data?.student_name}
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="text-slate-500 block">Enrolment Status</span>
-                      <span className="text-sm font-bold text-emerald-400 uppercase font-mono">
-                        {verificationResult.disclosed_data?.enrolment_status}
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="text-slate-500 block">Degree / Program</span>
-                      <span className="text-sm font-semibold text-slate-200">
-                        {verificationResult.disclosed_data?.program}
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="text-slate-500 block">Batch / Admission Year</span>
-                      <span className="text-sm font-semibold text-slate-200">
-                        Class of {verificationResult.disclosed_data?.admission_year}
-                      </span>
-                    </div>
-
-                    <div className="col-span-2 pt-2 border-t border-slate-800">
-                      <span className="text-slate-500 block">Affiliated Institution</span>
-                      <span className="text-sm font-semibold text-amber-300">
-                        {verificationResult.disclosed_data?.institution_name} (
-                        {verificationResult.disclosed_data?.institution_code})
-                      </span>
-                    </div>
-                  </div>
+                  <table className="w-full text-xs border-collapse">
+                    <tbody className="divide-y divide-[#D8DEE6]">
+                      <tr>
+                        <td className="py-2 text-[#5B6573] w-1/3">Candidate Name</td>
+                        <td className="py-2 font-bold text-[#17365D]">
+                          {verificationResult.disclosed_data?.student_name}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 text-[#5B6573]">Enrolment Status</td>
+                        <td className="py-2 font-mono font-bold text-[#237A52] uppercase">
+                          {verificationResult.disclosed_data?.enrolment_status}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 text-[#5B6573]">Degree Program</td>
+                        <td className="py-2 text-[#202B36]">
+                          {verificationResult.disclosed_data?.program}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 text-[#5B6573]">Admission Year</td>
+                        <td className="py-2 font-mono text-[#202B36]">
+                          Class of {verificationResult.disclosed_data?.admission_year}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 text-[#5B6573]">Affiliated College</td>
+                        <td className="py-2 font-semibold text-[#17365D]">
+                          {verificationResult.disclosed_data?.institution_name} ({verificationResult.disclosed_data?.institution_code})
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-500 font-mono">
+                <div className="flex items-center justify-between text-[10px] text-[#5B6573] font-mono">
                   <span>Cryptographic Timestamp: {verificationResult.disclosed_data?.timestamp?.slice(0, 19)}Z</span>
-                  <span className="text-emerald-400 font-semibold">Verification Authenticated ✓</span>
+                  <span className="text-[#237A52] font-semibold">Verification Certified Valid</span>
                 </div>
               </div>
             )}

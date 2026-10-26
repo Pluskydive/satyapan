@@ -1,118 +1,104 @@
-import { Shield, Lock, FileText, CheckCircle2, AlertOctagon, Terminal } from "lucide-react";
 import { getSatyapanStore } from "@/lib/mockData";
-
 
 export default async function AuditPage() {
   const store = getSatyapanStore();
   const logs = store.auditLogs;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center space-x-2">
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              Cybersecurity & Immutable Audit Ledger
-            </h1>
-            <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">
-              TAMPER-EVIDENT LOG
-            </span>
+          <div className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">
+            System Traceability & Compliance
           </div>
-          <p className="text-slate-400 text-xs sm:text-sm mt-1">
-            Complete cryptographic traceability of all admission ingestions, rule engine runs, and DPDP consent events.
+          <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-0.5">
+            National Technical Regulatory Audit Ledger
+          </h1>
+          <p className="text-xs text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
+            Immutable transaction records of all student enrolment ingestions, automated rule engine executions, and third-party verification consent events.
           </p>
         </div>
 
-        <div className="flex items-center space-x-2 text-xs">
-          <span className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-mono">
-            <Lock className="w-3.5 h-3.5 text-emerald-400" />
-            <span>DPDP Act 2023 Compliant</span>
+        <div className="text-xs font-mono text-[#5B6573] bg-[#F4F6F8] px-3 py-1.5 border border-[#D8DEE6] self-start sm:self-auto">
+          Audit Integrity: 100% Tamper-Evident
+        </div>
+      </div>
+
+      {/* Information Security Posture Standards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white border border-[#D8DEE6] p-4 rounded-[2px] space-y-1.5">
+          <div className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
+            CWE-1236 Spreadsheet Security
+          </div>
+          <p className="text-xs text-[#5B6573] leading-relaxed">
+            All spreadsheet inputs are sanitized by neutralizing formula operators to prevent arbitrary spreadsheet code execution during institutional review.
+          </p>
+        </div>
+
+        <div className="bg-white border border-[#D8DEE6] p-4 rounded-[2px] space-y-1.5">
+          <div className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
+            DPDP Act 2023 Selective Disclosure
+          </div>
+          <p className="text-xs text-[#5B6573] leading-relaxed">
+            Third-party verifiers are granted access only to academic enrolment credentials. Personal demographic attributes remain strictly confidential.
+          </p>
+        </div>
+
+        <div className="bg-white border border-[#D8DEE6] p-4 rounded-[2px] space-y-1.5">
+          <div className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
+            Role-Based Access Partitioning
+          </div>
+          <p className="text-xs text-[#5B6573] leading-relaxed">
+            AICTE central officers, institutional registrars, and external verifiers operate in distinct privilege partitions with chronological transaction logging.
+          </p>
+        </div>
+      </div>
+
+      {/* Audit Log Table */}
+      <div className="bg-white border border-[#D8DEE6] rounded-[2px] overflow-hidden">
+        <div className="p-4 border-b border-[#D8DEE6] flex items-center justify-between bg-[#F4F6F8]">
+          <h2 className="text-sm font-bold text-[#17365D] uppercase tracking-wider">
+            Chronological Audit Transaction Stream ({logs.length} Logged Events)
+          </h2>
+          <span className="text-[11px] font-mono text-[#5B6573]">
+            Format: UTC Timestamped Ledger
           </span>
         </div>
-      </div>
 
-      {/* Security Architecture Posture Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
-            <Shield className="w-5 h-5" />
-          </div>
-          <h3 className="text-sm font-bold text-white">CWE-1236 CSV Injection Defense</h3>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            All spreadsheet uploads are stripped and neutralized of formula operators (`=`, `+`, `-`, `@`, `\t`, `\r`)
-            prior to database ingestion to stop spreadsheet remote execution attacks.
-          </p>
-        </div>
-
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
-            <Lock className="w-5 h-5" />
-          </div>
-          <h3 className="text-sm font-bold text-white">Selective Credential Disclosure</h3>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            Verifiers only receive academic status (program, institution, year). Personal Protected Identifiers
-            like caste, gender, and full date of birth are excluded from third-party queries.
-          </p>
-        </div>
-
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center">
-            <Terminal className="w-5 h-5" />
-          </div>
-          <h3 className="text-sm font-bold text-white">Role-Based Integrity Verification</h3>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            AICTE apex regulators, institutional registrars, employer verifiers, and students operate within
-            strictly partitioned privilege domains with tamper-evident audit logging.
-          </p>
-        </div>
-      </div>
-
-      {/* Chronological Audit Events Ledger */}
-      <div className="rounded-2xl bg-slate-900/70 border border-slate-800 shadow-xl overflow-hidden space-y-4 p-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-base font-bold text-white">Cryptographic Audit Trail</h3>
-            <p className="text-slate-400 text-xs mt-0.5">
-              Live stream of database mutations, batch uploads, and integrity rule executions.
-            </p>
-          </div>
-          <span className="font-mono text-xs text-slate-500">{logs.length} Logged Events</span>
-        </div>
-
-        <div className="overflow-x-auto border border-slate-800 rounded-xl">
-          <table className="w-full text-left text-xs text-slate-300">
-            <thead className="bg-slate-950/80 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead className="bg-[#F4F6F8] text-[#5B6573] uppercase text-[10px] tracking-wider font-semibold border-b border-[#D8DEE6]">
               <tr>
-                <th className="py-3 px-4">Event ID</th>
-                <th className="py-3 px-4">Timestamp (UTC)</th>
-                <th className="py-3 px-4">Actor Role</th>
-                <th className="py-3 px-4">Action</th>
-                <th className="py-3 px-4">Target Entity</th>
-                <th className="py-3 px-4">Payload Summary</th>
+                <th className="py-2.5 px-4 font-mono w-32">Event ID</th>
+                <th className="py-2.5 px-4 font-mono w-44">Timestamp (UTC)</th>
+                <th className="py-2.5 px-4 w-36">Actor Role</th>
+                <th className="py-2.5 px-4 w-44">Action Executed</th>
+                <th className="py-2.5 px-4 w-40">Target Entity</th>
+                <th className="py-2.5 px-4">Cryptographic Summary Payload</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 font-sans">
+            <tbody className="divide-y divide-[#D8DEE6] text-[#202B36]">
               {logs.map((log) => (
-                <tr key={log.id} className="hover:bg-slate-800/30">
-                  <td className="py-3 px-4 font-mono text-[11px] text-amber-400 font-bold">
+                <tr key={log.id} className="hover:bg-slate-50 font-mono text-[11px]">
+                  <td className="py-2.5 px-4 font-bold text-[#17365D]">
                     {log.id}
                   </td>
-                  <td className="py-3 px-4 font-mono text-[11px] text-slate-400">
+                  <td className="py-2.5 px-4 text-[#5B6573]">
                     {new Date(log.created_at).toISOString().replace("T", " ").slice(0, 19)}
                   </td>
-                  <td className="py-3 px-4">
-                    <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[10px] font-bold uppercase">
+                  <td className="py-2.5 px-4 font-sans text-xs">
+                    <span className="px-1.5 py-0.5 bg-[#F4F6F8] border border-[#D8DEE6] text-[#17365D] text-[10px] font-semibold uppercase">
                       {log.actor_role}
                     </span>
                   </td>
-                  <td className="py-3 px-4 font-semibold text-white">
+                  <td className="py-2.5 px-4 font-semibold text-[#202B36]">
                     {log.action}
                   </td>
-                  <td className="py-3 px-4 font-mono text-slate-400">
+                  <td className="py-2.5 px-4 text-[#5B6573]">
                     {log.entity}
                   </td>
-                  <td className="py-3 px-4 font-mono text-[10px] text-slate-400 max-w-xs truncate">
+                  <td className="py-2.5 px-4 text-[#5B6573] max-w-xs truncate text-[10px]">
                     {JSON.stringify(log.after_data || {})}
                   </td>
                 </tr>

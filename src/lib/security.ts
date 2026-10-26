@@ -1,6 +1,6 @@
 /**
  * SATYAPAN Security, Privacy & Integrity Utilities
- * DPDP Act 2023 Compliance & Zero-Trust Defense Layer
+ * Digital Personal Data Protection (DPDP) Act 2023 Compliance
  */
 
 import { FlagSeverity } from './types';
@@ -15,13 +15,13 @@ export function isValidApaar(apaar?: string | null): boolean {
 }
 
 /**
- * Masks a 12-digit APAAR ID in compliance with Digital Personal Data Protection Act (DPDP) 2023.
- * Returns "XXXX-XXXX-1234" or "•••• •••• 1234" to prevent PII exposure across verifiers & public views.
+ * Masks a 12-digit APAAR ID in compliance with DPDP Act 2023.
+ * Returns "XXXX-XXXX-1234" to prevent PII exposure across public and institutional views.
  */
 export function formatMaskedApaar(apaar?: string | null): string {
   if (!apaar) return 'NOT ISSUED / INVALID';
   const clean = apaar.trim();
-  if (clean.length < 4) return '••••';
+  if (clean.length < 4) return 'XXXX';
   const lastFour = clean.slice(-4);
   return `XXXX-XXXX-${lastFour}`;
 }
@@ -33,7 +33,6 @@ export function formatMaskedApaar(apaar?: string | null): string {
 export function sanitizeCsvField(val: unknown): string {
   if (val === null || val === undefined) return '';
   const str = String(val).trim();
-  // If the cell begins with dangerous formula triggers, prepend a single quote to neutralise
   if (/^[=+\-@\t\r]/.test(str)) {
     return `'${str}`;
   }
@@ -53,7 +52,7 @@ export function sanitizeRecordRow<T extends Record<string, unknown>>(row: T): T 
 
 /**
  * DPDP Act 2023 Selective Disclosure Filter for Employer Verifiers.
- * Strictly withholds caste, gender, DOB year, and raw IDs from unconsented third parties.
+ * Strictly withholds personal identifiers (caste, gender, DOB) from third parties.
  */
 export function applySelectiveDisclosure(student: {
   full_name: string;
@@ -75,81 +74,68 @@ export function applySelectiveDisclosure(student: {
 }
 
 /**
- * UI visual helper for Severity Badges
+ * Visual styling for regulatory flag severity badges.
+ * Follows formal Indian government color standards with rectangular borders (0-2px radius).
  */
 export function getSeverityStyle(severity: FlagSeverity): {
   badge: string;
-  bg: string;
   border: string;
   text: string;
-  iconName: string;
 } {
   switch (severity) {
     case 'critical':
       return {
-        badge: 'bg-rose-500/15 text-rose-500 border-rose-500/30',
-        bg: 'bg-rose-500/10',
-        border: 'border-rose-500/40',
-        text: 'text-rose-500',
-        iconName: 'AlertOctagon',
+        badge: 'bg-white text-[#B42318] border border-[#B42318]',
+        border: 'border-[#B42318]',
+        text: 'text-[#B42318]',
       };
     case 'high':
       return {
-        badge: 'bg-amber-500/15 text-amber-500 border-amber-500/30',
-        bg: 'bg-amber-500/10',
-        border: 'border-amber-500/40',
-        text: 'text-amber-500',
-        iconName: 'AlertTriangle',
+        badge: 'bg-white text-[#B42318] border border-[#B42318]',
+        border: 'border-[#B42318]',
+        text: 'text-[#B42318]',
       };
     case 'medium':
       return {
-        badge: 'bg-yellow-500/15 text-yellow-500 border-yellow-500/30',
-        bg: 'bg-yellow-500/10',
-        border: 'border-yellow-500/40',
-        text: 'text-yellow-500',
-        iconName: 'AlertCircle',
+        badge: 'bg-white text-[#986500] border border-[#986500]',
+        border: 'border-[#986500]',
+        text: 'text-[#986500]',
       };
     case 'low':
     default:
       return {
-        badge: 'bg-blue-500/15 text-blue-500 border-blue-500/30',
-        bg: 'bg-blue-500/10',
-        border: 'border-blue-500/40',
-        text: 'text-blue-500',
-        iconName: 'Info',
+        badge: 'bg-white text-[#17365D] border border-[#17365D]',
+        border: 'border-[#17365D]',
+        text: 'text-[#17365D]',
       };
   }
 }
 
 /**
- * Returns color classes for student integrity score (0-100)
+ * Returns color classes for student integrity score (0-100).
  */
 export function getScoreStyle(score: number): {
   color: string;
   label: string;
-  bg: string;
-  ring: string;
+  border: string;
 } {
   if (score >= 90) {
     return {
-      color: 'text-emerald-500',
-      label: 'Optimal / High Integrity',
-      bg: 'bg-emerald-500/10',
-      ring: 'ring-emerald-500/30',
+      color: 'text-[#237A52]',
+      label: 'Compliant / High Integrity',
+      border: 'border-[#237A52]',
     };
   }
   if (score >= 70) {
     return {
-      color: 'text-amber-500',
-      label: 'Satisfactory / Minor Flags',
-      bg: 'bg-amber-500/10',
-      ring: 'ring-amber-500/30',
+      color: 'text-[#986500]',
+      label: 'Under Review / Minor Discrepancy',
+      border: 'border-[#986500]',
     };
   }
   return {
-    color: 'text-rose-500',
-    label: 'High Risk / Non-Compliant',
-    bg: 'bg-rose-500/10',
-    ring: 'ring-rose-500/30',
+    color: 'text-[#B42318]',
+    label: 'Action Required / Regulatory Flag',
+    border: 'border-[#B42318]',
   };
 }
