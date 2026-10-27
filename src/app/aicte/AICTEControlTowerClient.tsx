@@ -15,6 +15,8 @@ import {
   Globe2,
   ExternalLink,
   ShieldAlert,
+  Zap,
+  AlertTriangle,
 } from "lucide-react";
 
 interface Props {
@@ -41,6 +43,33 @@ export default function AICTEControlTowerClient({
   const [expandedFlagId, setExpandedFlagId] = useState<string | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [, startTransition] = useTransition();
+
+  // SIH 2026 Live Simulation State
+  const [simulationMode, setSimulationMode] = useState<"idle" | "cross_state" | "quota_breach">("idle");
+  const [isSimulating, setIsSimulating] = useState(false);
+
+  const handleSimulateCrossState = () => {
+    setIsSimulating(true);
+    setTimeout(() => {
+      setSimulationMode("cross_state");
+      setExpandedFlagId("sim-flag-dup");
+      setIsSimulating(false);
+    }, 350);
+  };
+
+  const handleSimulateQuotaBreach = () => {
+    setIsSimulating(true);
+    setTimeout(() => {
+      setSimulationMode("quota_breach");
+      setExpandedFlagId("sim-flag-quota");
+      setIsSimulating(false);
+    }, 350);
+  };
+
+  const handleResetSimulation = () => {
+    setSimulationMode("idle");
+    setExpandedFlagId(null);
+  };
 
   const handleRefresh = async () => {
     try {
@@ -73,31 +102,113 @@ export default function AICTEControlTowerClient({
     }
   };
 
+  // Simulated Flag Definitions for Live Hackathon Jury Testing
+  const simulatedCrossStateFlag: ValidationFlag = {
+    id: "sim-flag-dup",
+    student_id: "stu-sim-020",
+    institution_id: "inst-1001",
+    rule_code: "DUPLICATE_ENROLMENT",
+    severity: "critical",
+    title: "Cross-State Concurrent Admission Detected",
+    explanation:
+      "APAAR ID 1000 0000 0020 concurrently claimed by COEP Pune (Maharashtra, CAP Round 1) and RVCE Bengaluru (Karnataka, KEA Quota) with overlapping enrolment timestamps.",
+    recommended_action:
+      "Execute AICTE APH Clause 12.4 notice. Reclaim double-allotted seat and notify Maharashtra DTE and Karnataka KEA counseling authorities.",
+    status: "open",
+    created_at: new Date().toISOString(),
+    students: {
+      id: "stu-sim-020",
+      full_name: "Rahul S. Verma",
+      institutional_student_id: "2026-COEP-CS-042",
+      apaar_id: "100000000020",
+      integrity_score: 32,
+    },
+    institutions: {
+      id: "inst-1001",
+      name: "Government College of Engineering, Pune (COEP)",
+      state: "Maharashtra",
+      aicte_code: "1-3327145",
+    },
+  };
+
+  const simulatedQuotaFlag: ValidationFlag = {
+    id: "sim-flag-quota",
+    student_id: "stu-sim-nri",
+    institution_id: "inst-1003",
+    rule_code: "INTAKE_LIMIT_EXCEEDED",
+    severity: "critical",
+    title: "Supernumerary NRI Quota Exceeded (126.7% Capacity)",
+    explanation:
+      "Apex Institute of Technology, Mumbai has enrolled 19 NRI students against an approved statutory ceiling of 15 seats without Council extension approval.",
+    recommended_action:
+      "Issue immediate show-cause notice under AICTE Act Section 10(k); freeze candidate portal registration for excess admissions.",
+    status: "open",
+    created_at: new Date().toISOString(),
+    students: {
+      id: "stu-sim-nri",
+      full_name: "Tanya M. Mehta (Batch Intake)",
+      institutional_student_id: "2026-NRI-BATCH-019",
+      apaar_id: "100000000099",
+      integrity_score: 45,
+    },
+    institutions: {
+      id: "inst-1003",
+      name: "Apex Institute of Technology, Mumbai",
+      state: "Maharashtra",
+      aicte_code: "1-1003921",
+    },
+  };
+
+  const activeFlags: ValidationFlag[] =
+    simulationMode === "cross_state"
+      ? [simulatedCrossStateFlag, ...flags.filter((f) => f.id !== "sim-flag-dup")]
+      : simulationMode === "quota_breach"
+      ? [simulatedQuotaFlag, ...flags.filter((f) => f.id !== "sim-flag-quota")]
+      : flags;
+
   // Dynamic calculations for visualizations
   const totalStudents = national.total_students || 1;
-  const verifiedCount = national.verified_students || 0;
-  const flaggedCount = national.flagged_students || 0;
+  const verifiedCount =
+    simulationMode === "cross_state"
+      ? Math.max(0, (national.verified_students || 0) - 1)
+      : national.verified_students || 0;
+  const flaggedCount =
+    simulationMode !== "idle"
+      ? (national.flagged_students || 0) + 1
+      : national.flagged_students || 0;
   const verifiedPct = Math.round((verifiedCount / totalStudents) * 100);
   const flaggedPct = Math.round((flaggedCount / totalStudents) * 100);
 
-  const integrityScore = national.avg_integrity_score || 0;
+  const baseIntegrityScore = national.avg_integrity_score || 0;
+  const integrityScore =
+    simulationMode === "cross_state"
+      ? Math.max(0, Math.round((baseIntegrityScore - 8.4) * 10) / 10)
+      : simulationMode === "quota_breach"
+      ? Math.max(0, Math.round((baseIntegrityScore - 6.2) * 10) / 10)
+      : baseIntegrityScore;
+
   // Circular gauge math: radius 38 -> circumference = 2 * PI * 38 ≈ 238.76
   const gaugeCircumference = 238.76;
   const gaugeOffset = gaugeCircumference - (integrityScore / 100) * gaugeCircumference;
 
   // Breakdown counts
-  const domesticCount = Math.max(0, national.total_students - (national.nri_students + national.oci_students + national.fn_students));
+  const effectiveNriStudents =
+    simulationMode === "quota_breach" ? national.nri_students + 4 : national.nri_students;
+  const domesticCount = Math.max(
+    0,
+    national.total_students - (effectiveNriStudents + national.oci_students + national.fn_students)
+  );
   const domesticPct = ((domesticCount / totalStudents) * 100).toFixed(1);
-  const nriPct = ((national.nri_students / totalStudents) * 100).toFixed(1);
+  const nriPct = ((effectiveNriStudents / totalStudents) * 100).toFixed(1);
   const ociPct = ((national.oci_students / totalStudents) * 100).toFixed(1);
   const fnPct = ((national.fn_students / totalStudents) * 100).toFixed(1);
 
   // Severe flag counts
-  const criticalFlags = flags.filter((f) => f.severity.toUpperCase() === "CRITICAL").length;
-  const highFlags = flags.filter((f) => f.severity.toUpperCase() === "HIGH").length;
-  const mediumFlags = flags.filter((f) => f.severity.toUpperCase() === "MEDIUM").length;
+  const criticalFlags = activeFlags.filter((f) => f.severity.toUpperCase() === "CRITICAL").length;
+  const highFlags = activeFlags.filter((f) => f.severity.toUpperCase() === "HIGH").length;
+  const mediumFlags = activeFlags.filter((f) => f.severity.toUpperCase() === "MEDIUM").length;
 
-  const filteredFlags = flags.filter((f) => {
+  const filteredFlags = activeFlags.filter((f) => {
     const matchesSeverity =
       selectedSeverity === "ALL" || f.severity.toUpperCase() === selectedSeverity;
     const matchesRule =
@@ -159,7 +270,185 @@ export default function AICTEControlTowerClient({
         </div>
       </div>
 
-      {/* 2. Dynamic Executive Health Cockpit & Metrics (Replaces rigid boxes) */}
+      {/* 2. SIH Live Collision Simulation Lab (The Jury Showstopper) */}
+      <div className="bg-[#102A43] border border-[#1E3A8A] rounded-[6px] shadow-sm text-white overflow-hidden">
+        <div className="p-5 sm:p-6 space-y-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1 bg-[#F59E0B] text-[#102A43] text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-[2px]">
+                  <Zap className="w-3 h-3 fill-current" />
+                  SIH Innovation Lab
+                </span>
+                <span className="text-slate-300 text-xs font-semibold">
+                  Live Anomaly &amp; Fraud Collision Simulator
+                </span>
+              </div>
+              <h2 className="text-base sm:text-lg font-bold tracking-tight text-white">
+                One-Click Multi-State Conflict &amp; Quota Breach Engine
+              </h2>
+              <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                Demonstrate SATYAPAN&apos;s real-time detection of concurrent seat allotments across state counseling bodies and statutory quota over-allocation without manual audits.
+              </p>
+            </div>
+
+            {/* Simulation Action Buttons */}
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={handleSimulateCrossState}
+                disabled={isSimulating}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-[3px] transition-all cursor-pointer shadow-xs ${
+                  simulationMode === "cross_state"
+                    ? "bg-[#E11D48] text-white ring-2 ring-white/50"
+                    : "bg-[#2563EB] hover:bg-[#1D4ED8] text-white"
+                } disabled:opacity-50`}
+              >
+                <Zap className={`w-3.5 h-3.5 ${isSimulating ? "animate-spin" : ""}`} />
+                <span>Simulate Cross-State Collision (Pune vs Bengaluru)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSimulateQuotaBreach}
+                disabled={isSimulating}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-[3px] transition-all cursor-pointer shadow-xs ${
+                  simulationMode === "quota_breach"
+                    ? "bg-[#D97706] text-white ring-2 ring-white/50"
+                    : "bg-[#334155] hover:bg-[#475569] text-white border border-slate-600"
+                } disabled:opacity-50`}
+              >
+                <AlertTriangle className="w-3.5 h-3.5 text-[#F59E0B]" />
+                <span>Simulate Quota Breach (NRI Quota)</span>
+              </button>
+
+              {simulationMode !== "idle" && (
+                <button
+                  type="button"
+                  onClick={handleResetSimulation}
+                  className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white px-3 py-2 text-xs font-semibold rounded-[3px] border border-white/20 transition-colors cursor-pointer"
+                >
+                  <RotateCw className="w-3 h-3" />
+                  <span>Reset Simulation</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Active Simulation Dossier Panel: Cross-State */}
+          {simulationMode === "cross_state" && (
+            <div className="p-4.5 bg-[#0B1E33] border-l-4 border-[#E11D48] border-y border-r border-[#1E3A8A] rounded-[4px] space-y-3.5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-700/60 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#E11D48] animate-ping" />
+                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#FDA29B]">
+                    Critical Concurrency Collision Active (Rule: DUP_001)
+                  </span>
+                </div>
+                <div className="text-[11px] font-mono text-slate-300">
+                  Candidate: <strong className="text-white">Rahul S. Verma</strong> | Masked APAAR: <strong className="text-[#F59E0B]">XXXX-XXXX-0020</strong>
+                </div>
+              </div>
+
+              {/* Side-by-Side College Conflict Comparison */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                {/* College A */}
+                <div className="bg-[#102A43] p-3.5 border border-slate-700 rounded-[3px] space-y-1.5">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-bold text-[#93C5FD] uppercase tracking-wider">Primary Allotment (Maharashtra)</span>
+                    <span className="font-mono text-[10px] text-slate-400">Round 1 CAP</span>
+                  </div>
+                  <div className="font-bold text-white text-sm">
+                    Government College of Engineering, Pune (COEP)
+                  </div>
+                  <div className="text-slate-300 text-[11px]">
+                    Programme: <strong className="text-white">B.Tech Computer Engineering</strong>
+                  </div>
+                  <div className="text-[11px] font-mono text-slate-400">
+                    Admission Timestamp: 14-Jul-2026 10:24 IST (State Quota Verified)
+                  </div>
+                </div>
+
+                {/* College B */}
+                <div className="bg-[#102A43] p-3.5 border border-[#E11D48]/50 rounded-[3px] space-y-1.5">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-bold text-[#FDA29B] uppercase tracking-wider">Conflicting Claim (Karnataka)</span>
+                    <span className="font-mono text-[10px] text-[#FDA29B]">Overlapping Quota</span>
+                  </div>
+                  <div className="font-bold text-white text-sm">
+                    RV College of Engineering, Bengaluru (RVCE)
+                  </div>
+                  <div className="text-slate-300 text-[11px]">
+                    Programme: <strong className="text-white">B.E. Computer Science &amp; Engineering</strong>
+                  </div>
+                  <div className="text-[11px] font-mono text-slate-400">
+                    Admission Timestamp: 18-Jul-2026 15:42 IST (+96 Hrs Concurrency Delta)
+                  </div>
+                </div>
+              </div>
+
+              {/* Statutory Enforcement Resolution */}
+              <div className="bg-slate-900/60 p-3 rounded-[3px] border border-slate-700/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div className="space-y-0.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#F59E0B] block">
+                    Automated AICTE Regulatory Resolution Engine
+                  </span>
+                  <p className="text-slate-300 text-[11px] leading-snug">
+                    AICTE Approval Process Handbook (APH) Clause 12.4 violation detected. Automatic seat reclamation notice generated for Maharashtra DTE and Karnataka KEA.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById("flag-search-input");
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className="shrink-0 bg-[#E11D48] hover:bg-[#BE123C] text-white px-3 py-1.5 text-xs font-bold rounded-[2px] transition-colors cursor-pointer"
+                >
+                  View Discrepancy Record &darr;
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Active Quota Breach Dossier Panel */}
+          {simulationMode === "quota_breach" && (
+            <div className="p-4.5 bg-[#0B1E33] border-l-4 border-[#D97706] border-y border-r border-[#1E3A8A] rounded-[4px] space-y-3.5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-700/60 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#D97706] animate-ping" />
+                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#FDBA74]">
+                    Supernumerary Quota Ceiling Exceeded (Rule: CAP_002)
+                  </span>
+                </div>
+                <div className="text-[11px] font-mono text-slate-300">
+                  Institution: <strong className="text-white">Apex Institute of Technology, Mumbai</strong> (AICTE Code: 1-1003921)
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div className="bg-[#102A43] p-3 rounded-[3px] border border-slate-700">
+                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Sanctioned NRI Ceiling</span>
+                  <span className="font-mono text-lg font-bold text-white mt-0.5 block">15 Seats</span>
+                  <span className="text-[10px] text-slate-400">Statutory AICTE APH Limit</span>
+                </div>
+                <div className="bg-[#102A43] p-3 rounded-[3px] border border-[#D97706]/60">
+                  <span className="text-[10px] text-[#FDBA74] uppercase font-bold block">Enrolled Candidates</span>
+                  <span className="font-mono text-lg font-bold text-[#F59E0B] mt-0.5 block">19 Admissions</span>
+                  <span className="text-[10px] text-[#FDA29B] font-bold">+4 Unauthorized Admissions (126.7%)</span>
+                </div>
+                <div className="bg-[#102A43] p-3 rounded-[3px] border border-slate-700">
+                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Regulatory Action</span>
+                  <span className="font-bold text-white mt-0.5 block">Section 10(k) Notice</span>
+                  <span className="text-[10px] text-slate-400">Admissions Portal Frozen</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 3. Dynamic Executive Health Cockpit & Metrics (Replaces rigid boxes) */}
       <div className="bg-white border border-[#CBD5E1] rounded-[6px] shadow-xs overflow-hidden">
         {/* Cockpit Header Banner */}
         <div className="bg-[#102A43] text-white px-6 py-3 flex flex-wrap items-center justify-between text-xs">
@@ -610,13 +899,20 @@ export default function AICTEControlTowerClient({
                   const isCrit = flag.severity.toUpperCase() === "CRITICAL";
                   const isHigh = flag.severity.toUpperCase() === "HIGH";
                   const isExpanded = expandedFlagId === flag.id;
+                  const isSimFlag = flag.id.startsWith("sim-flag-");
 
                   return (
                     <React.Fragment key={flag.id}>
                       <tr
                         onClick={() => setExpandedFlagId(isExpanded ? null : flag.id)}
                         className={`transition-colors cursor-pointer ${
-                          isExpanded ? "bg-[#EFF6FF]" : "hover:bg-[#F8FAFC]"
+                          isSimFlag
+                            ? isExpanded
+                              ? "bg-[#FEF3C7] border-l-4 border-[#F59E0B]"
+                              : "bg-[#FFFBEB] hover:bg-[#FEF3C7]/60"
+                            : isExpanded
+                            ? "bg-[#EFF6FF]"
+                            : "hover:bg-[#F8FAFC]"
                         }`}
                       >
                         <td className="whitespace-nowrap px-4 py-3">
@@ -634,8 +930,14 @@ export default function AICTEControlTowerClient({
                         </td>
 
                         <td className="px-4 py-3">
-                          <div className="font-bold text-[#102A43] flex items-center gap-1.5">
+                          <div className="font-bold text-[#102A43] flex flex-wrap items-center gap-1.5">
                             <span>{flag.title}</span>
+                            {isSimFlag && (
+                              <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 text-[9px] font-mono font-bold bg-[#F59E0B] text-[#102A43] rounded-[2px]">
+                                <Zap className="w-2.5 h-2.5 fill-current" />
+                                LIVE SIMULATION
+                              </span>
+                            )}
                             {isExpanded ? (
                               <ChevronUp className="w-3.5 h-3.5 text-[#2563EB]" />
                             ) : (
@@ -698,8 +1000,13 @@ export default function AICTEControlTowerClient({
                           <td colSpan={7} className="p-4">
                             <div className="bg-white border border-[#CBD5E1] p-4 rounded-[4px] space-y-2 text-xs">
                               <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
-                                <span className="font-bold text-[#102A43] text-xs">
-                                  Dossier Detail: {flag.rule_code}
+                                <span className="font-bold text-[#102A43] text-xs flex items-center gap-1.5">
+                                  <span>Dossier Detail: {flag.rule_code}</span>
+                                  {isSimFlag && (
+                                    <span className="text-[10px] font-mono text-[#F59E0B] font-bold">
+                                      [SIH-2026-LIVE-SCENARIO]
+                                    </span>
+                                  )}
                                 </span>
                                 <span className="text-[11px] font-mono text-[#64748B]">
                                   Flag ID: {flag.id}
@@ -713,6 +1020,28 @@ export default function AICTEControlTowerClient({
                                   <strong>Recommended Action:</strong> {flag.recommended_action}
                                 </p>
                               )}
+
+                              {/* Special Cross-State Collision Side-by-Side Breakdown in Table */}
+                              {flag.id === "sim-flag-dup" && (
+                                <div className="mt-2 p-3 bg-[#F8FAFC] border border-[#CBD5E1] rounded-[3px] space-y-2">
+                                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#102A43]">
+                                    Cross-State Jurisdictional Overlap Audit
+                                  </div>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div className="bg-white p-2.5 border border-[#CBD5E1] rounded-[2px] space-y-1">
+                                      <div className="text-[10px] font-bold text-[#17365D]">Institution 1: COEP Pune (MH)</div>
+                                      <div className="text-[11px] text-[#334155]">B.Tech Computer Engineering (CAP Round 1)</div>
+                                      <div className="text-[10px] font-mono text-[#64748B]">Allotted: 14-Jul-2026 10:24 IST</div>
+                                    </div>
+                                    <div className="bg-white p-2.5 border border-[#E11D48]/40 rounded-[2px] space-y-1">
+                                      <div className="text-[10px] font-bold text-[#E11D48]">Institution 2: RVCE Bengaluru (KA)</div>
+                                      <div className="text-[11px] text-[#334155]">B.E. Computer Science (KEA Quota)</div>
+                                      <div className="text-[10px] font-mono text-[#E11D48]">Allotted: 18-Jul-2026 15:42 IST (+96h)</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+
                               <div className="flex flex-wrap items-center gap-3 pt-2 text-[11px]">
                                 <span className="text-[#64748B]">
                                   Reporting College: <strong className="text-[#102A43]">{flag.institutions?.name}</strong>
