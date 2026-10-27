@@ -1,10 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getRuntimeMode } from "@/lib/runtime-mode";
 import { getServerLocale } from "@/lib/i18n-server";
 
 export default async function HomePage() {
-  const [locale, mode] = await Promise.all([getServerLocale(), getRuntimeMode()]);
+  const locale = await getServerLocale();
   const isHi = locale === "hi";
 
   return (
@@ -29,9 +28,6 @@ export default async function HomePage() {
               <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" aria-hidden="true" />
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-200">
                 {isHi ? "AICTE छात्र नामांकन सत्यनिष्ठा पोर्टल" : "AICTE Student Admission Integrity Portal"}
-              </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 bg-[#FEF3C7] text-[#92400E] font-bold rounded-[2px] uppercase">
-                Team PRAMAANIT
               </span>
             </div>
 
@@ -68,15 +64,15 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Sub-strip with Runtime Mode */}
-        <div className="bg-[#0B1E32] px-6 py-2 border-t border-[#1E3A5F] flex flex-wrap items-center justify-between text-[11px] text-slate-300">
+        {/* Sub-strip */}
+        <div className="bg-[#0B1E32] px-6 py-2.5 border-t border-[#1E3A5F] flex flex-wrap items-center justify-between text-[11px] text-slate-300">
           <div>
             {isHi
-              ? "सभी AICTE अनुमोदित तकनीकी संस्थानों और विश्वविद्यालयों के लिए।"
-              : "For all AICTE-approved engineering and technical colleges across India."}
+              ? "अखिल भारतीय तकनीकी शिक्षा परिषद (AICTE) अनुमोदित संस्थानों और विश्वविद्यालयों के लिए।"
+              : "All India Council for Technical Education (AICTE) · Technical College Portal"}
           </div>
-          <div className="font-mono text-[10px] text-amber-400 font-semibold">
-            {mode === "demo" ? "Sandbox Mode" : "Live Mode"}
+          <div className="text-[11px] text-slate-300">
+            {isHi ? "डिजिटल भारत पहल" : "National Academic Governance"}
           </div>
         </div>
       </section>

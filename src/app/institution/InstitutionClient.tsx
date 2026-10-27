@@ -77,21 +77,13 @@ export default function InstitutionClient({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 space-y-6">
       {/* Page Title & Institution Switcher */}
-      <div className="bg-white border-2 border-[#1E3A5F] p-5 rounded-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
+      <div className="bg-white border border-[#D8DEE6] p-6 rounded-[6px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
         <div>
-          <div className="flex items-center space-x-2">
-            <span className="text-[10px] tracking-wider uppercase font-bold text-[#5B6573]">
-              {t("Institutional Compliance Terminal")}
-            </span>
-            <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
-              Team PRAMAANIT
-            </span>
-          </div>
-          <h1 className="text-xl sm:text-2xl font-black text-[#102A43] mt-0.5">
-            संस्थान स्वीकृत सीट लेजर <span className="text-base sm:text-lg font-bold text-[#17365D]">| Sanctioned Seat Ledger</span>
+          <h1 className="text-xl sm:text-2xl font-bold text-[#102A43]">
+            College Seats & Enrolment
           </h1>
-          <p className="text-xs text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
-            {t("Monitor approved intake thresholds, supernumerary quotas (FW/NRI), and address student admission flags.")}
+          <p className="text-xs sm:text-sm text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
+            Monitor approved intake seats, view quota breakdown, and review admitted students.
           </p>
         </div>
 

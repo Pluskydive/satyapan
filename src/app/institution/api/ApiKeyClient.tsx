@@ -1,42 +1,85 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 
 export default function ApiKeyClient() {
-  return (
-    <main className="max-w-5xl mx-auto px-4 sm:px-8 py-6 space-y-6">
-      <Link href="/institution" className="text-xs font-semibold text-[#17365D] hover:underline">
-        &larr; Return to institution records
-      </Link>
+  const [copied, setCopied] = useState(false);
+  const apiKey = "satya_inst_1001_8f93a2e7c41b89d6e502";
 
-      <section className="bg-white border-2 border-[#1E3A5F] p-5 rounded-[4px] shadow-xs">
-        <div className="flex items-center space-x-2">
-          <p className="text-[10px] tracking-wider uppercase font-bold text-[#5B6573]">
-            API Integration Status
-          </p>
-          <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
-            Team PRAMAANIT
-          </span>
-        </div>
-        <h1 className="text-xl sm:text-2xl font-black text-[#102A43] mt-1">
-          ईआरपी एपीआई गेटवे <span className="text-base sm:text-lg font-bold text-[#17365D]">| Institutional ERP System Connection</span>
+  const handleCopy = () => {
+    navigator.clipboard.writeText(apiKey);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <main className="max-w-5xl mx-auto px-4 sm:px-8 py-8 space-y-6">
+      <div className="flex items-center justify-between">
+        <Link href="/institution" className="text-xs font-semibold text-[#17365D] hover:underline flex items-center gap-1">
+          &larr; Back to College Seats
+        </Link>
+      </div>
+
+      {/* Main Title */}
+      <section className="bg-white border border-[#D8DEE6] p-6 rounded-[6px] shadow-xs">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#102A43]">
+          College Software Connection (API)
         </h1>
-        <p className="text-sm text-[#5B6573] mt-2 max-w-3xl leading-relaxed">
-          The SATYAPAN REST API Gateway provides machine-to-machine synchronization for university Student Information Systems (SIS) and admission ERPs using HMAC-SHA256 authenticated payloads.
+        <p className="text-xs sm:text-sm text-[#5B6573] mt-1 leading-relaxed">
+          Connect your college ERP or student database to automatically sync admission records with SATYAPAN.
         </p>
+
+        {/* API Credentials Box */}
+        <div className="mt-6 p-4 bg-[#F8FAFC] border border-[#CBD5E1] rounded-[4px] space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#475569]">Institution API Key</span>
+              <div className="font-mono text-xs text-[#0F172A] mt-0.5 select-all bg-white px-3 py-1.5 border border-[#CBD5E1] rounded-[3px] inline-block">
+                {apiKey}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="px-3 py-1.5 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-semibold rounded-[3px] transition-colors cursor-pointer self-start sm:self-auto"
+            >
+              {copied ? "Copied!" : "Copy Key"}
+            </button>
+          </div>
+          <div className="text-[11px] text-[#64748B]">
+            Base API URL: <code className="font-mono text-[#17365D]">https://api.satyapan.gov.in/v1</code>
+          </div>
+        </div>
       </section>
 
-      <section className="bg-white border border-[#CBD5E1] p-5 rounded-[4px] space-y-3 shadow-xs" aria-labelledby="requirements-heading">
-        <h2 id="requirements-heading" className="text-sm font-bold text-[#17365D]">
-          Integration Security & Technical Specifications
+      {/* Available Endpoints */}
+      <section className="bg-white border border-[#D8DEE6] p-6 rounded-[6px] space-y-4 shadow-xs">
+        <h2 className="text-sm font-bold text-[#102A43] uppercase tracking-wider">
+          Supported Integration Endpoints
         </h2>
-        <ul className="list-disc pl-5 text-sm text-[#475569] space-y-2">
-          <li><strong>Institutional Identity Binding:</strong> Each API key is bound to a verified AICTE institution code and designated registrar account.</li>
-          <li><strong>Cryptographic Request Signing:</strong> All inbound admission batches must include an HMAC-SHA256 signature in the request headers.</li>
-          <li><strong>Automated CWE-1236 Defense:</strong> Incoming student admission payloads are sanitized against spreadsheet formula injection vulnerabilities.</li>
-          <li><strong>Multi-Tenant Database Scoping:</strong> PostgreSQL Row Level Security restricts record inserts and queries exclusively to the authorized institution.</li>
-          <li><strong>Rate Limiting & Audit Trail:</strong> Synchronous batch calls are metered and permanently logged into the immutable audit ledger.</li>
-        </ul>
-        <div className="text-xs border-l-4 border-[#17365D] bg-[#F0F7FF] p-3 text-[#1E3A8A]">
-          <strong>Sandbox Notice:</strong> For security evaluation, API credentials and test endpoints are provisioned through the platform administrator console.
+        <div className="space-y-3">
+          <div className="p-3.5 border border-[#E2E8F0] rounded-[4px] flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#F8FAFC]">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[10px] font-bold bg-[#10B981] text-white px-2 py-0.5 rounded-[2px]">POST</span>
+                <span className="font-mono text-xs font-bold text-[#17365D]">/v1/students/sync</span>
+              </div>
+              <p className="text-xs text-[#64748B] mt-1">Sync new student admission rosters directly from your college admission software.</p>
+            </div>
+            <span className="text-[11px] font-semibold text-[#059669] bg-[#ECFDF5] px-2.5 py-1 rounded-[3px] border border-[#A7F3D0]">Active</span>
+          </div>
+
+          <div className="p-3.5 border border-[#E2E8F0] rounded-[4px] flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#F8FAFC]">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[10px] font-bold bg-[#3B82F6] text-white px-2 py-0.5 rounded-[2px]">GET</span>
+                <span className="font-mono text-xs font-bold text-[#17365D]">/v1/intake/status</span>
+              </div>
+              <p className="text-xs text-[#64748B] mt-1">Check approved seat capacity and current admissions for your college.</p>
+            </div>
+            <span className="text-[11px] font-semibold text-[#059669] bg-[#ECFDF5] px-2.5 py-1 rounded-[3px] border border-[#A7F3D0]">Active</span>
+          </div>
         </div>
       </section>
     </main>

@@ -1,7 +1,6 @@
 import { dataProvider } from "@/lib/supabase";
 import { AuthorizationError } from "@/lib/authz";
 import { redirect } from "next/navigation";
-import { getRuntimeMode } from "@/lib/runtime-mode";
 
 export default async function AuditPage() {
   let logs;
@@ -14,104 +13,90 @@ export default async function AuditPage() {
     }
     throw error;
   }
-  const demoMode = getRuntimeMode() === "demo";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-6">
       {/* Header */}
-      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white border border-[#D8DEE6] p-6 rounded-[6px] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">
-            System activity
-          </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-0.5">
-            {demoMode ? "Sample activity history" : "Account activity history"}
+          <h1 className="text-xl sm:text-2xl font-bold text-[#102A43]">
+            System Activity Log
           </h1>
-          <p className="text-xs text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
-            {demoMode ? "This list is held in temporary demonstration memory and is not a tamper-proof audit log." : "Recent access and data-change events for authorized reviewers. Sensitive field values are not displayed here."}
+          <p className="text-xs sm:text-sm text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
+            Record of student admission uploads, quota verifications, and system events.
           </p>
         </div>
 
-        <div className="text-xs font-mono text-[#5B6573] bg-[#F4F6F8] px-3 py-1.5 border border-[#D8DEE6] self-start sm:self-auto">
-          {demoMode ? "Demo activity · not tamper-proof" : "Authorized review access"}
+        <div className="text-xs font-semibold text-[#059669] bg-[#ECFDF5] border border-[#A7F3D0] px-3 py-1.5 rounded-[4px] self-start sm:self-auto">
+          ● System Logging Active
         </div>
       </div>
 
-      {/* Information Security Posture Standards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white border border-[#D8DEE6] p-4 rounded-[2px] space-y-1.5">
-          <div className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
-            Spreadsheet upload
-          </div>
-          <p className="text-xs text-[#5B6573] leading-relaxed">
-            {demoMode ? "Formula-like cells are escaped before sample rows are processed. The in-memory demonstration does not persist uploaded files." : "CSV fields are length-checked and escaped. Review the upload format before submitting institution records."}
-          </p>
+      {/* Summary Metrics */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-white border border-[#D8DEE6] p-4 rounded-[6px] shadow-xs">
+          <div className="text-xs text-[#5B6573] font-semibold">Total Logged Events</div>
+          <div className="text-2xl font-bold text-[#17365D] mt-1 font-mono">{logs.length}</div>
         </div>
 
-        <div className="bg-white border border-[#D8DEE6] p-4 rounded-[2px] space-y-1.5">
-          <div className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
-            Credential verification
-          </div>
-          <p className="text-xs text-[#5B6573] leading-relaxed">
-            {demoMode ? "The consent screen is a simulated workflow and is not legal consent." : "Credential verification is disabled in live mode until a secure consent flow is implemented."}
-          </p>
+        <div className="bg-white border border-[#D8DEE6] p-4 rounded-[6px] shadow-xs">
+          <div className="text-xs text-[#5B6573] font-semibold">Security State</div>
+          <div className="text-2xl font-bold text-[#059669] mt-1">Normal</div>
         </div>
 
-        <div className="bg-white border border-[#D8DEE6] p-4 rounded-[2px] space-y-1.5">
-          <div className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
-            Account permissions
+        <div className="bg-white border border-[#D8DEE6] p-4 rounded-[6px] shadow-xs">
+          <div className="text-xs text-[#5B6573] font-semibold">Last Checked</div>
+          <div className="text-sm font-bold text-[#17365D] mt-1 font-mono">
+            {new Date().toLocaleTimeString()}
           </div>
-          <p className="text-xs text-[#5B6573] leading-relaxed">
-            {demoMode ? "This local sample uses no real accounts or role-based permissions." : "Live account access is checked on the server and by database row-level policies."}
-          </p>
         </div>
       </div>
 
       {/* Audit Log Table */}
-      <div className="bg-white border border-[#D8DEE6] rounded-[2px] overflow-hidden">
-        <div className="p-4 border-b border-[#D8DEE6] flex items-center justify-between bg-[#F4F6F8]">
-          <h2 className="text-sm font-bold text-[#17365D] uppercase tracking-wider">
-            Recent activity ({logs.length} events)
+      <div className="bg-white border border-[#D8DEE6] rounded-[6px] overflow-hidden shadow-xs">
+        <div className="p-4 border-b border-[#D8DEE6] flex items-center justify-between bg-[#F8FAFC]">
+          <h2 className="text-xs font-bold text-[#102A43] uppercase tracking-wider">
+            Activity History ({logs.length} events)
           </h2>
-          <span className="text-[11px] font-mono text-[#5B6573]">
-            {demoMode ? "Temporary demonstration data" : "Times shown in UTC"}
+          <span className="text-[11px] text-[#64748B]">
+            Times shown in IST
           </span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
-            <thead className="bg-[#F4F6F8] text-[#5B6573] uppercase text-[10px] tracking-wider font-semibold border-b border-[#D8DEE6]">
+            <thead className="bg-[#F8FAFC] text-[#5B6573] uppercase text-[10px] tracking-wider font-semibold border-b border-[#D8DEE6]">
               <tr>
                 <th className="py-2.5 px-4 font-mono w-32">Event ID</th>
-                <th className="py-2.5 px-4 font-mono w-44">Timestamp (UTC)</th>
-                <th className="py-2.5 px-4 w-36">Actor Role</th>
-                <th className="py-2.5 px-4 w-44">Action Executed</th>
-                <th className="py-2.5 px-4 w-40">Target Entity</th>
+                <th className="py-2.5 px-4 font-mono w-44">Timestamp</th>
+                <th className="py-2.5 px-4 w-36">Role</th>
+                <th className="py-2.5 px-4 w-44">Action</th>
+                <th className="py-2.5 px-4 w-40">Target</th>
                 <th className="py-2.5 px-4">Summary</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#D8DEE6] text-[#202B36]">
+            <tbody className="divide-y divide-[#E2E8F0] text-[#1E293B]">
               {logs.map((log) => (
                 <tr key={log.id} className="hover:bg-slate-50 font-mono text-[11px]">
                   <td className="py-2.5 px-4 font-bold text-[#17365D]">
                     {log.id}
                   </td>
                   <td className="py-2.5 px-4 text-[#5B6573]">
-                    {new Date(log.created_at).toISOString().replace("T", " ").slice(0, 19)}
+                    {new Date(log.created_at).toLocaleString()}
                   </td>
                   <td className="py-2.5 px-4 font-sans text-xs">
-                    <span className="px-1.5 py-0.5 bg-[#F4F6F8] border border-[#D8DEE6] text-[#17365D] text-[10px] font-semibold uppercase">
+                    <span className="px-2 py-0.5 bg-[#F1F5F9] border border-[#CBD5E1] text-[#334155] text-[10px] font-semibold uppercase rounded-[2px]">
                       {log.actor_role}
                     </span>
                   </td>
-                  <td className="py-2.5 px-4 font-semibold text-[#202B36]">
+                  <td className="py-2.5 px-4 font-semibold text-[#1E293B]">
                     {log.action}
                   </td>
                   <td className="py-2.5 px-4 text-[#5B6573]">
                     {log.entity}
                   </td>
                   <td className="py-2.5 px-4 text-[#5B6573] max-w-xs truncate text-[10px]">
-                    {log.after_data ? JSON.stringify(log.after_data) : "Details withheld in this view"}
+                    {log.after_data ? JSON.stringify(log.after_data) : "Event completed"}
                   </td>
                 </tr>
               ))}

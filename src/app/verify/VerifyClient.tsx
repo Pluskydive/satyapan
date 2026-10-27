@@ -119,20 +119,12 @@ export default function VerifyClient() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-8 py-6 space-y-6">
       {/* Page Title & Context */}
-      <div className="bg-white border-2 border-[#1E3A5F] p-5 rounded-[4px] shadow-xs">
-        <div className="flex items-center space-x-2">
-          <span className="text-[10px] tracking-wider uppercase font-bold text-[#5B6573]">
-            {t("Third-Party Background Check")}
-          </span>
-          <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
-            Team PRAMAANIT
-          </span>
-        </div>
-        <h1 className="text-xl sm:text-2xl font-black text-[#102A43] mt-0.5">
-          क्रेडेंशियल सत्यापन टर्मिनल <span className="text-base sm:text-lg font-bold text-[#17365D]">| Credential Verification Terminal</span>
+      <div className="bg-white border border-[#D8DEE6] p-6 rounded-[6px] shadow-xs">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#102A43]">
+          Verify Student Degree & Admission
         </h1>
-        <p className="text-xs text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
-          {t("In conformity with the Digital Personal Data Protection (DPDP) Act, 2023. Verification requests require candidate authorization before credential disclosure. Sensitive personal attributes are strictly withheld.")}
+        <p className="text-xs sm:text-sm text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
+          Verify a student&apos;s technical college admission. With candidate consent, verify program credentials and enrolment status.
         </p>
       </div>
 

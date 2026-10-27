@@ -45,13 +45,8 @@ export default function CertificateClient({ student }: Props) {
         <div className="border border-[#C87524] p-6 sm:p-8 space-y-8">
           {/* Institutional Heading */}
           <div className="text-center space-y-1 pb-6 border-b border-[#D8DEE6]">
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-xs font-black text-[#102A43] uppercase tracking-widest">
-                SATYAPAN · AICTE ENROLMENT INTEGRITY REGISTRY
-              </span>
-              <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
-                Team PRAMAANIT
-              </span>
+            <div className="text-xs font-bold text-[#102A43] uppercase tracking-widest">
+              AICTE Verified Academic Record
             </div>
             <div className="text-xs font-semibold text-[#17365D]">
               राष्ट्रीय छात्र नामांकन सत्यनिष्ठा एवं अपार रजिस्ट्री

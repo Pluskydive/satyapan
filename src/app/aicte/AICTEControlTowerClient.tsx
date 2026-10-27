@@ -23,7 +23,6 @@ interface Props {
 }
 
 export default function AICTEControlTowerClient({
-  isDemo,
   initialNational,
   initialStates,
   initialFlags,
@@ -88,21 +87,13 @@ export default function AICTEControlTowerClient({
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-8 sm:py-8">
       {/* Top Context & Action Bar */}
-      <div className="flex flex-col gap-4 border-2 border-[#1E3A5F] bg-white p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6 rounded-[4px] shadow-xs">
+      <div className="flex flex-col gap-4 border border-[#D8DEE6] bg-white p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6 rounded-[6px] shadow-xs">
         <div>
-          <div className="flex items-center space-x-2">
-            <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#5B6573]">
-              {t("Enrolment review workspace")}
-            </span>
-            <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
-              Team PRAMAANIT
-            </span>
-          </div>
-          <h1 className="mt-1 text-2xl font-black tracking-tight text-[#102A43] sm:text-3xl">
-            AICTE राष्ट्रीय नियंत्रण कक्ष <span className="text-xl sm:text-2xl font-bold text-[#17365D]">| National Control Tower</span>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#102A43]">
+            National Admission Overview
           </h1>
-          <p className="mt-1.5 max-w-3xl text-xs sm:text-sm leading-relaxed text-[#5B6573]">
-            {t("Review national enrolment summaries, cross-state duplicate flags, and sanctioned intake adherence.")}
+          <p className="mt-1 max-w-3xl text-xs sm:text-sm text-[#5B6573]">
+            Track student enrolment numbers across states, verify college intake quotas, and review duplicate admissions.
           </p>
         </div>
 
@@ -111,26 +102,20 @@ export default function AICTEControlTowerClient({
             type="button"
             onClick={handleRefresh}
             disabled={isRunning}
-            className="min-h-10 border border-[#8B95A1] bg-white px-3.5 py-2 text-xs font-semibold text-[#17365D] transition-colors hover:bg-[#F4F6F8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#17365D] disabled:opacity-50 rounded-[2px] cursor-pointer"
+            className="min-h-9 border border-[#CBD5E1] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#17365D] transition-colors hover:bg-[#F4F6F8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#17365D] disabled:opacity-50 rounded-[4px] cursor-pointer"
           >
-            {isRunning ? t("Refreshing…") : t("Refresh data")}
+            {isRunning ? t("Refreshing…") : "Refresh"}
           </button>
           <button
             type="button"
             onClick={handleRunIntegrity}
             disabled={isRunning}
-            className="min-h-10 border border-[#C87524] bg-[#C87524] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[#a65f1a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C87524] disabled:opacity-50 rounded-[2px] cursor-pointer shadow-xs"
+            className="min-h-9 bg-[#17365D] hover:bg-[#102A43] px-4 py-1.5 text-xs font-bold text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#17365D] disabled:opacity-50 rounded-[4px] cursor-pointer shadow-xs"
           >
-            {isRunning ? t("Running checks…") : t("Run integrity checks")}
+            {isRunning ? "Checking Records…" : "Run Record Check"}
           </button>
         </div>
       </div>
-
-      {isDemo && (
-        <div className="border-l-4 border-[#17365D] bg-[#F0F7FF] px-4 py-3 text-xs leading-relaxed text-[#1E3A8A] rounded-[2px]" role="note">
-          <strong>SATYAPAN Active Sandbox:</strong> Cross-state duplicate APAAR detection and sanctioned seat ceiling reconciliation active.
-        </div>
-      )}
 
       {/* 5 Operational Metric KPI Panels */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">

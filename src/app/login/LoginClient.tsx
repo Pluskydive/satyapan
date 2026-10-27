@@ -179,22 +179,14 @@ export default function LoginClient({ isDemo = false }: Props) {
   return (
     <section className="max-w-4xl mx-auto px-4 py-8 sm:py-12">
       {/* Institutional Breadcrumb & Header */}
-      <div className="bg-white border-2 border-[#1E3A5F] p-6 sm:p-8 rounded-[4px] shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#D8DEE6] pb-4">
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-black text-[#102A43]">सत्यापन | SATYAPAN</span>
-              <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
-                Team PRAMAANIT
-              </span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-black text-[#102A43] mt-1">
-              हितधारक लॉगिन गेटवे <span className="text-base font-bold text-[#17365D]">| Stakeholder Access Gateway</span>
-            </h1>
-          </div>
-          <div className="text-xs font-mono px-2.5 py-1 bg-[#F4F6F8] border border-[#D8DEE6] text-[#17365D] font-bold">
-            {isDemo ? "Evaluation Gateway" : "Live Authenticated Gateway"}
-          </div>
+      <div className="bg-white border border-[#D8DEE6] p-6 sm:p-8 rounded-[6px] shadow-sm">
+        <div className="border-b border-[#D8DEE6] pb-4">
+          <h1 className="text-xl sm:text-2xl font-bold text-[#102A43]">
+            Account Login
+          </h1>
+          <p className="text-xs sm:text-sm text-[#5B6573] mt-1">
+            Sign in to access your college or AICTE administration workspace.
+          </p>
         </div>
 
         {expiredLink && (

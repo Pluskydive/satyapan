@@ -176,21 +176,13 @@ function UploadContent() {
       </div>
 
       {/* Page Title & Action Bar */}
-      <div className="bg-white border-2 border-[#1E3A5F] p-5 rounded-[4px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+      <div className="bg-white border border-[#D8DEE6] p-6 rounded-[6px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
         <div>
-          <div className="flex items-center space-x-2">
-            <span className="text-[10px] tracking-wider uppercase font-bold text-[#5B6573]">
-              {t("Data Ingestion Terminal")}
-            </span>
-            <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
-              Team PRAMAANIT
-            </span>
-          </div>
-          <h1 className="text-xl sm:text-2xl font-black text-[#102A43] mt-0.5">
-            थोक छात्र प्रवेश CSV अपलोड <span className="text-base sm:text-lg font-bold text-[#17365D]">| Batch CSV Ingestion</span>
+          <h1 className="text-xl sm:text-2xl font-bold text-[#102A43]">
+            Upload Student Admission List
           </h1>
-          <p className="text-xs text-[#5B6573] mt-1 max-w-xl leading-relaxed">
-            {t("Ingest official technical admission batches. Includes automated CWE-1236 spreadsheet formula sanitization and APAAR ID syntax validation.")}
+          <p className="text-xs sm:text-sm text-[#5B6573] mt-1 max-w-xl leading-relaxed">
+            Upload new student admissions in CSV format. The system automatically checks student APAAR IDs and seat limits.
           </p>
         </div>
 
@@ -284,10 +276,10 @@ function UploadContent() {
         <div className="bg-white border border-[#D8DEE6] rounded-[2px] p-5 space-y-4">
           <div className="pb-3 border-b border-[#D8DEE6] flex items-center justify-between">
             <h3 className="text-sm font-bold text-[#17365D] uppercase tracking-wider">
-              {t("Pre-Flight Cybersecurity & Syntax Audit")}
+              File Check Summary
             </h3>
             <span className="text-xs font-mono text-[#237A52] font-semibold">
-              {t("Security Inspection Cleared")}
+              Format Verified
             </span>
           </div>
 
@@ -305,7 +297,7 @@ function UploadContent() {
               <div className="text-lg font-bold font-mono text-[#B42318] mt-0.5">{validationStats.invalidApaar}</div>
             </div>
             <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("CWE-1236 Neutralized")}</div>
+              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">Protected Cells</div>
               <div className="text-lg font-bold font-mono text-[#17365D] mt-0.5">{validationStats.sanitizedFormulas}</div>
             </div>
           </div>

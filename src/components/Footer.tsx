@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 
 export default function Footer() {
-  const { locale, t } = useLanguage();
+  const { locale } = useLanguage();
 
   return (
     <footer className="w-full bg-[#102A43] text-slate-300 text-xs border-t border-[#1E3A5F] mt-auto">
@@ -33,89 +33,89 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Column 2: Stakeholder Portals */}
+          {/* Column 2: Quick Links */}
           <div>
             <div className="font-bold text-white uppercase text-[11px] tracking-wider mb-3 text-[#FBBF24]">
-              {locale === "hi" ? "हितधारक पोर्टल" : "Stakeholder Portals"}
+              {locale === "hi" ? "त्वरित लिंक" : "Quick Links"}
             </div>
             <ul className="space-y-2 text-[11px] text-slate-300">
               <li>
                 <Link href="/aicte" className="hover:text-white hover:underline flex items-center gap-1.5">
-                  <span className="text-slate-500">&rsaquo;</span> {t("Control Tower")}
+                  <span className="text-slate-500">&rsaquo;</span> {locale === "hi" ? "राष्ट्रीय विवरण" : "National Overview"}
                 </Link>
               </li>
               <li>
                 <Link href="/institution" className="hover:text-white hover:underline flex items-center gap-1.5">
-                  <span className="text-slate-500">&rsaquo;</span> {t("Seat Ledgers")}
+                  <span className="text-slate-500">&rsaquo;</span> {locale === "hi" ? "कॉलेज सीटें" : "College Seats"}
                 </Link>
               </li>
               <li>
                 <Link href="/institution/upload" className="hover:text-white hover:underline flex items-center gap-1.5">
-                  <span className="text-slate-500">&rsaquo;</span> {t("CSV Ingestion")}
+                  <span className="text-slate-500">&rsaquo;</span> {locale === "hi" ? "छात्र अपलोड" : "Upload Students"}
                 </Link>
               </li>
               <li>
                 <Link href="/verify" className="hover:text-white hover:underline flex items-center gap-1.5">
-                  <span className="text-slate-500">&rsaquo;</span> {t("Employer Verification")}
+                  <span className="text-slate-500">&rsaquo;</span> {locale === "hi" ? "प्रमाणपत्र सत्यापन" : "Verify Degree"}
                 </Link>
               </li>
               <li>
                 <Link href="/aicte/reports" className="hover:text-white hover:underline flex items-center gap-1.5">
-                  <span className="text-slate-500">&rsaquo;</span> {t("NIRF/NAAC Reports")}
+                  <span className="text-slate-500">&rsaquo;</span> {locale === "hi" ? "रिपोर्ट" : "Reports"}
                 </Link>
               </li>
               <li>
                 <Link href="/audit" className="hover:text-white hover:underline flex items-center gap-1.5">
-                  <span className="text-slate-500">&rsaquo;</span> {t("Audit Ledger")}
+                  <span className="text-slate-500">&rsaquo;</span> {locale === "hi" ? "गतिविधि लॉग" : "Activity Log"}
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: Framework & Integrations */}
+          {/* Column 3: Framework & Portals */}
           <div>
             <div className="font-bold text-white uppercase text-[11px] tracking-wider mb-3 text-[#FBBF24]">
-              {locale === "hi" ? "तकनीकी एकीकरण" : "Technical Framework"}
+              {locale === "hi" ? "राष्ट्रीय पहल" : "National Initiatives"}
             </div>
             <ul className="space-y-2 text-[11px] text-slate-300">
               <li>
-                <span className="text-slate-500">&rsaquo;</span> APAAR / ABC 12-Digit Identifier Sync
+                <span className="text-slate-500">&rsaquo;</span> All India Council for Technical Education (AICTE)
               </li>
               <li>
-                <span className="text-slate-500">&rsaquo;</span> DigiLocker Compatible QR Payload
+                <span className="text-slate-500">&rsaquo;</span> APAAR / ABC National Student Registry
               </li>
               <li>
-                <span className="text-slate-500">&rsaquo;</span> AICTE Sanctioned Intake Thresholds
+                <span className="text-slate-500">&rsaquo;</span> Ministry of Education, Govt. of India
               </li>
               <li>
-                <span className="text-slate-500">&rsaquo;</span> Institutional ERP API REST Gateway
+                <span className="text-slate-500">&rsaquo;</span> National Institutional Ranking Framework (NIRF)
               </li>
               <li>
-                <span className="text-slate-500">&rsaquo;</span> NIRF / NAAC Accreditation Dossiers
+                <span className="text-slate-500">&rsaquo;</span> National Board of Accreditation (NBA)
               </li>
             </ul>
           </div>
 
-          {/* Column 4: Standards & Security */}
+          {/* Column 4: Policies & Help */}
           <div>
             <div className="font-bold text-white uppercase text-[11px] tracking-wider mb-3 text-[#FBBF24]">
-              {locale === "hi" ? "सुरक्षा एवं मानक" : "Standards & Security"}
+              {locale === "hi" ? "नीतियाँ एवं सहायता" : "Policies & Help"}
             </div>
             <ul className="space-y-2 text-[11px] text-slate-400">
-              <li className="flex items-center gap-1.5">
-                <span className="text-[#10B981]">✓</span> Digital Personal Data Protection (DPDP) Act, 2023
+              <li className="flex items-center gap-1.5 hover:text-white cursor-pointer">
+                <span className="text-slate-500">&rsaquo;</span> Website Policies &amp; Terms
               </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-[#10B981]">✓</span> Guidelines for Indian Government Websites (GIGW 3.0)
+              <li className="flex items-center gap-1.5 hover:text-white cursor-pointer">
+                <span className="text-slate-500">&rsaquo;</span> Privacy &amp; Data Protection
               </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-[#10B981]">✓</span> OWASP CWE-1236 Formula Neutralization
+              <li className="flex items-center gap-1.5 hover:text-white cursor-pointer">
+                <span className="text-slate-500">&rsaquo;</span> Helpdesk &amp; Technical Support
               </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-[#10B981]">✓</span> Cryptographic HMAC-SHA256 API Gateway
+              <li className="flex items-center gap-1.5 hover:text-white cursor-pointer">
+                <span className="text-slate-500">&rsaquo;</span> Frequently Asked Questions (FAQ)
               </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-[#10B981]">✓</span> PostgreSQL Multi-Tenant Row Level Security
+              <li className="flex items-center gap-1.5 hover:text-white cursor-pointer">
+                <span className="text-slate-500">&rsaquo;</span> GIGW 3.0 Compliance
               </li>
             </ul>
             <div className="mt-4 pt-3 border-t border-slate-700/60 text-[10px] text-slate-400">

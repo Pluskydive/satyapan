@@ -16,7 +16,6 @@ export default function Navbar({ mode, viewer }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   const { locale, setLocale, t } = useLanguage();
-  const [isRunning, setIsRunning] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notice, setNotice] = useState("");
   const [fontSize, setFontSize] = useState<"small" | "normal" | "large">("normal");
@@ -68,23 +67,6 @@ export default function Navbar({ mode, viewer }: Props) {
     { href: "/institution/api", label: "Connect Software", hiLabel: "सॉफ्टवेयर लिंक", roles: ["platform_admin", "institution_admin"] },
     ...(viewer?.role === "platform_admin" ? [{ href: "/admin/users", label: "User Accounts", hiLabel: "खाते", roles: ["platform_admin"] }] : []),
   ].filter((link) => link.roles.length === 0 || (!!viewer && link.roles.includes(viewer.role)));
-
-  const handleRunIntegrity = async () => {
-    setIsRunning(true);
-    setNotice("");
-    try {
-      const response = await fetch("/api/integrity/run", { method: "POST" });
-      const data = await response.json();
-      if (!response.ok || !data.success) throw new Error("not-complete");
-      setNotice(t("System integrity audit executed successfully. Records verified across registries."));
-      window.dispatchEvent(new CustomEvent("satyapan:refresh"));
-    } catch {
-      setNotice(t("Integrity audit could not be completed. Please re-try."));
-    } finally {
-      setIsRunning(false);
-      window.setTimeout(() => setNotice(""), 6000);
-    }
-  };
 
   const handleSignOut = async () => {
     setNotice("");
@@ -193,23 +175,17 @@ export default function Navbar({ mode, viewer }: Props) {
               <span className="text-[8px] font-mono font-bold leading-none text-slate-200">PAN</span>
             </div>
 
-            {/* Bilingual Titles in Hindi & English */}
+            {/* Titles */}
             <div className="leading-tight">
               <Link href="/" className="group inline-block">
-                <div className="flex items-center space-x-2">
-                  <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#102A43] group-hover:text-[#17365D]">
-                    सत्यापन <span className="text-base sm:text-lg font-bold text-[#17365D]">| SATYAPAN</span>
-                  </h1>
-                  <span className="text-[9px] px-1.5 py-0.5 bg-[#FEF3C7] border border-[#F59E0B] text-[#92400E] font-bold rounded-[2px] uppercase">
-                    Team PRAMAANIT
-                  </span>
-                </div>
-                {/* Bilingual Subtitle */}
+                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#102A43] group-hover:text-[#17365D]">
+                  सत्यापन <span className="text-base sm:text-lg font-bold text-[#17365D]">| SATYAPAN</span>
+                </h1>
                 <div className="text-[11px] font-bold text-[#17365D]">
-                  राष्ट्रीय छात्र नामांकन सत्यनिष्ठा एवं अपार रजिस्ट्री
+                  अखिल भारतीय तकनीकी शिक्षा परिषद (AICTE)
                 </div>
                 <div className="text-[10px] font-medium text-[#5B6573]">
-                  National Student Enrolment Integrity & APAAR Registry Platform
+                  All India Council for Technical Education
                 </div>
               </Link>
             </div>
@@ -218,17 +194,14 @@ export default function Navbar({ mode, viewer }: Props) {
           {/* Right: Active Stakeholder Role & Actions */}
           <div className="flex items-center flex-wrap gap-2.5">
             {!isAuthScreen && (
-              <div className="flex items-center gap-2 bg-[#F8FAFC] border border-[#CBD5E1] px-3 py-1.5 text-xs rounded-[2px]">
-                <div className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" aria-hidden="true" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#5B6573]">
-                  {locale === "hi" ? "भूमिका" : "Role"}:
-                </span>
+              <div className="flex items-center gap-2 bg-[#F8FAFC] border border-[#CBD5E1] px-3 py-1.5 text-xs rounded-[4px]">
+                <div className="w-2 h-2 rounded-full bg-[#10B981]" aria-hidden="true" />
                 <span className="font-bold text-[#102A43]">
                   {viewer?.role === "platform_admin" && (locale === "hi" ? "AICTE केंद्रीय प्रशासक" : "AICTE Central Admin")}
-                  {viewer?.role === "institution_admin" && (locale === "hi" ? "संस्थान कुलसचिव" : "Institutional Registrar")}
-                  {viewer?.role === "institution_staff" && (locale === "hi" ? "संस्थान कर्मचारी" : "Institutional Staff")}
-                  {viewer?.role === "reviewer" && (locale === "hi" ? "गुणवत्ता ऑडिटर" : "Accreditation Auditor")}
-                  {!viewer && (locale === "hi" ? "नियोक्ता / सत्यापनकर्ता" : "Public Verifier")}
+                  {viewer?.role === "institution_admin" && (locale === "hi" ? "संस्थान कुलसचिव" : "College Registrar")}
+                  {viewer?.role === "institution_staff" && (locale === "hi" ? "संस्थान कर्मचारी" : "College Staff")}
+                  {viewer?.role === "reviewer" && (locale === "hi" ? "ऑडिटर" : "Auditor")}
+                  {!viewer && (locale === "hi" ? "सत्यापनकर्ता" : "Public Verifier")}
                 </span>
                 {isDemo && (
                   <Link href="/login" className="ml-1 text-[11px] font-bold text-[#C87524] hover:underline">
@@ -236,20 +209,6 @@ export default function Navbar({ mode, viewer }: Props) {
                   </Link>
                 )}
               </div>
-            )}
-
-            {/* Run Integrity Check Button */}
-            {!isAuthScreen && (
-              <button
-                type="button"
-                onClick={handleRunIntegrity}
-                disabled={isRunning}
-                className="hidden sm:inline-flex items-center px-3 py-1.5 text-xs font-bold bg-[#17365D] hover:bg-[#102A43] text-white rounded-[2px] disabled:opacity-50 transition-colors shadow-xs"
-              >
-                {isRunning
-                  ? (locale === "hi" ? "जाँच चल रही है…" : "Auditing Registry…")
-                  : (locale === "hi" ? "अखंडता ऑडिट चलाएँ" : "Run Integrity Audit")}
-              </button>
             )}
 
             {/* Login / Sign Out Button */}
