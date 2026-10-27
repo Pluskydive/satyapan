@@ -167,13 +167,16 @@ export default function Navbar({ mode, viewer }: Props) {
       {/* 3. Main Header with Bilingual Title (Styled like voters.eci.gov.in & UIDAI) */}
       <header className="w-full bg-white border-b border-[#D8DEE6]">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
-          {/* Left: Modern App Logo & Bilingual Title */}
+          {/* Left: Team PRAMAANIT Logo & Bilingual Title */}
           <div className="flex items-center space-x-3.5">
-            {/* Custom Modern Geometric Logo for SATYAPAN */}
-            <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-[#102A43] to-[#17365D] rounded-[4px] border-2 border-[#1E3A5F] flex flex-col items-center justify-center text-white shadow-xs" aria-hidden="true">
-              <span className="font-extrabold text-xs tracking-tighter text-[#F59E0B]">SATYA</span>
-              <span className="text-[8px] font-mono font-bold leading-none text-slate-200">PAN</span>
-            </div>
+            {/* Official Team PRAMAANIT Seal & Logo */}
+            <Link href="/" className="flex-shrink-0 group">
+              <img
+                src="/pramaanit-logo.jpg"
+                alt="PRAMAANIT - Certified Authentic Verified"
+                className="h-12 w-auto object-contain rounded-[4px] border border-slate-200 shadow-xs hover:opacity-95 transition-opacity"
+              />
+            </Link>
 
             {/* Titles */}
             <div className="leading-tight">
