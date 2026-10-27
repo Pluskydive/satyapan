@@ -283,22 +283,22 @@ function UploadContent() {
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-            <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Total Records")}</div>
-              <div className="text-lg font-bold font-mono text-[#17365D] mt-0.5">{validationStats.total}</div>
+          <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-[4px] p-3 divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] grid grid-cols-2 sm:grid-cols-4 text-xs">
+            <div className="px-3 py-1">
+              <span className="text-[#64748B] text-[11px] block">{t("Total Records")}</span>
+              <span className="text-base font-bold text-[#102A43] font-mono">{validationStats.total}</span>
             </div>
-            <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Valid APAARs")}</div>
-              <div className="text-lg font-bold font-mono text-[#237A52] mt-0.5">{validationStats.validApaar}</div>
+            <div className="px-3 py-1">
+              <span className="text-[#64748B] text-[11px] block">{t("Valid APAARs")}</span>
+              <span className="text-base font-bold text-[#102A43] font-mono">{validationStats.validApaar}</span>
             </div>
-            <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Invalid APAARs")}</div>
-              <div className="text-lg font-bold font-mono text-[#B42318] mt-0.5">{validationStats.invalidApaar}</div>
+            <div className="px-3 py-1">
+              <span className="text-[#64748B] text-[11px] block">{t("Invalid APAARs")}</span>
+              <span className="text-base font-bold text-[#102A43] font-mono">{validationStats.invalidApaar}</span>
             </div>
-            <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">Protected Cells</div>
-              <div className="text-lg font-bold font-mono text-[#17365D] mt-0.5">{validationStats.sanitizedFormulas}</div>
+            <div className="px-3 py-1">
+              <span className="text-[#64748B] text-[11px] block">Protected Cells</span>
+              <span className="text-base font-bold text-[#102A43] font-mono">{validationStats.sanitizedFormulas}</span>
             </div>
           </div>
 

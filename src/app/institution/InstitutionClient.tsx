@@ -174,23 +174,23 @@ export default function InstitutionClient({
           </div>
         </div>
 
-        {/* 4-Column Breakdown Table */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 text-xs">
-          <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-            <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Approved intake reference")}</div>
-            <div className="text-lg font-bold font-mono text-[#17365D] mt-0.5">{currentInst.approved_intake}</div>
+        {/* Unified Institutional Audit Breakdown */}
+        <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-[4px] p-3 divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] grid grid-cols-2 sm:grid-cols-4 text-xs">
+          <div className="px-3 py-1">
+            <span className="text-[#64748B] text-[11px] block">{t("Approved intake reference")}</span>
+            <span className="text-base font-bold text-[#102A43] font-mono">{currentInst.approved_intake} seats</span>
           </div>
-          <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-            <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Actual Admissions")}</div>
-            <div className="text-lg font-bold font-mono text-[#237A52] mt-0.5">{currentInst.actual_enrolment}</div>
+          <div className="px-3 py-1">
+            <span className="text-[#64748B] text-[11px] block">{t("Actual Admissions")}</span>
+            <span className="text-base font-bold text-[#102A43] font-mono">{currentInst.actual_enrolment} enrolled</span>
           </div>
-          <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-            <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Flagged Admissions")}</div>
-            <div className="text-lg font-bold font-mono text-[#B42318] mt-0.5">{currentInst.flagged_students}</div>
+          <div className="px-3 py-1">
+            <span className="text-[#64748B] text-[11px] block">{t("Flagged Admissions")}</span>
+            <span className="text-base font-bold text-[#102A43] font-mono">{currentInst.flagged_students} flagged</span>
           </div>
-          <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-            <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Integrity Index")}</div>
-            <div className="text-lg font-bold font-mono text-[#17365D] mt-0.5">{currentInst.avg_integrity_score} / 100</div>
+          <div className="px-3 py-1">
+            <span className="text-[#64748B] text-[11px] block">{t("Integrity Index")}</span>
+            <span className="text-base font-bold text-[#102A43] font-mono">{currentInst.avg_integrity_score} / 100</span>
           </div>
         </div>
       </div>

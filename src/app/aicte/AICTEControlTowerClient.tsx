@@ -117,70 +117,81 @@ export default function AICTEControlTowerClient({
         </div>
       </div>
 
-      {/* 5 Operational Metric KPI Panels */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-        {/* Panel 1: Total Enrolment Records */}
-        <div className="border border-[#D8DEE6] border-t-4 border-t-[#17365D] bg-white p-4 sm:p-5 rounded-[2px]">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-[#5B6573]">
-            {t("Enrolment records")}
-          </div>
-          <div className="mt-2 font-mono text-2xl sm:text-3xl font-extrabold text-[#17365D]">
-            {national.total_students.toLocaleString()}
-          </div>
-          <div className="mt-1 text-[11px] leading-tight text-[#5B6573]">
-            {t("Records in the current dataset")}
-          </div>
+      {/* Unified National Admission Statistics Ribbon */}
+      <div className="bg-white border border-[#CBD5E1] rounded-[6px] shadow-xs overflow-hidden">
+        <div className="bg-[#102A43] text-white px-5 py-2.5 flex flex-wrap items-center justify-between text-xs">
+          <span className="font-bold uppercase tracking-wider text-[11px] text-[#F59E0B]">
+            {t("National Enrolment Summary Ledger")}
+          </span>
+          <span className="text-slate-300 text-[11px]">
+            {t("Central Technical Education Registry")}
+          </span>
         </div>
 
-        {/* Panel 2: Verified Compliant Records */}
-        <div className="border border-[#D8DEE6] border-t-4 border-t-[#237A52] bg-white p-4 sm:p-5 rounded-[2px]">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-[#5B6573]">
-            {t("Verified records")}
+        <div className="p-4 sm:p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-4 divide-y sm:divide-y-0 sm:divide-x divide-[#E2E8F0]">
+          {/* Metric 1 */}
+          <div className="sm:px-3">
+            <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-wider block">
+              {t("Enrolment records")}
+            </span>
+            <div className="mt-1.5 font-mono text-2xl sm:text-3xl font-extrabold text-[#102A43]">
+              {national.total_students.toLocaleString()}
+            </div>
+            <p className="mt-1 text-[11px] text-[#64748B]">
+              {t("Total reported admissions")}
+            </p>
           </div>
-          <div className="mt-2 font-mono text-2xl sm:text-3xl font-extrabold text-[#237A52]">
-            {national.verified_students.toLocaleString()}
-          </div>
-          <div className="mt-1 text-[11px] leading-tight text-[#5B6573]">
-            {Math.round((national.verified_students / (national.total_students || 1)) * 100)}% {t("of records marked verified")}
-          </div>
-        </div>
 
-        {/* Panel 3: Flagged Discrepancy Records */}
-        <div className="border border-[#D8DEE6] border-t-4 border-t-[#B42318] bg-white p-4 sm:p-5 rounded-[2px]">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-[#5B6573]">
-            {t("Flagged records")}
+          {/* Metric 2 */}
+          <div className="sm:px-4 pt-3 sm:pt-0">
+            <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-wider block">
+              {t("Verified records")}
+            </span>
+            <div className="mt-1.5 font-mono text-2xl sm:text-3xl font-extrabold text-[#102A43]">
+              {national.verified_students.toLocaleString()}
+            </div>
+            <p className="mt-1 text-[11px] text-[#64748B]">
+              {Math.round((national.verified_students / (national.total_students || 1)) * 100)}% {t("adherence rate")}
+            </p>
           </div>
-          <div className="mt-2 font-mono text-2xl sm:text-3xl font-extrabold text-[#B42318]">
-            {national.flagged_students.toLocaleString()}
-          </div>
-          <div className="mt-1 text-[11px] leading-tight text-[#5B6573]">
-            {t("Records marked for review")}
-          </div>
-        </div>
 
-        {/* Panel 4: Institutions Represented */}
-        <div className="border border-[#D8DEE6] border-t-4 border-t-[#102A43] bg-white p-4 sm:p-5 rounded-[2px]">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-[#5B6573]">
-            {t("Institutions represented")}
+          {/* Metric 3 */}
+          <div className="sm:px-4 pt-3 sm:pt-0">
+            <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-wider block">
+              {t("Flagged records")}
+            </span>
+            <div className="mt-1.5 font-mono text-2xl sm:text-3xl font-extrabold text-[#102A43]">
+              {national.flagged_students.toLocaleString()}
+            </div>
+            <p className="mt-1 text-[11px] text-[#64748B]">
+              {t("Pending review queue")}
+            </p>
           </div>
-          <div className="mt-2 font-mono text-2xl sm:text-3xl font-extrabold text-[#102A43]">
-            {national.institutions_reporting.toLocaleString()}
-          </div>
-          <div className="mt-1 text-[11px] leading-tight text-[#5B6573]">
-            {t("Distinct institutions in the dataset")}
-          </div>
-        </div>
 
-        {/* Panel 5: National Integrity Index */}
-        <div className="col-span-2 sm:col-span-1 border border-[#D8DEE6] border-t-4 border-t-[#C87524] bg-white p-4 sm:p-5 rounded-[2px]">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-[#5B6573]">
-            {t("Average integrity score")}
+          {/* Metric 4 */}
+          <div className="sm:px-4 pt-3 sm:pt-0">
+            <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-wider block">
+              {t("Institutions represented")}
+            </span>
+            <div className="mt-1.5 font-mono text-2xl sm:text-3xl font-extrabold text-[#102A43]">
+              {national.institutions_reporting.toLocaleString()}
+            </div>
+            <p className="mt-1 text-[11px] text-[#64748B]">
+              {t("Participating colleges")}
+            </p>
           </div>
-          <div className="mt-2 font-mono text-2xl sm:text-3xl font-extrabold text-[#17365D]">
-            {national.avg_integrity_score} / 100
-          </div>
-          <div className="mt-1 text-[11px] leading-tight text-[#5B6573]">
-            {t("Mean score in the current dataset")}
+
+          {/* Metric 5 */}
+          <div className="col-span-2 sm:col-span-1 sm:px-4 pt-3 sm:pt-0">
+            <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-wider block">
+              {t("Average integrity score")}
+            </span>
+            <div className="mt-1.5 font-mono text-2xl sm:text-3xl font-extrabold text-[#102A43]">
+              {national.avg_integrity_score} / 100
+            </div>
+            <p className="mt-1 text-[11px] text-[#64748B]">
+              {t("National index rating")}
+            </p>
           </div>
         </div>
       </div>

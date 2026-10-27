@@ -1,6 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getServerLocale } from "@/lib/i18n-server";
+import {
+  GraduationCap,
+  Upload,
+  Plug,
+  BarChart3,
+  CheckCircle,
+  FileText,
+  Scroll,
+  Lock,
+  Key,
+  Building2,
+  ShieldCheck,
+  ArrowRight,
+} from "lucide-react";
 
 export default async function HomePage() {
   const locale = await getServerLocale();
@@ -55,9 +69,10 @@ export default async function HomePage() {
                 />
                 <button
                   type="submit"
-                  className="w-full sm:w-auto bg-[#F59E0B] hover:bg-[#D97706] text-[#102A43] text-xs font-bold px-4 py-2 rounded-[3px] transition-colors cursor-pointer shadow-sm whitespace-nowrap"
+                  className="w-full sm:w-auto bg-[#F59E0B] hover:bg-[#D97706] text-[#102A43] text-xs font-bold px-4 py-2 rounded-[3px] transition-colors cursor-pointer shadow-sm whitespace-nowrap flex items-center justify-center gap-1.5"
                 >
-                  {isHi ? "सत्यापन करें" : "Verify Student"} &rarr;
+                  <span>{isHi ? "सत्यापन करें" : "Verify Student"}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </form>
             </div>
@@ -77,95 +92,98 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 2. Structured Institutional Services and National Verification (Government Portal Grid) */}
-      <section aria-labelledby="main-sections" className="space-y-6">
+      {/* 2. Structured Institutional Services and National Verification (Cohesive Executive Styling) */}
+      <section aria-labelledby="main-sections" className="space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* COLUMN 1: COLLEGE WORKSPACE */}
           <div className="space-y-4">
-            <div className="border-b-2 border-[#102A43] pb-2 flex items-center justify-between">
-              <h2 className="text-sm sm:text-base font-bold text-[#102A43] uppercase tracking-wide">
-                {isHi ? "कॉलेज प्रवेश एवं सीट प्रबंधन" : "College Admissions & Seats"}
-              </h2>
-              <span className="text-xs font-semibold text-[#5B6573]">
-                {isHi ? "संस्थान सेवाएँ" : "Institutional Services"}
-              </span>
+            {/* Section Banner */}
+            <div className="inline-flex items-center gap-2 bg-[#102A43] text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-[4px] shadow-xs">
+              <Building2 className="w-4 h-4 text-[#F59E0B]" />
+              <span>{isHi ? "कॉलेज सेवाएँ" : "COLLEGE SERVICES"}</span>
             </div>
 
             <div className="space-y-4">
               {/* Card 1: College Seats */}
-              <article className="border border-[#CBD5E1] border-t-4 border-t-[#17365D] bg-white p-5 rounded-[4px] hover:border-[#17365D] transition-colors shadow-xs">
-                <div>
-                  <h3 className="text-base font-bold text-[#102A43]">
-                    {isHi ? "कॉलेज सीटें और छात्र सूची" : "College Seats & Student List"}
-                  </h3>
-                  <p className="text-xs text-[#5B6573] mt-1.5 leading-relaxed">
-                    {isHi
-                      ? "स्वीकृत सीटें, भरे हुए प्रवेश और खाली सीटों की जाँच करें।"
-                      : "Check approved seat limits, admitted students, and quota status."}
-                  </p>
-                  <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
-                    <span className="text-[11px] text-[#64748B]">
-                      {isHi ? "सीट रजिस्टर एवं कोटा" : "Seat register & quota"}
-                    </span>
-                    <Link
-                      href="/institution"
-                      className="text-xs font-bold text-[#17365D] hover:underline inline-flex items-center gap-1"
-                    >
-                      <span>{isHi ? "सीटें देखें" : "Open College Seats"}</span>
-                      <span>&rarr;</span>
-                    </Link>
+              <article className="border border-[#CBD5E1] bg-white p-5 rounded-[6px] hover:border-[#17365D] hover:shadow-md transition-all">
+                <div className="flex items-start gap-4">
+                  <div className="w-11 h-11 rounded-full bg-[#102A43] text-[#F59E0B] flex items-center justify-center shrink-0 shadow-xs">
+                    <GraduationCap className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-base font-bold text-[#102A43]">
+                      {isHi ? "कॉलेज सीटें और छात्र सूची" : "College Seats & Student List"}
+                    </h2>
+                    <p className="text-xs text-[#5B6573] mt-1 leading-relaxed">
+                      {isHi
+                        ? "स्वीकृत सीटें, भरे हुए प्रवेश और खाली सीटों की जाँच करें।"
+                        : "Check approved seat limits, admitted students, and quota status."}
+                    </p>
+                    <div className="mt-4 pt-3 border-t border-[#E2E8F0]">
+                      <Link
+                        href="/institution"
+                        className="inline-flex items-center gap-1.5 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-bold py-2 px-4 rounded-[3px] transition-colors"
+                      >
+                        <span>{isHi ? "सीटें देखें" : "Open College Seats"}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </article>
 
               {/* Card 2: Upload Student List */}
-              <article className="border border-[#CBD5E1] border-t-4 border-t-[#B42318] bg-white p-5 rounded-[4px] hover:border-[#B42318] transition-colors shadow-xs">
-                <div>
-                  <h3 className="text-base font-bold text-[#102A43]">
-                    {isHi ? "छात्र सूची अपलोड करें" : "Upload Student Admission List"}
-                  </h3>
-                  <p className="text-xs text-[#5B6573] mt-1.5 leading-relaxed">
-                    {isHi
-                      ? "Excel या CSV फ़ाइल द्वारा छात्रों के प्रवेश की सूची अपलोड करें।"
-                      : "Upload student admissions list using a standard Excel or CSV file."}
-                  </p>
-                  <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
-                    <span className="text-[11px] text-[#64748B]">
-                      {isHi ? "CSV फ़ाइल अपलोड" : "CSV Batch Ingestion"}
-                    </span>
-                    <Link
-                      href="/institution/upload"
-                      className="text-xs font-bold text-[#B42318] hover:underline inline-flex items-center gap-1"
-                    >
-                      <span>{isHi ? "फ़ाइल अपलोड करें" : "Upload CSV"}</span>
-                      <span>&rarr;</span>
-                    </Link>
+              <article className="border border-[#CBD5E1] bg-white p-5 rounded-[6px] hover:border-[#17365D] hover:shadow-md transition-all">
+                <div className="flex items-start gap-4">
+                  <div className="w-11 h-11 rounded-full bg-[#102A43] text-[#F59E0B] flex items-center justify-center shrink-0 shadow-xs">
+                    <Upload className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-base font-bold text-[#102A43]">
+                      {isHi ? "छात्र सूची अपलोड करें" : "Upload Student Admission List"}
+                    </h2>
+                    <p className="text-xs text-[#5B6573] mt-1 leading-relaxed">
+                      {isHi
+                        ? "Excel या CSV फ़ाइल द्वारा छात्रों के प्रवेश की सूची अपलोड करें।"
+                        : "Upload student admissions list using a standard Excel or CSV file."}
+                    </p>
+                    <div className="mt-4 pt-3 border-t border-[#E2E8F0]">
+                      <Link
+                        href="/institution/upload"
+                        className="inline-flex items-center gap-1.5 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-bold py-2 px-4 rounded-[3px] transition-colors"
+                      >
+                        <span>{isHi ? "फ़ाइल अपलोड करें" : "Upload CSV"}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </article>
 
               {/* Card 3: Connect Software */}
-              <article className="border border-[#CBD5E1] border-t-4 border-t-[#C87524] bg-white p-5 rounded-[4px] hover:border-[#C87524] transition-colors shadow-xs">
-                <div>
-                  <h3 className="text-base font-bold text-[#102A43]">
-                    {isHi ? "कॉलेज सॉफ्टवेयर जोड़ें" : "Connect College Software"}
-                  </h3>
-                  <p className="text-xs text-[#5B6573] mt-1.5 leading-relaxed">
-                    {isHi
-                      ? "कॉलेज के ERP या एडमिशन सिस्टम को सीधे API द्वारा जोड़ें।"
-                      : "Link your college ERP or student database directly via API."}
-                  </p>
-                  <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
-                    <span className="text-[11px] text-[#64748B]">
-                      {isHi ? "सिस्टम एकीकरण" : "System Integration"}
-                    </span>
-                    <Link
-                      href="/institution/api"
-                      className="text-xs font-bold text-[#C87524] hover:underline inline-flex items-center gap-1"
-                    >
-                      <span>{isHi ? "सॉफ्टवेयर लिंक देखें" : "Connect Software"}</span>
-                      <span>&rarr;</span>
-                    </Link>
+              <article className="border border-[#CBD5E1] bg-white p-5 rounded-[6px] hover:border-[#17365D] hover:shadow-md transition-all">
+                <div className="flex items-start gap-4">
+                  <div className="w-11 h-11 rounded-full bg-[#102A43] text-[#F59E0B] flex items-center justify-center shrink-0 shadow-xs">
+                    <Plug className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-base font-bold text-[#102A43]">
+                      {isHi ? "कॉलेज सॉफ्टवेयर जोड़ें" : "Connect College Software"}
+                    </h2>
+                    <p className="text-xs text-[#5B6573] mt-1 leading-relaxed">
+                      {isHi
+                        ? "कॉलेज के ERP या एडमिशन सिस्टम को सीधे API द्वारा जोड़ें।"
+                        : "Link your college ERP or student database directly via API."}
+                    </p>
+                    <div className="mt-4 pt-3 border-t border-[#E2E8F0]">
+                      <Link
+                        href="/institution/api"
+                        className="inline-flex items-center gap-1.5 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-bold py-2 px-4 rounded-[3px] transition-colors"
+                      >
+                        <span>{isHi ? "सॉफ्टवेयर लिंक देखें" : "Connect Software"}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </article>
@@ -174,90 +192,93 @@ export default async function HomePage() {
 
           {/* COLUMN 2: SERVICES & OVERSIGHT */}
           <div className="space-y-4">
-            <div className="border-b-2 border-[#102A43] pb-2 flex items-center justify-between">
-              <h2 className="text-sm sm:text-base font-bold text-[#102A43] uppercase tracking-wide">
-                {isHi ? "राष्ट्रीय निरीक्षण एवं सत्यापन" : "National Oversight & Verification"}
-              </h2>
-              <span className="text-xs font-semibold text-[#5B6573]">
-                {isHi ? "सार्वजनिक एवं नियामक सेवाएँ" : "Public & Regulatory Services"}
-              </span>
+            {/* Section Banner */}
+            <div className="inline-flex items-center gap-2 bg-[#17365D] text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-[4px] shadow-xs">
+              <ShieldCheck className="w-4 h-4 text-[#F59E0B]" />
+              <span>{isHi ? "नागरिक एवं विनियामक सेवाएँ" : "SERVICES & OVERSIGHT"}</span>
             </div>
 
             <div className="space-y-4">
               {/* Card 4: National Overview */}
-              <article className="border border-[#CBD5E1] border-t-4 border-t-[#102A43] bg-white p-5 rounded-[4px] hover:border-[#102A43] transition-colors shadow-xs">
-                <div>
-                  <h3 className="text-base font-bold text-[#102A43]">
-                    {isHi ? "अखिल भारतीय विवरण" : "National Overview"}
-                  </h3>
-                  <p className="text-xs text-[#5B6573] mt-1.5 leading-relaxed">
-                    {isHi
-                      ? "देश भर के राज्यों की सीटें, प्रवेश आंकड़े और दोहरे दाखिले देखें।"
-                      : "View nationwide seat numbers, state-wise admissions, and duplicate student flags."}
-                  </p>
-                  <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
-                    <span className="text-[11px] text-[#64748B]">
-                      {isHi ? "राज्यवार आंकड़े एवं विश्लेषण" : "State breakdown & analytics"}
-                    </span>
-                    <Link
-                      href="/aicte"
-                      className="text-xs font-bold text-[#102A43] hover:underline inline-flex items-center gap-1"
-                    >
-                      <span>{isHi ? "डैशबोर्ड खोलें" : "Open Dashboard"}</span>
-                      <span>&rarr;</span>
-                    </Link>
+              <article className="border border-[#CBD5E1] bg-white p-5 rounded-[6px] hover:border-[#17365D] hover:shadow-md transition-all">
+                <div className="flex items-start gap-4">
+                  <div className="w-11 h-11 rounded-full bg-[#17365D] text-[#F59E0B] flex items-center justify-center shrink-0 shadow-xs">
+                    <BarChart3 className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-base font-bold text-[#102A43]">
+                      {isHi ? "अखिल भारतीय विवरण" : "National Overview"}
+                    </h2>
+                    <p className="text-xs text-[#5B6573] mt-1 leading-relaxed">
+                      {isHi
+                        ? "देश भर के राज्यों की सीटें, प्रवेश आंकड़े और दोहरे दाखिले देखें।"
+                        : "View nationwide seat numbers, state-wise admissions, and duplicate student flags."}
+                    </p>
+                    <div className="mt-4 pt-3 border-t border-[#E2E8F0]">
+                      <Link
+                        href="/aicte"
+                        className="inline-flex items-center gap-1.5 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-bold py-2 px-4 rounded-[3px] transition-colors"
+                      >
+                        <span>{isHi ? "डैशबोर्ड खोलें" : "Open Dashboard"}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </article>
 
               {/* Card 5: Verify Student Degree */}
-              <article className="border border-[#CBD5E1] border-t-4 border-t-[#237A52] bg-white p-5 rounded-[4px] hover:border-[#237A52] transition-colors shadow-xs">
-                <div>
-                  <h3 className="text-base font-bold text-[#102A43]">
-                    {isHi ? "छात्र प्रमाणपत्र सत्यापन" : "Verify Student Degree"}
-                  </h3>
-                  <p className="text-xs text-[#5B6573] mt-1.5 leading-relaxed">
-                    {isHi
-                      ? "नियोक्ता छात्र की सहमति से उनके शैक्षणिक रिकॉर्ड की जाँच कर सकते हैं।"
-                      : "Verify candidate academic records with candidate digital consent."}
-                  </p>
-                  <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
-                    <span className="text-[11px] text-[#64748B]">
-                      {isHi ? "डिजिटल सत्यापन" : "Digital Verification"}
-                    </span>
-                    <Link
-                      href="/verify"
-                      className="text-xs font-bold text-[#237A52] hover:underline inline-flex items-center gap-1"
-                    >
-                      <span>{isHi ? "सत्यापित करें" : "Verify Degree"}</span>
-                      <span>&rarr;</span>
-                    </Link>
+              <article className="border border-[#CBD5E1] bg-white p-5 rounded-[6px] hover:border-[#17365D] hover:shadow-md transition-all">
+                <div className="flex items-start gap-4">
+                  <div className="w-11 h-11 rounded-full bg-[#17365D] text-[#F59E0B] flex items-center justify-center shrink-0 shadow-xs">
+                    <CheckCircle className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-base font-bold text-[#102A43]">
+                      {isHi ? "छात्र प्रमाणपत्र सत्यापन" : "Verify Student Degree"}
+                    </h2>
+                    <p className="text-xs text-[#5B6573] mt-1 leading-relaxed">
+                      {isHi
+                        ? "नियोक्ता छात्र की सहमति से उनके शैक्षणिक रिकॉर्ड की जाँच कर सकते हैं।"
+                        : "Verify candidate academic records with candidate digital consent."}
+                    </p>
+                    <div className="mt-4 pt-3 border-t border-[#E2E8F0]">
+                      <Link
+                        href="/verify"
+                        className="inline-flex items-center gap-1.5 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-bold py-2 px-4 rounded-[3px] transition-colors"
+                      >
+                        <span>{isHi ? "सत्यापित करें" : "Verify Degree"}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </article>
 
               {/* Card 6: College Reports */}
-              <article className="border border-[#CBD5E1] border-t-4 border-t-[#4F46E5] bg-white p-5 rounded-[4px] hover:border-[#4F46E5] transition-colors shadow-xs">
-                <div>
-                  <h3 className="text-base font-bold text-[#102A43]">
-                    {isHi ? "कॉलेज रिपोर्ट और रैंकिंग" : "College Reports & Ranking"}
-                  </h3>
-                  <p className="text-xs text-[#5B6573] mt-1.5 leading-relaxed">
-                    {isHi
-                      ? "NIRF और NAAC प्रत्यायन के लिए प्रमाणित रिपोर्ट डाउनलोड करें।"
-                      : "Download certified admission summaries for NIRF and NAAC accreditation."}
-                  </p>
-                  <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
-                    <span className="text-[11px] text-[#64748B]">
-                      {isHi ? "प्रत्यायन डेटा डाउनलोड" : "NIRF / NAAC Export"}
-                    </span>
-                    <Link
-                      href="/aicte/reports"
-                      className="text-xs font-bold text-[#4F46E5] hover:underline inline-flex items-center gap-1"
-                    >
-                      <span>{isHi ? "रिपोर्ट देखें" : "View Reports"}</span>
-                      <span>&rarr;</span>
-                    </Link>
+              <article className="border border-[#CBD5E1] bg-white p-5 rounded-[6px] hover:border-[#17365D] hover:shadow-md transition-all">
+                <div className="flex items-start gap-4">
+                  <div className="w-11 h-11 rounded-full bg-[#17365D] text-[#F59E0B] flex items-center justify-center shrink-0 shadow-xs">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-base font-bold text-[#102A43]">
+                      {isHi ? "कॉलेज रिपोर्ट और रैंकिंग" : "College Reports & Ranking"}
+                    </h2>
+                    <p className="text-xs text-[#5B6573] mt-1 leading-relaxed">
+                      {isHi
+                        ? "NIRF और NAAC प्रत्यायन के लिए प्रमाणित रिपोर्ट डाउनलोड करें।"
+                        : "Download certified admission summaries for NIRF and NAAC accreditation."}
+                    </p>
+                    <div className="mt-4 pt-3 border-t border-[#E2E8F0]">
+                      <Link
+                        href="/aicte/reports"
+                        className="inline-flex items-center gap-1.5 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-bold py-2 px-4 rounded-[3px] transition-colors"
+                      >
+                        <span>{isHi ? "रिपोर्ट देखें" : "View Reports"}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </article>
@@ -265,54 +286,69 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* 3. Bottom Row: Quick Utilities (Clean 3-card strip without emojis) */}
+        {/* 3. Bottom Row: Quick Utilities */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
           {/* Card 7: Sample Certificate */}
           <Link
             href="/verify/certificate/stu-1"
-            className="p-4 bg-white border border-[#CBD5E1] rounded-[4px] hover:border-[#102A43] hover:shadow-xs transition-all group flex items-center justify-between"
+            className="p-4 bg-white border border-[#CBD5E1] rounded-[6px] hover:border-[#102A43] hover:shadow-md transition-all group flex items-center justify-between"
           >
-            <div>
-              <div className="text-xs font-bold text-[#102A43] group-hover:text-[#17365D]">
-                {isHi ? "नमूना प्रमाणपत्र देखें" : "Sample QR Certificate"}
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-[#F4F6F8] text-[#17365D] border border-[#CBD5E1] flex items-center justify-center shrink-0">
+                <Scroll className="w-4 h-4" />
               </div>
-              <div className="text-[11px] text-[#64748B] mt-0.5">
-                {isHi ? "डिजिटल क्यूआर कोड युक्त प्रमाणपत्र" : "Printable verified certificate"}
+              <div>
+                <div className="text-xs font-bold text-[#102A43] group-hover:text-[#17365D]">
+                  {isHi ? "नमूना प्रमाणपत्र देखें" : "Sample QR Certificate"}
+                </div>
+                <div className="text-[11px] text-[#64748B] mt-0.5">
+                  {isHi ? "डिजिटल क्यूआर कोड युक्त प्रमाणपत्र" : "Printable verified certificate"}
+                </div>
               </div>
             </div>
-            <span className="text-xs text-slate-400 group-hover:text-[#102A43] font-bold">&rarr;</span>
+            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-[#102A43] transition-transform group-hover:translate-x-0.5" />
           </Link>
 
           {/* Card 8: Activity Log */}
           <Link
             href="/audit"
-            className="p-4 bg-white border border-[#CBD5E1] rounded-[4px] hover:border-[#102A43] hover:shadow-xs transition-all group flex items-center justify-between"
+            className="p-4 bg-white border border-[#CBD5E1] rounded-[6px] hover:border-[#102A43] hover:shadow-md transition-all group flex items-center justify-between"
           >
-            <div>
-              <div className="text-xs font-bold text-[#102A43] group-hover:text-[#17365D]">
-                {isHi ? "गतिविधि लॉग" : "Activity Log"}
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-[#F4F6F8] text-[#17365D] border border-[#CBD5E1] flex items-center justify-center shrink-0">
+                <Lock className="w-4 h-4" />
               </div>
-              <div className="text-[11px] text-[#64748B] mt-0.5">
-                {isHi ? "डेटा बदलावों का पूरा रिकॉर्ड" : "Timestamped system history"}
+              <div>
+                <div className="text-xs font-bold text-[#102A43] group-hover:text-[#17365D]">
+                  {isHi ? "गतिविधि लॉग" : "Activity Log"}
+                </div>
+                <div className="text-[11px] text-[#64748B] mt-0.5">
+                  {isHi ? "डेटा बदलावों का पूरा रिकॉर्ड" : "Timestamped system history"}
+                </div>
               </div>
             </div>
-            <span className="text-xs text-slate-400 group-hover:text-[#102A43] font-bold">&rarr;</span>
+            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-[#102A43] transition-transform group-hover:translate-x-0.5" />
           </Link>
 
           {/* Card 9: Login */}
           <Link
             href="/login"
-            className="p-4 bg-white border border-[#CBD5E1] rounded-[4px] hover:border-[#102A43] hover:shadow-xs transition-all group flex items-center justify-between"
+            className="p-4 bg-white border border-[#CBD5E1] rounded-[6px] hover:border-[#102A43] hover:shadow-md transition-all group flex items-center justify-between"
           >
-            <div>
-              <div className="text-xs font-bold text-[#102A43] group-hover:text-[#17365D]">
-                {isHi ? "लॉगिन पोर्टल" : "Login Portal"}
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-[#F4F6F8] text-[#17365D] border border-[#CBD5E1] flex items-center justify-center shrink-0">
+                <Key className="w-4 h-4" />
               </div>
-              <div className="text-[11px] text-[#64748B] mt-0.5">
-                {isHi ? "अपने आधिकारिक खाते में जाएँ" : "Access your account"}
+              <div>
+                <div className="text-xs font-bold text-[#102A43] group-hover:text-[#17365D]">
+                  {isHi ? "लॉगिन पोर्टल" : "Login Portal"}
+                </div>
+                <div className="text-[11px] text-[#64748B] mt-0.5">
+                  {isHi ? "अपने आधिकारिक खाते में जाएँ" : "Access your account"}
+                </div>
               </div>
             </div>
-            <span className="text-xs text-slate-400 group-hover:text-[#102A43] font-bold">&rarr;</span>
+            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-[#102A43] transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
       </section>

@@ -32,22 +32,23 @@ export default async function AuditPage() {
         </div>
       </div>
 
-      {/* Summary Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white border border-[#D8DEE6] p-4 rounded-[6px] shadow-xs">
-          <div className="text-xs text-[#5B6573] font-semibold">Total Logged Events</div>
-          <div className="text-2xl font-bold text-[#17365D] mt-1 font-mono">{logs.length}</div>
+      {/* System Audit Status Bar */}
+      <div className="bg-white border border-[#CBD5E1] rounded-[6px] p-4 shadow-xs divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0">
+        <div className="sm:px-4">
+          <div className="text-xs text-[#64748B] font-semibold">Total Logged Events</div>
+          <div className="text-2xl font-bold text-[#102A43] mt-1 font-mono">{logs.length} entries</div>
         </div>
-
-        <div className="bg-white border border-[#D8DEE6] p-4 rounded-[6px] shadow-xs">
-          <div className="text-xs text-[#5B6573] font-semibold">Security State</div>
-          <div className="text-2xl font-bold text-[#059669] mt-1">Normal</div>
+        <div className="sm:px-4 pt-3 sm:pt-0">
+          <div className="text-xs text-[#64748B] font-semibold">Security Integrity State</div>
+          <div className="text-2xl font-bold text-[#102A43] mt-1 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" aria-hidden="true" />
+            <span>Normal & Active</span>
+          </div>
         </div>
-
-        <div className="bg-white border border-[#D8DEE6] p-4 rounded-[6px] shadow-xs">
-          <div className="text-xs text-[#5B6573] font-semibold">Last Checked</div>
-          <div className="text-sm font-bold text-[#17365D] mt-1 font-mono">
-            {new Date().toLocaleTimeString()}
+        <div className="sm:px-4 pt-3 sm:pt-0">
+          <div className="text-xs text-[#64748B] font-semibold">System Synchronization Time</div>
+          <div className="text-base font-bold text-[#102A43] mt-1 font-mono">
+            {new Date().toLocaleTimeString()} IST
           </div>
         </div>
       </div>
