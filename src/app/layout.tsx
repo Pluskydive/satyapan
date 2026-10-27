@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   title: "SATYAPAN (सत्यापन) | Enrolment Integrity Platform",
   description: "National Student Enrolment Integrity and APAAR Registry Platform. Developed by Team PRAMAANIT.",
   robots: { index: false, follow: false },
+  icons: {
+    icon: "data:,",
+  },
 };
 
 export default async function RootLayout({
