@@ -38,12 +38,7 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-slate-700/60">
             {/* Column 1: Product & Team PRAMAANIT */}
             <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <img
-                  src="/pramaanit-logo.jpg"
-                  alt="Team PRAMAANIT"
-                  className="h-9 w-auto bg-white p-0.5 rounded-[3px] border border-slate-600 shadow-xs"
-                />
+              <div className="flex items-center space-x-2">
                 <span className="font-black text-white text-base tracking-tight">SATYAPAN</span>
                 <span className="text-[10px] px-1.5 py-0.5 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
                   Team PRAMAANIT
