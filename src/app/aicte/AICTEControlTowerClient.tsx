@@ -222,50 +222,70 @@ export default function AICTEControlTowerClient({
   });
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-8 sm:py-8">
-      {/* 1. Executive National Command Header */}
-      <div className="bg-white border border-[#CBD5E1] p-5 rounded-[4px] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="mx-auto max-w-7xl space-y-4 px-4 py-4 sm:px-6 sm:py-6">
+      {/* Maharashtra.gov.in Official Breadcrumb */}
+      <div className="bg-[#EAEFF5] border border-[#CBD5E1] px-4 py-1.5 rounded-[2px] text-xs text-[#334155] flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 text-[11px]">
+          <Link href="/" className="text-[#205081] font-semibold hover:underline">
+            मुख्य पृष्ठ / Home
+          </Link>
+          <span className="text-[#94A3B8]">&gt;</span>
+          <span className="text-[#205081] font-semibold">
+            तंत्रशिक्षण संचालनालय, महाराष्ट्र राज्य / DTE Maharashtra &amp; AICTE
+          </span>
+          <span className="text-[#94A3B8]">&gt;</span>
+          <span className="text-[#102A43] font-bold">
+            प्रवेश सत्यनिष्ठा महामंडळ / National Enrolment Ledger
+          </span>
+        </div>
+        <div className="hidden sm:block text-[10px] font-mono text-[#64748B]">
+          Academic Year 2026-27 | GIGW Compliant
+        </div>
+      </div>
+
+      {/* 1. Maharashtra.gov.in Department Header Block */}
+      <div className="bg-white border-l-4 border-l-[#FF9933] border-y border-r border-[#CBD5E1] p-4 sm:p-5 rounded-[2px] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" aria-hidden="true" />
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#10B981]">
-              Live Multi-State Registry Connected
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#205081]">
+              महाराष्ट्र शासन • Government of Maharashtra • AICTE Central Registry
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#102A43] mt-1">
-            National Admission Overview &amp; Verification
+            राष्ट्रीय छात्र प्रवेश आढावा व पडताळणी / National Admission Overview &amp; Verification
           </h1>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={handleRefresh}
             disabled={isRunning}
-            className="inline-flex items-center gap-1.5 border border-[#CBD5E1] bg-white px-3.5 py-2 text-xs font-semibold text-[#17365D] hover:bg-[#F8FAFC] disabled:opacity-50 rounded-[2px] transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 border border-[#205081] bg-white px-3 py-1.5 text-xs font-semibold text-[#205081] hover:bg-[#F4F6F9] disabled:opacity-50 rounded-[2px] transition-colors cursor-pointer"
           >
             <RotateCw className={`w-3.5 h-3.5 ${isRunning ? "animate-spin" : ""}`} />
-            <span>{isRunning ? t("Refreshing…") : "Refresh"}</span>
+            <span>{isRunning ? t("Refreshing…") : "माहिती अद्यतन करा / Refresh"}</span>
           </button>
           <button
             type="button"
             onClick={handleRunIntegrity}
             disabled={isRunning}
-            className="inline-flex items-center gap-1.5 bg-[#17365D] hover:bg-[#102A43] px-4 py-2 text-xs font-bold text-white disabled:opacity-50 rounded-[2px] transition-colors cursor-pointer shadow-xs"
+            className="inline-flex items-center gap-1.5 bg-[#205081] hover:bg-[#112D4E] px-3.5 py-1.5 text-xs font-bold text-white disabled:opacity-50 rounded-[2px] transition-colors cursor-pointer shadow-xs"
           >
-            <ShieldAlert className="w-3.5 h-3.5 text-[#F59E0B]" />
-            <span>{isRunning ? "Checking Records…" : "Run Record Check"}</span>
+            <ShieldAlert className="w-3.5 h-3.5 text-[#FF9933]" />
+            <span>{isRunning ? "तपासणी सुरू आहे..." : "नोंदणी पडताळणी / Run Record Check"}</span>
           </button>
         </div>
       </div>
 
-      {/* 2. SIH Live Collision Simulation Controls */}
-      <div className="bg-white border border-[#CBD5E1] rounded-[4px] shadow-xs overflow-hidden">
-        <div className="bg-[#102A43] text-white px-5 py-2.5 flex flex-wrap items-center justify-between text-xs gap-3">
+      {/* 2. Maharashtra Government Anomaly Simulation Bench */}
+      <div className="bg-white border border-[#CBD5E1] border-t-2 border-t-[#FF9933] rounded-[2px] shadow-xs overflow-hidden">
+        <div className="bg-[#205081] text-white px-4 py-2.5 flex flex-wrap items-center justify-between text-xs gap-3">
           <div className="flex items-center gap-2">
-            <Zap className="w-3.5 h-3.5 text-[#F59E0B]" />
+            <Zap className="w-3.5 h-3.5 text-[#FF9933]" />
             <span className="font-bold uppercase tracking-wider text-[11px] text-white">
-              Real-Time Fraud &amp; Anomaly Simulator
+              प्रवेश विसंगती प्रत्यक्ष चाचणी कक्ष / Real-Time Fraud &amp; Anomaly Simulator
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -273,33 +293,33 @@ export default function AICTEControlTowerClient({
               type="button"
               onClick={handleSimulateCrossState}
               disabled={isSimulating}
-              className={`px-3 py-1.5 text-xs font-bold rounded-[2px] transition-colors cursor-pointer ${
+              className={`px-3 py-1 text-xs font-bold rounded-[2px] transition-colors cursor-pointer ${
                 simulationMode === "cross_state"
-                  ? "bg-[#E11D48] text-white"
-                  : "bg-[#2563EB] hover:bg-[#1D4ED8] text-white"
+                  ? "bg-[#B42318] text-white"
+                  : "bg-[#FF9933] hover:bg-[#E67300] text-[#102A43]"
               } disabled:opacity-50`}
             >
-              Simulate Cross-State Collision (Pune vs Bengaluru)
+              Cross-State Collision Test (Pune vs Bengaluru)
             </button>
             <button
               type="button"
               onClick={handleSimulateQuotaBreach}
               disabled={isSimulating}
-              className={`px-3 py-1.5 text-xs font-bold rounded-[2px] transition-colors cursor-pointer ${
+              className={`px-3 py-1 text-xs font-bold rounded-[2px] transition-colors cursor-pointer ${
                 simulationMode === "quota_breach"
-                  ? "bg-[#D97706] text-white"
-                  : "bg-[#334155] hover:bg-[#475569] text-white border border-slate-600"
+                  ? "bg-[#B42318] text-white"
+                  : "bg-white/10 hover:bg-white/20 text-white border border-white/30"
               } disabled:opacity-50`}
             >
-              Simulate Quota Ceiling Breach
+              Supernumerary Quota Breach Test
             </button>
             {simulationMode !== "idle" && (
               <button
                 type="button"
                 onClick={handleResetSimulation}
-                className="px-2.5 py-1.5 text-xs font-semibold bg-white/10 hover:bg-white/20 text-white rounded-[2px] border border-white/30 transition-colors cursor-pointer"
+                className="px-2.5 py-1 text-xs font-semibold bg-white/20 hover:bg-white/30 text-white rounded-[2px] transition-colors cursor-pointer"
               >
-                Reset
+                मूळ स्थिती / Reset
               </button>
             )}
           </div>
@@ -307,46 +327,48 @@ export default function AICTEControlTowerClient({
 
         {/* Tabular Collision Finding (When Simulation Active) */}
         {simulationMode === "cross_state" && (
-          <div className="p-4 bg-[#FEF2F2] border-t border-[#FECDCA]">
+          <div className="p-3 bg-[#FFF7ED] border-t border-[#FED7AA]">
             <div className="overflow-x-auto">
-              <table className="w-full text-xs border-collapse">
+              <table className="w-full text-xs border border-[#CBD5E1] bg-white">
                 <thead>
-                  <tr className="border-b border-[#FECDCA] text-[10px] font-bold uppercase text-[#991B1B]">
-                    <th className="py-1.5 px-3 text-left">Incident Finding</th>
-                    <th className="py-1.5 px-3 text-left">Primary Seat (Maharashtra)</th>
-                    <th className="py-1.5 px-3 text-left">Conflicting Claim (Karnataka)</th>
-                    <th className="py-1.5 px-3 text-left">Regulatory Finding</th>
-                    <th className="py-1.5 px-3 text-right">Action</th>
+                  <tr className="bg-[#205081] text-white text-[11px] font-bold">
+                    <th className="py-2 px-3 text-center w-14 border border-[#112D4E]">क्र. / Sr.</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">तपासणी विषय / Incident</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">महाराष्ट्र राज्य प्रवेश / Primary Allotment (Pune)</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">कर्नाटक राज्य प्रवेश / Conflicting Claim (Bengaluru)</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">शासकीय निर्णय / Regulatory Finding</th>
+                    <th className="py-2 px-3 text-center border border-[#112D4E] w-24">कृती / Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#FECDCA] text-[#7F1D1D]">
-                  <tr>
-                    <td className="py-2.5 px-3 font-bold font-mono">
-                      Candidate: Rahul S. Verma<br />
-                      <span className="text-[10px] font-mono text-[#991B1B]">APAAR: 1000 0000 0020</span>
+                <tbody className="divide-y divide-[#CBD5E1] text-[#202B36]">
+                  <tr className="bg-[#FFF5F5]">
+                    <td className="py-2.5 px-3 text-center font-bold border border-[#CBD5E1]">1</td>
+                    <td className="py-2.5 px-3 border border-[#CBD5E1]">
+                      <span className="font-bold text-[#B42318] block font-mono">DUP_001 Collision</span>
+                      <span className="text-[11px]">Rahul S. Verma (APAAR: 1000 0000 0020)</span>
                     </td>
-                    <td className="py-2.5 px-3">
-                      <strong>COEP Pune</strong> (1-3327145) • B.Tech CSE<br />
-                      <span className="font-mono text-[10px] text-[#991B1B]">Allotted: 14-Jul-2026 10:24 IST (CAP Round 1)</span>
+                    <td className="py-2.5 px-3 border border-[#CBD5E1]">
+                      <strong>COEP Pune (1-3327145)</strong> • B.Tech CSE<br />
+                      <span className="font-mono text-[10px] text-[#64748B]">State CAP Round 1 • 14-Jul-2026 10:24 IST</span>
                     </td>
-                    <td className="py-2.5 px-3">
-                      <strong>RVCE Bengaluru</strong> (1-4569123) • B.E. CS<br />
-                      <span className="font-mono text-[10px] text-[#991B1B]">Allotted: 18-Jul-2026 15:42 IST (+96h Concurrency)</span>
+                    <td className="py-2.5 px-3 border border-[#CBD5E1]">
+                      <strong>RVCE Bengaluru (1-4569123)</strong> • B.E. CS<br />
+                      <span className="font-mono text-[10px] text-[#B42318]">KEA Quota • 18-Jul-2026 15:42 IST (+96h)</span>
                     </td>
-                    <td className="py-2.5 px-3">
-                      AICTE APH Clause 12.4 Breach<br />
-                      <span className="text-[10px] font-semibold text-[#991B1B]">Automated Vacancy Re-allocation Triggered</span>
+                    <td className="py-2.5 px-3 border border-[#CBD5E1]">
+                      <span className="font-bold text-[#B42318] block">AICTE APH Clause 12.4 Breach</span>
+                      <span className="text-[10px] text-[#64748B]">Automated Vacancy Re-allocation Triggered</span>
                     </td>
-                    <td className="py-2.5 px-3 text-right">
+                    <td className="py-2.5 px-3 text-center border border-[#CBD5E1]">
                       <button
                         type="button"
                         onClick={() => {
                           const el = document.getElementById("flag-search-input");
                           if (el) el.scrollIntoView({ behavior: "smooth" });
                         }}
-                        className="px-2.5 py-1 bg-[#B91C1C] hover:bg-[#991B1B] text-white text-xs font-bold rounded-[2px] transition-colors cursor-pointer"
+                        className="px-2.5 py-1 bg-[#205081] hover:bg-[#112D4E] text-white text-xs font-bold rounded-[2px] transition-colors cursor-pointer"
                       >
-                        Inspect Row &darr;
+                        पहा / View &darr;
                       </button>
                     </td>
                   </tr>
@@ -357,26 +379,28 @@ export default function AICTEControlTowerClient({
         )}
 
         {simulationMode === "quota_breach" && (
-          <div className="p-4 bg-[#FFFBEB] border-t border-[#FEDF89]">
+          <div className="p-3 bg-[#FFF7ED] border-t border-[#FED7AA]">
             <div className="overflow-x-auto">
-              <table className="w-full text-xs border-collapse">
+              <table className="w-full text-xs border border-[#CBD5E1] bg-white">
                 <thead>
-                  <tr className="border-b border-[#FEDF89] text-[10px] font-bold uppercase text-[#92400E]">
-                    <th className="py-1.5 px-3 text-left">Reporting Institution</th>
-                    <th className="py-1.5 px-3 text-left">Quota Category</th>
-                    <th className="py-1.5 px-3 text-center">Approved Ceiling</th>
-                    <th className="py-1.5 px-3 text-center">Enrolled Candidates</th>
-                    <th className="py-1.5 px-3 text-left">Statutory Finding</th>
+                  <tr className="bg-[#205081] text-white text-[11px] font-bold">
+                    <th className="py-2 px-3 text-center w-14 border border-[#112D4E]">क्र. / Sr.</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">संस्था / Reporting Institution</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">प्रवर्ग / Quota Category</th>
+                    <th className="py-2 px-3 text-center border border-[#112D4E]">मंजूर जागा / Ceiling</th>
+                    <th className="py-2 px-3 text-center border border-[#112D4E]">दाखल विद्यार्थी / Enrolled</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">शासकीय स्थिती / Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#FEDF89] text-[#78350F]">
+                <tbody className="divide-y divide-[#CBD5E1] text-[#202B36]">
                   <tr>
-                    <td className="py-2.5 px-3 font-bold">Apex Institute of Technology, Mumbai (1-1003921)</td>
-                    <td className="py-2.5 px-3">Non-Resident Indian (NRI Quota)</td>
-                    <td className="py-2.5 px-3 text-center font-mono font-bold">15 Seats</td>
-                    <td className="py-2.5 px-3 text-center font-mono font-bold text-[#B91C1C]">19 Admissions (+4)</td>
-                    <td className="py-2.5 px-3">
-                      <span className="px-2 py-0.5 bg-[#FEF2F2] border border-[#FECDCA] text-[#991B1B] text-[10px] font-bold uppercase rounded-[2px]">
+                    <td className="py-2.5 px-3 text-center font-bold border border-[#CBD5E1]">1</td>
+                    <td className="py-2.5 px-3 font-bold border border-[#CBD5E1]">Apex Institute of Technology, Mumbai (1-1003921)</td>
+                    <td className="py-2.5 px-3 border border-[#CBD5E1]">Non-Resident Indian (NRI Quota)</td>
+                    <td className="py-2.5 px-3 text-center font-mono font-bold border border-[#CBD5E1]">15 Seats</td>
+                    <td className="py-2.5 px-3 text-center font-mono font-bold text-[#B42318] border border-[#CBD5E1]">19 Admissions (+4)</td>
+                    <td className="py-2.5 px-3 border border-[#CBD5E1]">
+                      <span className="px-2 py-0.5 bg-[#FEF2F2] border border-[#FECDCA] text-[#B42318] text-[10px] font-bold uppercase rounded-[2px]">
                         AICTE Section 10(k) Notice Issued
                       </span>
                     </td>
@@ -388,22 +412,22 @@ export default function AICTEControlTowerClient({
         )}
       </div>
 
-      {/* 3. Unified Government National Executive Summary Ledger */}
-      <div className="bg-white border border-[#CBD5E1] rounded-[4px] shadow-xs overflow-hidden">
-        <div className="bg-[#102A43] text-white px-5 py-2.5 flex items-center justify-between text-xs">
-          <span className="font-bold uppercase tracking-wider text-[11px] text-[#F59E0B]">
-            National Admission Executive Status Ledger
+      {/* 3. Maharashtra.gov.in Official Executive Status Ledger */}
+      <div className="bg-white border border-[#CBD5E1] rounded-[2px] shadow-xs overflow-hidden">
+        <div className="bg-[#205081] text-white px-4 py-2 flex items-center justify-between text-xs">
+          <span className="font-bold uppercase tracking-wider text-[11px]">
+            राज्य व राष्ट्रीय प्रवेश सद्यस्थिती तक्ता / State &amp; National Enrolment Status Ledger
           </span>
-          <span className="font-mono text-slate-300 text-[11px]">
-            Reporting Jurisdictions: {states.length} States • Updated Live
+          <span className="font-mono text-slate-200 text-[11px]">
+            क्षेत्र / Reporting States: {states.length} • Updated Live
           </span>
         </div>
 
         {/* Flat horizontal government ledger */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] text-xs">
-          <div className="p-4 bg-[#F8FAFC]">
+          <div className="p-3.5 bg-[#F4F6F9]">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-              Integrity Standing
+              सत्यनिष्ठा गुण / Integrity Score
             </span>
             <div className="flex items-baseline gap-1 mt-1">
               <span className="font-mono text-2xl font-black text-[#102A43]">{integrityScore}</span>
@@ -415,16 +439,16 @@ export default function AICTEControlTowerClient({
                   ? "bg-[#ECFDF5] text-[#059669]"
                   : integrityScore >= 70
                   ? "bg-[#FFFBEB] text-[#D97706]"
-                  : "bg-[#FEF2F2] text-[#E11D48]"
+                  : "bg-[#FEF2F2] text-[#B42318]"
               }`}
             >
               {integrityScore >= 90 ? "High Compliance" : integrityScore >= 70 ? "Moderate" : "Reconciliation Active"}
             </span>
           </div>
 
-          <div className="p-4">
+          <div className="p-3.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-              Total Admissions
+              एकूण प्रवेश / Total Admissions
             </span>
             <div className="font-mono text-2xl font-black text-[#102A43] mt-1">
               {totalStudents.toLocaleString()}
@@ -432,9 +456,9 @@ export default function AICTEControlTowerClient({
             <span className="text-[10px] text-[#64748B]">Sanctioned Enrolment</span>
           </div>
 
-          <div className="p-4">
+          <div className="p-3.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-              Verified Admissions
+              प्रमाणित प्रवेश / Verified
             </span>
             <div className="font-mono text-2xl font-black text-[#059669] mt-1">
               {verifiedCount.toLocaleString()}
@@ -442,19 +466,19 @@ export default function AICTEControlTowerClient({
             <span className="text-[10px] font-mono font-bold text-[#059669]">{verifiedPct}% Compliant</span>
           </div>
 
-          <div className="p-4">
+          <div className="p-3.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-              Review Queue
+              पडताळणी रांग / Review Queue
             </span>
-            <div className="font-mono text-2xl font-black text-[#E11D48] mt-1">
+            <div className="font-mono text-2xl font-black text-[#B42318] mt-1">
               {flaggedCount.toLocaleString()}
             </div>
-            <span className="text-[10px] font-mono font-bold text-[#E11D48]">{flaggedPct}% Discrepancies</span>
+            <span className="text-[10px] font-mono font-bold text-[#B42318]">{flaggedPct}% Discrepancies</span>
           </div>
 
-          <div className="p-4">
+          <div className="p-3.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-              Reporting Colleges
+              नोंदणीकृत महाविद्यालये / Colleges
             </span>
             <div className="font-mono text-2xl font-black text-[#102A43] mt-1">
               {national.institutions_reporting}
@@ -462,87 +486,95 @@ export default function AICTEControlTowerClient({
             <span className="text-[10px] text-[#64748B]">Approved Institutions</span>
           </div>
 
-          <div className="p-4">
+          <div className="p-3.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-              States / UTs
+              राज्य व केंद्रशासित प्रदेश / States
             </span>
             <div className="font-mono text-2xl font-black text-[#102A43] mt-1">
               {states.length}
             </div>
-            <span className="text-[10px] text-[#64748B]">Reporting Regions</span>
+            <span className="text-[10px] text-[#64748B]">Jurisdictions</span>
           </div>
         </div>
       </div>
 
-      {/* 4. State Intake & Statutory Quota Ledgers (Pure Tabular Government Layout) */}
-      <div className="bg-white border border-[#CBD5E1] rounded-[4px] shadow-xs overflow-hidden">
-        <div className="bg-[#F8FAFC] border-b border-[#CBD5E1] px-5 py-3 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-[#102A43]">
-            State Intake &amp; Statutory Quota Ledgers
-          </h2>
-
-          <div className="flex items-center gap-1 bg-white border border-[#CBD5E1] p-0.5 rounded-[2px] text-xs">
+      {/* 4. Maharashtra Government Style State & Quota Tables */}
+      <div className="bg-white border border-[#CBD5E1] rounded-[2px] shadow-xs overflow-hidden">
+        {/* Government Folder Navigation Tabs */}
+        <div className="bg-[#EAEFF5] border-b border-[#CBD5E1] px-4 pt-2 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-1 text-xs">
             <button
               type="button"
               onClick={() => setActiveTab("both")}
-              className={`px-3 py-1 font-semibold rounded-[2px] transition-colors cursor-pointer ${
-                activeTab === "both" ? "bg-[#17365D] text-white" : "text-[#5B6573] hover:text-[#17365D]"
+              className={`px-3.5 py-2 font-bold rounded-t-[2px] transition-colors cursor-pointer border-t border-x ${
+                activeTab === "both"
+                  ? "bg-white text-[#205081] border-t-2 border-t-[#FF9933] border-x-[#CBD5E1] -mb-[1px]"
+                  : "bg-transparent text-[#475569] border-transparent hover:text-[#205081]"
               }`}
             >
-              Unified View
+              संयुक्त तक्ता / Unified View
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("states")}
-              className={`px-3 py-1 font-semibold rounded-[2px] transition-colors cursor-pointer ${
-                activeTab === "states" ? "bg-[#17365D] text-white" : "text-[#5B6573] hover:text-[#17365D]"
+              className={`px-3.5 py-2 font-bold rounded-t-[2px] transition-colors cursor-pointer border-t border-x ${
+                activeTab === "states"
+                  ? "bg-white text-[#205081] border-t-2 border-t-[#FF9933] border-x-[#CBD5E1] -mb-[1px]"
+                  : "bg-transparent text-[#475569] border-transparent hover:text-[#205081]"
               }`}
             >
-              State-Wise
+              राज्यनिहाय तक्ता / State-Wise
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("categories")}
-              className={`px-3 py-1 font-semibold rounded-[2px] transition-colors cursor-pointer ${
-                activeTab === "categories" ? "bg-[#17365D] text-white" : "text-[#5B6573] hover:text-[#17365D]"
+              className={`px-3.5 py-2 font-bold rounded-t-[2px] transition-colors cursor-pointer border-t border-x ${
+                activeTab === "categories"
+                  ? "bg-white text-[#205081] border-t-2 border-t-[#FF9933] border-x-[#CBD5E1] -mb-[1px]"
+                  : "bg-transparent text-[#475569] border-transparent hover:text-[#205081]"
               }`}
             >
-              Quota Distribution
+              प्रवर्गनिहाय कोटा / Quota Distribution
             </button>
+          </div>
+
+          <div className="text-[11px] font-mono text-[#64748B] pb-2 sm:pb-0">
+            Directive: AICTE APH Regulations 2026-27
           </div>
         </div>
 
-        <div className="p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* State Table */}
+        <div className="p-4 grid grid-cols-1 lg:grid-cols-2 gap-6 bg-white">
+          {/* State Table (Maharashtra Portal Layout) */}
           {(activeTab === "both" || activeTab === "states") && (
-            <div className={`space-y-3 ${activeTab === "states" ? "lg:col-span-2" : ""}`}>
-              <div className="flex items-center justify-between pb-1.5 border-b border-[#CBD5E1]">
-                <span className="font-bold text-xs uppercase tracking-wider text-[#102A43]">
-                  Admissions by State Jurisdiction
+            <div className={`space-y-2 ${activeTab === "states" ? "lg:col-span-2" : ""}`}>
+              <div className="flex items-center justify-between pb-1">
+                <span className="font-bold text-xs uppercase tracking-wider text-[#205081]">
+                  राज्यनिहाय विद्यार्थी संख्या / Admissions by State Jurisdiction
                 </span>
                 {selectedStateFilter !== "ALL" && (
                   <button
                     type="button"
                     onClick={() => setSelectedStateFilter("ALL")}
-                    className="text-[11px] font-bold text-[#2563EB] hover:underline cursor-pointer"
+                    className="text-[11px] font-bold text-[#205081] hover:underline cursor-pointer"
                   >
-                    Clear Filter ({selectedStateFilter})
+                    फिल्टर रद्द करा / Clear ({selectedStateFilter})
                   </button>
                 )}
               </div>
 
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto border border-[#CBD5E1]">
                 <table className="w-full text-left text-xs border-collapse">
-                  <thead className="bg-[#F8FAFC] text-[#64748B] uppercase text-[10px] font-bold border-b border-[#CBD5E1]">
+                  <thead className="bg-[#205081] text-white uppercase text-[10px] font-bold">
                     <tr>
-                      <th className="py-2 px-3">State / UT</th>
-                      <th className="py-2 px-3 text-right">Admitted Students</th>
-                      <th className="py-2 px-3 text-right">National Share</th>
-                      <th className="py-2 px-3 text-right">Action</th>
+                      <th className="py-2 px-3 border-r border-[#112D4E] w-12 text-center">क्र.</th>
+                      <th className="py-2 px-3 border-r border-[#112D4E]">राज्य / State or UT</th>
+                      <th className="py-2 px-3 text-right border-r border-[#112D4E]">प्रवेशित विद्यार्थी / Students</th>
+                      <th className="py-2 px-3 text-right border-r border-[#112D4E]">टक्केवारी / Share %</th>
+                      <th className="py-2 px-3 text-center w-24">कृती / Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#E2E8F0] text-[#1E293B]">
-                    {states.map((st) => {
+                  <tbody className="divide-y divide-[#CBD5E1] text-[#202B36]">
+                    {states.map((st, index) => {
                       const share = Math.round((st.students / totalStudents) * 100);
                       const isFiltered = selectedStateFilter === st.state;
                       return (
@@ -550,28 +582,35 @@ export default function AICTEControlTowerClient({
                           key={st.state}
                           onClick={() => setSelectedStateFilter(isFiltered ? "ALL" : st.state)}
                           className={`cursor-pointer transition-colors ${
-                            isFiltered ? "bg-[#EFF6FF] font-semibold" : "hover:bg-[#F8FAFC]"
+                            isFiltered
+                              ? "bg-[#EFF6FF] font-semibold"
+                              : index % 2 === 0
+                              ? "bg-white hover:bg-[#EAEFF5]"
+                              : "bg-[#F4F6F9] hover:bg-[#EAEFF5]"
                           }`}
                         >
-                          <td className="py-2.5 px-3">
+                          <td className="py-2.5 px-3 text-center font-bold text-[#64748B] border-r border-[#CBD5E1]">
+                            {index + 1}
+                          </td>
+                          <td className="py-2.5 px-3 border-r border-[#CBD5E1]">
                             <div className="flex items-center gap-2">
                               <span className="font-bold text-[#102A43]">{st.state}</span>
                               {isFiltered && (
-                                <span className="text-[9px] bg-[#2563EB] text-white px-1.5 py-0.2 rounded font-mono">
-                                  FILTERED
+                                <span className="text-[9px] bg-[#205081] text-white px-1.5 py-0.2 rounded font-mono">
+                                  निवडलेले / ACTIVE
                                 </span>
                               )}
                             </div>
                           </td>
-                          <td className="py-2.5 px-3 text-right font-mono font-bold text-[#102A43]">
+                          <td className="py-2.5 px-3 text-right font-mono font-bold text-[#102A43] border-r border-[#CBD5E1]">
                             {st.students.toLocaleString()}
                           </td>
-                          <td className="py-2.5 px-3 text-right font-mono text-[#475569]">
+                          <td className="py-2.5 px-3 text-right font-mono text-[#475569] border-r border-[#CBD5E1]">
                             {share}%
                           </td>
-                          <td className="py-2.5 px-3 text-right">
-                            <span className="text-[11px] text-[#2563EB] font-bold hover:underline">
-                              {isFiltered ? "Reset" : "Filter"}
+                          <td className="py-2.5 px-3 text-center">
+                            <span className="text-[11px] text-[#205081] font-bold hover:underline">
+                              {isFiltered ? "रद्द करा" : "फिल्टर"}
                             </span>
                           </td>
                         </tr>
@@ -583,70 +622,83 @@ export default function AICTEControlTowerClient({
             </div>
           )}
 
-          {/* Quota Table */}
+          {/* Quota Table (Maharashtra Portal Layout) */}
           {(activeTab === "both" || activeTab === "categories") && (
-            <div className={`space-y-3 ${activeTab === "categories" ? "lg:col-span-2" : ""}`}>
-              <div className="flex items-center justify-between pb-1.5 border-b border-[#CBD5E1]">
-                <span className="font-bold text-xs uppercase tracking-wider text-[#102A43]">
-                  Statutory Quota Allocation
+            <div className={`space-y-2 ${activeTab === "categories" ? "lg:col-span-2" : ""}`}>
+              <div className="flex items-center justify-between pb-1">
+                <span className="font-bold text-xs uppercase tracking-wider text-[#205081]">
+                  वैधानिक प्रवर्गनिहाय कोटा / Statutory Quota Allocation
                 </span>
                 <span className="text-[10px] font-mono text-[#64748B]">AICTE APH Limits</span>
               </div>
 
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto border border-[#CBD5E1]">
                 <table className="w-full text-left text-xs border-collapse">
-                  <thead className="bg-[#F8FAFC] text-[#64748B] uppercase text-[10px] font-bold border-b border-[#CBD5E1]">
+                  <thead className="bg-[#205081] text-white uppercase text-[10px] font-bold">
                     <tr>
-                      <th className="py-2 px-3">Quota Category</th>
-                      <th className="py-2 px-3 text-right">Admitted</th>
-                      <th className="py-2 px-3 text-right">Share %</th>
-                      <th className="py-2 px-3 text-center">Status</th>
+                      <th className="py-2 px-3 border-r border-[#112D4E] w-12 text-center">क्र.</th>
+                      <th className="py-2 px-3 border-r border-[#112D4E]">प्रवर्ग / Quota Category</th>
+                      <th className="py-2 px-3 text-right border-r border-[#112D4E]">विद्यार्थी / Count</th>
+                      <th className="py-2 px-3 text-right border-r border-[#112D4E]">प्रमाण / Share %</th>
+                      <th className="py-2 px-3 text-center w-28">स्थिती / Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#E2E8F0] text-[#1E293B]">
-                    <tr>
-                      <td className="py-2.5 px-3 font-semibold text-[#102A43]">Indian Domestic (General / Reserved)</td>
-                      <td className="py-2.5 px-3 text-right font-mono font-bold">{domesticCount.toLocaleString()}</td>
-                      <td className="py-2.5 px-3 text-right font-mono">{domesticPct}%</td>
+                  <tbody className="divide-y divide-[#CBD5E1] text-[#202B36]">
+                    <tr className="bg-white hover:bg-[#EAEFF5]">
+                      <td className="py-2.5 px-3 text-center font-bold text-[#64748B] border-r border-[#CBD5E1]">1</td>
+                      <td className="py-2.5 px-3 font-semibold text-[#102A43] border-r border-[#CBD5E1]">
+                        भारतीय सर्वसाधारण व राखीव / Indian Domestic (General/Reserved)
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold border-r border-[#CBD5E1]">{domesticCount.toLocaleString()}</td>
+                      <td className="py-2.5 px-3 text-right font-mono border-r border-[#CBD5E1]">{domesticPct}%</td>
                       <td className="py-2.5 px-3 text-center">
-                        <span className="px-1.5 py-0.5 bg-[#ECFDF5] text-[#059669] text-[9px] font-mono font-bold rounded-[2px]">
-                          NORMAL
+                        <span className="px-1.5 py-0.5 bg-[#ECFDF5] text-[#059669] text-[9px] font-mono font-bold rounded-[2px] border border-[#A7F3D0]">
+                          नियमानुसार / VALID
                         </span>
                       </td>
                     </tr>
-                    <tr>
-                      <td className="py-2.5 px-3 font-semibold text-[#102A43]">Non-Resident Indian (NRI Quota)</td>
-                      <td className="py-2.5 px-3 text-right font-mono font-bold">{effectiveNriStudents.toLocaleString()}</td>
-                      <td className="py-2.5 px-3 text-right font-mono">{nriPct}%</td>
+                    <tr className="bg-[#F4F6F9] hover:bg-[#EAEFF5]">
+                      <td className="py-2.5 px-3 text-center font-bold text-[#64748B] border-r border-[#CBD5E1]">2</td>
+                      <td className="py-2.5 px-3 font-semibold text-[#102A43] border-r border-[#CBD5E1]">
+                        अनिवासी भारतीय / Non-Resident Indian (NRI Quota)
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold border-r border-[#CBD5E1]">{effectiveNriStudents.toLocaleString()}</td>
+                      <td className="py-2.5 px-3 text-right font-mono border-r border-[#CBD5E1]">{nriPct}%</td>
                       <td className="py-2.5 px-3 text-center">
                         <span
-                          className={`px-1.5 py-0.5 text-[9px] font-mono font-bold rounded-[2px] ${
+                          className={`px-1.5 py-0.5 text-[9px] font-mono font-bold rounded-[2px] border ${
                             simulationMode === "quota_breach"
-                              ? "bg-[#FEF2F2] text-[#B91C1C]"
-                              : "bg-[#FFFBEB] text-[#D97706]"
+                              ? "bg-[#FEF2F2] text-[#B42318] border-[#FECDCA]"
+                              : "bg-[#FFFBEB] text-[#D97706] border-[#FEDF89]"
                           }`}
                         >
-                          {simulationMode === "quota_breach" ? "OVER CEILING" : "WITHIN LIMIT"}
+                          {simulationMode === "quota_breach" ? "मर्यादा ओलांडली" : "मर्यादेत / IN LIMIT"}
                         </span>
                       </td>
                     </tr>
-                    <tr>
-                      <td className="py-2.5 px-3 font-semibold text-[#102A43]">Overseas Citizen of India (OCI / PIO)</td>
-                      <td className="py-2.5 px-3 text-right font-mono font-bold">{national.oci_students.toLocaleString()}</td>
-                      <td className="py-2.5 px-3 text-right font-mono">{ociPct}%</td>
+                    <tr className="bg-white hover:bg-[#EAEFF5]">
+                      <td className="py-2.5 px-3 text-center font-bold text-[#64748B] border-r border-[#CBD5E1]">3</td>
+                      <td className="py-2.5 px-3 font-semibold text-[#102A43] border-r border-[#CBD5E1]">
+                        भारतीय वंशाचे नागरिक / Overseas Citizen of India (OCI/PIO)
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold border-r border-[#CBD5E1]">{national.oci_students.toLocaleString()}</td>
+                      <td className="py-2.5 px-3 text-right font-mono border-r border-[#CBD5E1]">{ociPct}%</td>
                       <td className="py-2.5 px-3 text-center">
-                        <span className="px-1.5 py-0.5 bg-[#F1F5F9] text-[#475569] text-[9px] font-mono font-bold rounded-[2px]">
-                          COMPLIANT
+                        <span className="px-1.5 py-0.5 bg-[#F1F5F9] text-[#475569] text-[9px] font-mono font-bold rounded-[2px] border border-[#CBD5E1]">
+                          प्रमाणित / VALID
                         </span>
                       </td>
                     </tr>
-                    <tr>
-                      <td className="py-2.5 px-3 font-semibold text-[#102A43]">Foreign Nationals / Supernumerary</td>
-                      <td className="py-2.5 px-3 text-right font-mono font-bold">{national.fn_students.toLocaleString()}</td>
-                      <td className="py-2.5 px-3 text-right font-mono">{fnPct}%</td>
+                    <tr className="bg-[#F4F6F9] hover:bg-[#EAEFF5]">
+                      <td className="py-2.5 px-3 text-center font-bold text-[#64748B] border-r border-[#CBD5E1]">4</td>
+                      <td className="py-2.5 px-3 font-semibold text-[#102A43] border-r border-[#CBD5E1]">
+                        विदेशी नागरिक / Foreign Nationals (Supernumerary)
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold border-r border-[#CBD5E1]">{national.fn_students.toLocaleString()}</td>
+                      <td className="py-2.5 px-3 text-right font-mono border-r border-[#CBD5E1]">{fnPct}%</td>
                       <td className="py-2.5 px-3 text-center">
-                        <span className="px-1.5 py-0.5 bg-[#F1F5F9] text-[#475569] text-[9px] font-mono font-bold rounded-[2px]">
-                          COMPLIANT
+                        <span className="px-1.5 py-0.5 bg-[#F1F5F9] text-[#475569] text-[9px] font-mono font-bold rounded-[2px] border border-[#CBD5E1]">
+                          प्रमाणित / VALID
                         </span>
                       </td>
                     </tr>
@@ -658,17 +710,17 @@ export default function AICTEControlTowerClient({
         </div>
       </div>
 
-      {/* 4. Dynamic Flag Discrepancy Queue & Anomaly Inspector */}
-      <div className="bg-white border border-[#CBD5E1] rounded-[6px] shadow-xs overflow-hidden">
+      {/* 4. Dynamic Flag Discrepancy Queue & Anomaly Inspector (Maharashtra Portal GR Table Style) */}
+      <div className="bg-white border border-[#CBD5E1] rounded-[2px] shadow-xs overflow-hidden">
         {/* Table Header & Interactive Filter Bar */}
-        <div className="p-5 border-b border-[#E2E8F0] bg-[#F8FAFC] space-y-4">
+        <div className="p-4 border-b border-[#CBD5E1] bg-[#EAEFF5] space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#C87524]">
-                Automated Verification Review Queue
+              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#205081]">
+                केंद्रीय तपासणी व पडताळणी नोंदवही / Central Verification Register
               </div>
-              <h2 className="text-base font-bold text-[#102A43] mt-0.5">
-                Discrepancy Records ({filteredFlags.length} of {flags.length})
+              <h2 className="text-sm sm:text-base font-bold text-[#102A43] mt-0.5">
+                पडताळणी प्रलंबित प्रकरणे / Discrepancy Records ({filteredFlags.length} / {flags.length})
               </h2>
             </div>
 
@@ -677,46 +729,46 @@ export default function AICTEControlTowerClient({
               <button
                 type="button"
                 onClick={() => setSelectedSeverity("ALL")}
-                className={`px-2.5 py-1 rounded-[3px] font-bold text-xs transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[2px] font-bold text-xs transition-colors cursor-pointer border ${
                   selectedSeverity === "ALL"
-                    ? "bg-[#102A43] text-white"
-                    : "bg-white border border-[#CBD5E1] text-[#475569] hover:bg-slate-100"
+                    ? "bg-[#205081] text-white border-[#205081]"
+                    : "bg-white border-[#CBD5E1] text-[#475569] hover:bg-[#F4F6F9]"
                 }`}
               >
-                All ({flags.length})
+                सर्व / All ({flags.length})
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedSeverity("CRITICAL")}
-                className={`px-2.5 py-1 rounded-[3px] font-bold text-xs transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[2px] font-bold text-xs transition-colors cursor-pointer border ${
                   selectedSeverity === "CRITICAL"
-                    ? "bg-[#E11D48] text-white"
-                    : "bg-white border border-[#CBD5E1] text-[#E11D48] hover:bg-rose-50"
+                    ? "bg-[#B42318] text-white border-[#B42318]"
+                    : "bg-white border-[#FECDCA] text-[#B42318] hover:bg-[#FEF2F2]"
                 }`}
               >
-                Critical ({criticalFlags})
+                अतिगंभीर / Critical ({criticalFlags})
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedSeverity("HIGH")}
-                className={`px-2.5 py-1 rounded-[3px] font-bold text-xs transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[2px] font-bold text-xs transition-colors cursor-pointer border ${
                   selectedSeverity === "HIGH"
-                    ? "bg-[#D97706] text-white"
-                    : "bg-white border border-[#CBD5E1] text-[#D97706] hover:bg-amber-50"
+                    ? "bg-[#D97706] text-white border-[#D97706]"
+                    : "bg-white border-[#FEDF89] text-[#D97706] hover:bg-[#FFFBEB]"
                 }`}
               >
-                High ({highFlags})
+                गंभीर / High ({highFlags})
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedSeverity("MEDIUM")}
-                className={`px-2.5 py-1 rounded-[3px] font-bold text-xs transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded-[2px] font-bold text-xs transition-colors cursor-pointer border ${
                   selectedSeverity === "MEDIUM"
-                    ? "bg-[#475569] text-white"
-                    : "bg-white border border-[#CBD5E1] text-[#475569] hover:bg-slate-100"
+                    ? "bg-[#475569] text-white border-[#475569]"
+                    : "bg-white border-[#CBD5E1] text-[#475569] hover:bg-[#F4F6F9]"
                 }`}
               >
-                Medium ({mediumFlags})
+                मध्यम / Medium ({mediumFlags})
               </button>
             </div>
           </div>
@@ -728,49 +780,50 @@ export default function AICTEControlTowerClient({
               <input
                 id="flag-search-input"
                 type="text"
-                placeholder="Search by student name, roll number, APAAR ID, college name, or rule code..."
+                placeholder="नाव, रोल नंबर, अपार आयडी, किंवा महाविद्यालयाचे नाव शोधा..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 border border-[#CBD5E1] bg-white text-xs text-[#1E293B] rounded-[3px] focus:outline-none focus:border-[#17365D]"
+                className="w-full pl-9 pr-3 py-1.5 border border-[#CBD5E1] bg-white text-xs text-[#102A43] rounded-[2px] focus:outline-none focus:border-[#205081]"
               />
             </div>
 
             <select
               value={selectedRuleCode}
               onChange={(e) => setSelectedRuleCode(e.target.value)}
-              className="w-full sm:w-auto px-3 py-2 border border-[#CBD5E1] bg-white text-xs font-semibold text-[#102A43] rounded-[3px] focus:outline-none focus:border-[#17365D] cursor-pointer"
+              className="w-full sm:w-auto px-3 py-1.5 border border-[#CBD5E1] bg-white text-xs font-semibold text-[#102A43] rounded-[2px] focus:outline-none focus:border-[#205081] cursor-pointer"
             >
-              <option value="ALL">All Inspection Rules</option>
-              <option value="DUPLICATE_ENROLMENT">Duplicate Admission (Cross-State)</option>
-              <option value="INTAKE_LIMIT_EXCEEDED">Intake Over Capacity</option>
-              <option value="INVALID_APAAR_FORMAT">Invalid APAAR Syntax</option>
+              <option value="ALL">सर्व नियम / All Inspection Rules</option>
+              <option value="DUPLICATE_ENROLMENT">दुहेरी प्रवेश / Duplicate Admission (Cross-State)</option>
+              <option value="INTAKE_LIMIT_EXCEEDED">मंजूर जागा पेक्षा जास्त / Intake Over Capacity</option>
+              <option value="INVALID_APAAR_FORMAT">अवैध अपार रचना / Invalid APAAR Syntax</option>
             </select>
           </div>
         </div>
 
-        {/* Dynamic Interactive Data Table */}
+        {/* Dynamic Interactive Data Table (Maharashtra GR Format) */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[950px] border-collapse text-left text-xs">
-            <thead className="border-b border-[#CBD5E1] bg-[#F8FAFC] text-[10px] font-bold uppercase tracking-wider text-[#64748B]">
+            <thead className="bg-[#205081] text-white uppercase text-[10px] font-bold">
               <tr>
-                <th scope="col" className="w-24 px-4 py-3">Severity</th>
-                <th scope="col" className="px-4 py-3">Discrepancy Rule</th>
-                <th scope="col" className="px-4 py-3">Student &amp; Roll</th>
-                <th scope="col" className="px-4 py-3 font-mono">Masked APAAR</th>
-                <th scope="col" className="px-4 py-3">Reporting Institution</th>
-                <th scope="col" className="px-4 py-3 text-center">Score</th>
-                <th scope="col" className="px-4 py-3 text-right">Action</th>
+                <th scope="col" className="w-12 px-3 py-2.5 border-r border-[#112D4E] text-center">क्र.</th>
+                <th scope="col" className="w-24 px-3 py-2.5 border-r border-[#112D4E]">गंभीरता / Level</th>
+                <th scope="col" className="px-3 py-2.5 border-r border-[#112D4E]">तपासणी नियम / Discrepancy Rule</th>
+                <th scope="col" className="px-3 py-2.5 border-r border-[#112D4E]">विद्यार्थी / Student Details</th>
+                <th scope="col" className="px-3 py-2.5 border-r border-[#112D4E] font-mono">अपार आयडी / APAAR ID</th>
+                <th scope="col" className="px-3 py-2.5 border-r border-[#112D4E]">नोंदणीकृत महाविद्यालय / College</th>
+                <th scope="col" className="px-3 py-2.5 text-center border-r border-[#112D4E]">अंक / Score</th>
+                <th scope="col" className="px-3 py-2.5 text-center w-24">तपशील / Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E2E8F0] text-[#1E293B]">
+            <tbody className="divide-y divide-[#CBD5E1] text-[#102A43]">
               {filteredFlags.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center text-xs text-[#64748B]">
-                    No discrepancy records match the active search filters.
+                  <td colSpan={8} className="px-4 py-8 text-center text-xs text-[#64748B]">
+                    शोध निकषानुसार कोणतीही विसंगती नोंद आढळली नाही. / No records match criteria.
                   </td>
                 </tr>
               ) : (
-                filteredFlags.map((flag) => {
+                filteredFlags.map((flag, idx) => {
                   const isCrit = flag.severity.toUpperCase() === "CRITICAL";
                   const isHigh = flag.severity.toUpperCase() === "HIGH";
                   const isExpanded = expandedFlagId === flag.id;
@@ -787,34 +840,40 @@ export default function AICTEControlTowerClient({
                               : "bg-[#FFFBEB] hover:bg-[#FEF3C7]/60"
                             : isExpanded
                             ? "bg-[#EFF6FF]"
-                            : "hover:bg-[#F8FAFC]"
+                            : idx % 2 === 0
+                            ? "bg-white hover:bg-[#EAEFF5]"
+                            : "bg-[#F4F6F9] hover:bg-[#EAEFF5]"
                         }`}
                       >
-                        <td className="whitespace-nowrap px-4 py-3">
+                        <td className="px-3 py-2.5 text-center font-bold text-[#64748B] border-r border-[#CBD5E1]">
+                          {idx + 1}
+                        </td>
+
+                        <td className="whitespace-nowrap px-3 py-2.5 border-r border-[#CBD5E1]">
                           <span
-                            className={`inline-block px-2 py-0.5 text-[10px] font-mono font-bold uppercase rounded-[2px] border ${
+                            className={`inline-block px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase rounded-[2px] border ${
                               isCrit
                                 ? "bg-[#FDF0EF] border-[#FECDCA] text-[#B42318]"
                                 : isHigh
                                 ? "bg-[#FFF7E6] border-[#FEDF89] text-[#B54708]"
-                                : "bg-[#F4F6F8] border-[#D8DEE6] text-[#344054]"
+                                : "bg-[#F4F6F8] border-[#CBD5E1] text-[#344054]"
                             }`}
                           >
-                            {flag.severity}
+                            {isCrit ? "अतिगंभीर" : isHigh ? "गंभीर" : "मध्यम"}
                           </span>
                         </td>
 
-                        <td className="px-4 py-3">
+                        <td className="px-3 py-2.5 border-r border-[#CBD5E1]">
                           <div className="font-bold text-[#102A43] flex flex-wrap items-center gap-1.5">
                             <span>{flag.title}</span>
                             {isSimFlag && (
-                              <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 text-[9px] font-mono font-bold bg-[#F59E0B] text-[#102A43] rounded-[2px]">
+                              <span className="inline-flex items-center gap-0.5 px-1 py-0.2 text-[9px] font-mono font-bold bg-[#FF9933] text-white rounded-[2px]">
                                 <Zap className="w-2.5 h-2.5 fill-current" />
-                                LIVE SIMULATION
+                                थेट चाचणी
                               </span>
                             )}
                             {isExpanded ? (
-                              <ChevronUp className="w-3.5 h-3.5 text-[#2563EB]" />
+                              <ChevronUp className="w-3.5 h-3.5 text-[#205081]" />
                             ) : (
                               <ChevronDown className="w-3.5 h-3.5 text-[#64748B]" />
                             )}
@@ -824,20 +883,20 @@ export default function AICTEControlTowerClient({
                           </div>
                         </td>
 
-                        <td className="whitespace-nowrap px-4 py-3">
+                        <td className="whitespace-nowrap px-3 py-2.5 border-r border-[#CBD5E1]">
                           <div className="font-semibold text-[#102A43]">
                             {flag.students?.full_name || t("Name unavailable")}
                           </div>
                           <div className="font-mono text-[10px] text-[#64748B]">
-                            Roll: {flag.students?.institutional_student_id || flag.student_id}
+                            रोल: {flag.students?.institutional_student_id || flag.student_id}
                           </div>
                         </td>
 
-                        <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-[#334155]">
+                        <td className="whitespace-nowrap px-3 py-2.5 font-mono text-xs text-[#334155] border-r border-[#CBD5E1]">
                           {formatMaskedApaar(flag.students?.apaar_id)}
                         </td>
 
-                        <td className="px-4 py-3">
+                        <td className="px-3 py-2.5 border-r border-[#CBD5E1]">
                           <div className="font-medium text-[#102A43]">
                             {flag.institutions?.name || t("Institution unavailable")}
                           </div>
@@ -846,11 +905,11 @@ export default function AICTEControlTowerClient({
                           </div>
                         </td>
 
-                        <td className="whitespace-nowrap px-4 py-3 text-center font-mono font-bold">
+                        <td className="whitespace-nowrap px-3 py-2.5 text-center font-mono font-bold border-r border-[#CBD5E1]">
                           <span
                             className={
                               (flag.students?.integrity_score || 0) < 70
-                                ? "text-[#E11D48]"
+                                ? "text-[#B42318]"
                                 : "text-[#D97706]"
                             }
                           >
@@ -858,12 +917,12 @@ export default function AICTEControlTowerClient({
                           </span>
                         </td>
 
-                        <td className="whitespace-nowrap px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
+                        <td className="whitespace-nowrap px-3 py-2.5 text-center" onClick={(e) => e.stopPropagation()}>
                           <Link
                             href={`/aicte/students/${flag.student_id}`}
-                            className="inline-flex items-center gap-1 border border-[#17365D] bg-white px-2.5 py-1 text-xs font-bold text-[#17365D] hover:bg-[#17365D] hover:text-white rounded-[2px] transition-colors"
+                            className="inline-flex items-center gap-1 bg-[#205081] text-white hover:bg-[#112D4E] px-2.5 py-1 text-xs font-bold rounded-[2px] transition-colors"
                           >
-                            <span>Inspect</span>
+                            <span>पहा</span>
                             <ExternalLink className="w-3 h-3" />
                           </Link>
                         </td>
@@ -871,28 +930,28 @@ export default function AICTEControlTowerClient({
 
                       {/* Expandable Dossier Row Detail */}
                       {isExpanded && (
-                        <tr className="bg-[#F8FAFC] border-b border-[#CBD5E1]">
-                          <td colSpan={7} className="p-4">
-                            <div className="bg-white border border-[#CBD5E1] p-4 rounded-[4px] space-y-2 text-xs">
-                              <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
+                        <tr className="bg-[#EAEFF5] border-b border-[#CBD5E1]">
+                          <td colSpan={8} className="p-3 sm:p-4">
+                            <div className="bg-white border border-[#CBD5E1] p-3 sm:p-4 rounded-[2px] space-y-2 text-xs">
+                              <div className="flex items-center justify-between pb-2 border-b border-[#CBD5E1]">
                                 <span className="font-bold text-[#102A43] text-xs flex items-center gap-1.5">
-                                  <span>Dossier Detail: {flag.rule_code}</span>
+                                  <span>दोषारोप तपशील / Case Dossier: {flag.rule_code}</span>
                                   {isSimFlag && (
-                                    <span className="text-[10px] font-mono text-[#F59E0B] font-bold">
+                                    <span className="text-[10px] font-mono text-[#FF9933] font-bold">
                                       [SIH-2026-LIVE-SCENARIO]
                                     </span>
                                   )}
                                 </span>
                                 <span className="text-[11px] font-mono text-[#64748B]">
-                                  Flag ID: {flag.id}
+                                  प्रकरण क्र. / Flag ID: {flag.id}
                                 </span>
                               </div>
                               <p className="text-[#334155] leading-relaxed">
                                 {flag.explanation || "Discrepancy flagged under AICTE Approval Process Handbook (APH) validation check."}
                               </p>
                               {flag.recommended_action && (
-                                <p className="text-[11px] text-[#B54708] bg-[#FFF7E6] border border-[#FEDF89] p-2 rounded-[2px]">
-                                  <strong>Recommended Action:</strong> {flag.recommended_action}
+                                <p className="text-[11px] text-[#B42318] bg-[#FEF2F2] border border-[#FECDCA] p-2 rounded-[2px]">
+                                  <strong>शिफारस केलेली कारवाई / Recommended Action:</strong> {flag.recommended_action}
                                 </p>
                               )}
 

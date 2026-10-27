@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Papa from "papaparse";
-import { useLanguage } from "@/components/LanguageProvider";
 import { sanitizeRecordRow, isValidApaar } from "@/lib/security";
 import type { InstitutionSummary } from "@/lib/types";
 
@@ -19,7 +18,6 @@ const SAMPLE_CSV_CONTENT = `apaar_id,institutional_student_id,full_name,dob_year
 99999,STU-505,Arjun Mehta,2005,Male,General,indian,B.Tech Mechanical,2026,2026-11-20`;
 
 function UploadContent() {
-  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -164,66 +162,82 @@ function UploadContent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-8 py-6 space-y-6">
-      {/* Back link */}
-      <div>
-        <Link
-          href="/institution"
-          className="text-xs font-semibold text-[#17365D] hover:underline"
-        >
-          &larr; {t("Seat Ledgers")}
-        </Link>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4">
+      {/* Maharashtra.gov.in Official Breadcrumb */}
+      <div className="bg-[#EAEFF5] border border-[#CBD5E1] px-4 py-1.5 rounded-[2px] text-xs text-[#334155] flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 text-[11px]">
+          <Link href="/" className="text-[#205081] font-semibold hover:underline">
+            मुख्य पृष्ठ / Home
+          </Link>
+          <span className="text-[#94A3B8]">&gt;</span>
+          <Link href="/institution" className="text-[#205081] font-semibold hover:underline">
+            महाविद्यालयीन प्रशासन / College Administration
+          </Link>
+          <span className="text-[#94A3B8]">&gt;</span>
+          <span className="text-[#102A43] font-bold">
+            विद्यार्थी प्रवेश सूची अपलोड / Upload CSV
+          </span>
+        </div>
+        <div className="hidden sm:block text-[10px] font-mono text-[#64748B]">
+          मान्यता निकष: AICTE APH २०२६-२७
+        </div>
       </div>
 
-      {/* Page Title & Action Bar */}
-      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[4px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+      {/* 1. Maharashtra.gov.in Department Header Block */}
+      <div className="bg-white border-l-4 border-l-[#FF9933] border-y border-r border-[#CBD5E1] p-4 sm:p-5 rounded-[2px] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#102A43]">
-            Upload Student Admission List
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" aria-hidden="true" />
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#205081]">
+              महाराष्ट्र शासन • तंत्रशिक्षण संचालनालय • Student Admission Ingestion
+            </span>
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#102A43] mt-1">
+            विद्यार्थी प्रवेश सूची अपलोड / Upload Student Admission List
           </h1>
         </div>
 
         <button
           type="button"
           onClick={handleDownloadTemplate}
-          className="px-3 py-1.5 bg-white border border-[#D8DEE6] hover:bg-[#F4F6F8] text-[#17365D] text-xs font-semibold rounded-[2px] transition-colors cursor-pointer self-start sm:self-auto"
+          className="px-3.5 py-1.5 bg-white border border-[#205081] hover:bg-[#F4F6F9] text-[#205081] text-xs font-bold rounded-[2px] transition-colors cursor-pointer self-start sm:self-auto shadow-xs"
         >
-          {t("Download Standard CSV Template")}
+          प्रमाणित नमुना CSV डाउनलोड / Download Template
         </button>
       </div>
 
-      {/* Step 1: Target Institution */}
-      <div className="bg-white border border-[#D8DEE6] p-4 rounded-[2px] space-y-2">
-        <label htmlFor="upload-inst-select" className="text-xs font-bold text-[#17365D] uppercase tracking-wider block">
-          {t("Step 1: Select Target Reporting Institution")}
+      {/* Step 1: Target Institution Selection */}
+      <div className="bg-white border border-[#CBD5E1] p-4 rounded-[2px] space-y-2 shadow-xs">
+        <label htmlFor="upload-inst-select" className="text-xs font-bold text-[#205081] uppercase tracking-wider block">
+          टप्पा १: संस्था निवडा / Step 1: Select Reporting Institution
         </label>
         <select
           id="upload-inst-select"
-          aria-label={t("Step 1: Select Target Reporting Institution")}
+          aria-label="Select Target Reporting Institution"
           value={selectedInstId}
           onChange={(e) => setSelectedInstId(e.target.value)}
-          className="w-full px-3 py-2 bg-white border border-[#D8DEE6] text-xs font-semibold text-[#202B36] rounded-[2px] focus:outline-none focus:border-[#17365D] cursor-pointer"
+          className="w-full px-3 py-2 bg-white border border-[#CBD5E1] text-xs font-semibold text-[#102A43] rounded-[2px] focus:outline-none focus:border-[#205081] cursor-pointer"
         >
           {institutions.map((inst) => (
             <option key={inst.id} value={inst.id}>
-              {inst.name} ({inst.aicte_code}) - {inst.state} (Sanctioned Intake: {inst.approved_intake})
+              {inst.name} ({inst.aicte_code}) - {inst.state} (मंजूर प्रवेश क्षमता: {inst.approved_intake})
             </option>
           ))}
         </select>
       </div>
 
       {/* Step 2: Upload Dropzone */}
-      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] space-y-4">
+      <div className="bg-white border border-[#CBD5E1] p-4 sm:p-5 rounded-[2px] space-y-3 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <label className="text-xs font-bold text-[#17365D] uppercase tracking-wider block">
-            {t("Step 2: Upload Structured Admission File")}
+          <label className="text-xs font-bold text-[#205081] uppercase tracking-wider block">
+            टप्पा २: प्रवेश सूची फाइल निवडा / Step 2: Select Student CSV File
           </label>
           <button
             type="button"
             onClick={handleLoadSample}
-            className="text-xs font-semibold text-[#17365D] hover:underline cursor-pointer text-left sm:text-right"
+            className="text-xs font-bold text-[#205081] hover:underline cursor-pointer text-left sm:text-right"
           >
-            {t("Load Sample Verification Batch (5 Records with Anomalies)")}
+            चाचणी बॅच लोड करा / Load Sample Verification Batch (५ नोंदी)
           </button>
         </div>
 
@@ -237,7 +251,7 @@ function UploadContent() {
             }
           }}
           onClick={() => fileInputRef.current?.click()}
-          className="border border-dashed border-[#D8DEE6] hover:border-[#17365D] p-8 text-center bg-[#F4F6F8] hover:bg-slate-100 transition-colors cursor-pointer rounded-[2px] space-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#17365D]"
+          className="border border-dashed border-[#CBD5E1] hover:border-[#205081] p-6 sm:p-8 text-center bg-[#F4F6F9] hover:bg-[#EAEFF5] transition-colors cursor-pointer rounded-[2px] space-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#205081]"
         >
           <input
             type="file"
@@ -245,17 +259,17 @@ function UploadContent() {
             onChange={handleFileChange}
             accept=".csv"
             className="hidden"
-            aria-label={t("Click to select admission CSV file, or drag and drop file here")}
+            aria-label="Click to select admission CSV file, or drag and drop file here"
           />
-          <div className="text-sm font-semibold text-[#17365D]">
-            {t("Click to select admission CSV file, or drag and drop file here")}
+          <div className="text-xs sm:text-sm font-bold text-[#205081]">
+            येथे क्लिक करा किंवा CSV फाईल ड्रॅग करून टाका / Click to select admission CSV file
           </div>
-          <div className="text-xs text-[#5B6573]">
-            {t("Accepts UTF-8 encoded CSV files conforming to AICTE APH data specification")}
+          <div className="text-[11px] text-[#64748B]">
+            AICTE APH मानकानुसार UTF-8 एन्कोडेड CSV (.csv) फाइल आवश्यक
           </div>
           {fileName && (
-            <div className="inline-block mt-2 px-2.5 py-0.5 bg-white border border-[#17365D] text-[#17365D] font-mono text-xs font-semibold">
-              {t("Selected File:")} {fileName}
+            <div className="inline-block mt-2 px-3 py-1 bg-white border border-[#205081] text-[#205081] font-mono text-xs font-bold rounded-[2px]">
+              निवडलेली फाईल: {fileName}
             </div>
           )}
         </div>
@@ -263,68 +277,75 @@ function UploadContent() {
 
       {/* Error state */}
       {errorMessage && (
-        <div role="alert" className="p-3 bg-white border-l-4 border-[#B42318] text-xs text-[#B42318] border border-[#D8DEE6]">
-          <strong>Validation Error:</strong> {errorMessage}
+        <div role="alert" className="p-3 bg-[#FEF2F2] border-l-4 border-l-[#B42318] border-y border-r border-[#FECDCA] text-xs text-[#B42318] rounded-[2px]">
+          <strong>तपासणी त्रुटी / Validation Error:</strong> {errorMessage}
         </div>
       )}
 
       {/* Pre-flight inspection & Preview */}
       {validationStats && (
-        <div className="bg-white border border-[#D8DEE6] rounded-[2px] p-5 space-y-4">
-          <div className="pb-3 border-b border-[#D8DEE6] flex items-center justify-between">
-            <h3 className="text-sm font-bold text-[#17365D] uppercase tracking-wider">
-              File Check Summary
+        <div className="bg-white border border-[#CBD5E1] rounded-[2px] p-4 sm:p-5 space-y-4 shadow-xs">
+          <div className="pb-3 border-b border-[#CBD5E1] flex items-center justify-between">
+            <h3 className="text-xs sm:text-sm font-bold text-[#205081] uppercase tracking-wider">
+              फाइल पडताळणी सारांश / Pre-Ingestion File Summary
             </h3>
-            <span className="text-xs font-mono text-[#237A52] font-semibold">
-              Format Verified
+            <span className="text-xs font-mono text-[#059669] font-bold">
+              प्रारूप सत्यापित / RFC-4180 Valid
             </span>
           </div>
 
-          <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-[4px] p-3 divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] grid grid-cols-2 sm:grid-cols-4 text-xs">
+          <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-[2px] p-3 divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] grid grid-cols-2 sm:grid-cols-4 text-xs">
             <div className="px-3 py-1">
-              <span className="text-[#64748B] text-[11px] block">{t("Total Records")}</span>
+              <span className="text-[#64748B] text-[10px] font-bold uppercase block">एकूण नोंदी / Total Records</span>
               <span className="text-base font-bold text-[#102A43] font-mono">{validationStats.total}</span>
             </div>
             <div className="px-3 py-1">
-              <span className="text-[#64748B] text-[11px] block">{t("Valid APAARs")}</span>
-              <span className="text-base font-bold text-[#102A43] font-mono">{validationStats.validApaar}</span>
+              <span className="text-[#64748B] text-[10px] font-bold uppercase block">वैध अपार / Valid APAAR</span>
+              <span className="text-base font-bold text-[#059669] font-mono">{validationStats.validApaar}</span>
             </div>
             <div className="px-3 py-1">
-              <span className="text-[#64748B] text-[11px] block">{t("Invalid APAARs")}</span>
-              <span className="text-base font-bold text-[#102A43] font-mono">{validationStats.invalidApaar}</span>
+              <span className="text-[#64748B] text-[10px] font-bold uppercase block">अवैध अपार / Invalid APAAR</span>
+              <span className="text-base font-bold text-[#B42318] font-mono">{validationStats.invalidApaar}</span>
             </div>
             <div className="px-3 py-1">
-              <span className="text-[#64748B] text-[11px] block">Protected Cells</span>
+              <span className="text-[#64748B] text-[10px] font-bold uppercase block">संरक्षित फील्ड्स / Sanitized</span>
               <span className="text-base font-bold text-[#102A43] font-mono">{validationStats.sanitizedFormulas}</span>
             </div>
           </div>
 
-          {/* Record table preview */}
-          <div className="border border-[#D8DEE6] overflow-x-auto max-h-52">
-            <table className="w-full text-left text-xs border-collapse min-w-[650px]">
-              <thead className="bg-[#F4F6F8] text-[#5B6573] uppercase text-[10px] font-semibold sticky top-0 border-b border-[#D8DEE6]">
+          {/* Record table preview (GR Table Style) */}
+          <div className="border border-[#CBD5E1] overflow-x-auto max-h-60 rounded-[2px]">
+            <table className="w-full text-left text-xs border-collapse min-w-[700px]">
+              <thead className="bg-[#205081] text-white uppercase text-[10px] font-bold sticky top-0">
                 <tr>
-                  <th scope="col" className="py-2 px-3 font-mono">{t("Roll / Student ID")}</th>
-                  <th scope="col" className="py-2 px-3">{t("Student Name")}</th>
-                  <th scope="col" className="py-2 px-3 font-mono">{t("Masked APAAR ID")}</th>
-                  <th scope="col" className="py-2 px-3">{t("Degree Program")}</th>
-                  <th scope="col" className="py-2 px-3">{t("Intake reference")}</th>
+                  <th scope="col" className="w-12 py-2 px-3 border-r border-[#112D4E] text-center">क्र.</th>
+                  <th scope="col" className="py-2 px-3 font-mono border-r border-[#112D4E]">रोल / Student ID</th>
+                  <th scope="col" className="py-2 px-3 border-r border-[#112D4E]">विद्यार्थी नाव / Full Name</th>
+                  <th scope="col" className="py-2 px-3 font-mono border-r border-[#112D4E]">अपार आयडी / APAAR</th>
+                  <th scope="col" className="py-2 px-3 border-r border-[#112D4E]">अभ्यासक्रम / Program</th>
+                  <th scope="col" className="py-2 px-3 text-center">प्रवेश दिनांक / Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D8DEE6] text-[#202B36] font-mono text-[11px]">
+              <tbody className="divide-y divide-[#CBD5E1] text-[#102A43] font-mono text-[11px]">
                 {parsedRows.map((r, i) => (
-                  <tr key={i} className="hover:bg-slate-50">
-                    <td className="py-2 px-3 font-semibold text-[#17365D]">{r.institutional_student_id}</td>
-                    <td className="py-2 px-3 font-sans text-xs">{r.full_name}</td>
-                    <td className="py-2 px-3">
+                  <tr
+                    key={i}
+                    className={`transition-colors ${
+                      i % 2 === 0 ? "bg-white hover:bg-[#EAEFF5]" : "bg-[#F4F6F9] hover:bg-[#EAEFF5]"
+                    }`}
+                  >
+                    <td className="py-2 px-3 text-center font-bold text-[#64748B] border-r border-[#CBD5E1]">{i + 1}</td>
+                    <td className="py-2 px-3 font-bold text-[#205081] border-r border-[#CBD5E1]">{r.institutional_student_id}</td>
+                    <td className="py-2 px-3 font-sans text-xs font-semibold border-r border-[#CBD5E1]">{r.full_name}</td>
+                    <td className="py-2 px-3 border-r border-[#CBD5E1]">
                       {isValidApaar(r.apaar_id) ? (
-                        <span className="text-[#237A52]">{r.apaar_id}</span>
+                        <span className="text-[#059669] font-bold">{r.apaar_id}</span>
                       ) : (
-                        <span className="text-[#B42318]">{r.apaar_id || "MISSING"}</span>
+                        <span className="text-[#B42318] font-bold bg-[#FEF2F2] px-1 py-0.5 rounded-[2px]">{r.apaar_id || "MISSING"}</span>
                       )}
                     </td>
-                    <td className="py-2 px-3 font-sans text-xs">{r.program}</td>
-                    <td className="py-2 px-3 text-[#5B6573]">{r.admission_date || "—"}</td>
+                    <td className="py-2 px-3 font-sans text-xs border-r border-[#CBD5E1]">{r.program}</td>
+                    <td className="py-2 px-3 text-center text-[#64748B]">{r.admission_date || "—"}</td>
                   </tr>
                 ))}
               </tbody>
@@ -335,38 +356,37 @@ function UploadContent() {
             type="button"
             onClick={handleUploadSubmit}
             disabled={isUploading}
-            className="w-full py-2.5 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-bold rounded-[2px] transition-colors cursor-pointer disabled:opacity-50"
+            className="w-full py-2.5 bg-[#205081] hover:bg-[#112D4E] text-white text-xs font-bold rounded-[2px] transition-colors cursor-pointer disabled:opacity-50 shadow-xs"
           >
-            {isUploading ? t("Running sample checks…") : `${t("Save changes")} (${parsedRows.length})`}
+            {isUploading ? "पडताळणी व नोंदणी प्रक्रिया सुरू आहे... / Processing..." : `नोंदी प्रमाणित करून जतन करा / Commit Records (${parsedRows.length})`}
           </button>
         </div>
       )}
 
       {/* Success notification */}
       {uploadResult && (
-        <div role="status" className="bg-white border-l-4 border-[#237A52] p-4 border border-[#D8DEE6] rounded-[2px] space-y-3">
+        <div role="status" className="bg-[#ECFDF5] border-l-4 border-l-[#059669] p-4 border-y border-r border-[#A7F3D0] rounded-[2px] space-y-3 shadow-xs">
           <div>
-            <div className="text-xs font-bold text-[#237A52] uppercase">
-              {t("Batch Ingestion Completed Successfully")}
+            <div className="text-xs font-bold text-[#059669] uppercase">
+              प्रवेश बॅच यशस्वीरित्या नोंदणीकृत करण्यात आली / Batch Ingestion Successful
             </div>
-            <div className="text-xs text-[#5B6573] mt-1">
-              Synchronized {uploadResult.inserted} admission records into the institutional roster.
-              The automated verification checks were run and all records were refreshed.
+            <div className="text-xs text-[#334155] mt-1">
+              संस्थेच्या नोंदवहीत एकूण {uploadResult.inserted} विद्यार्थ्यांची नोंद यशस्वीपणे करण्यात आली आहे. AICTE केंद्रीय तपासणी प्रणालीद्वारे सर्व नोंदींचे पुनरावलोकन पूर्ण झाले आहे.
             </div>
           </div>
           <div className="flex items-center space-x-3 pt-1">
             <Link
               href="/institution"
-              className="text-xs font-semibold text-[#17365D] hover:underline"
+              className="text-xs font-bold text-[#205081] hover:underline"
             >
-              &rarr; {t("Seat Ledgers")}
+              &rarr; संस्था नोंदवही पहा / View College Roster
             </Link>
-            <span className="text-[#D8DEE6]">|</span>
+            <span className="text-[#CBD5E1]">|</span>
             <Link
               href="/aicte"
-              className="text-xs font-semibold text-[#17365D] hover:underline"
+              className="text-xs font-bold text-[#205081] hover:underline"
             >
-              &rarr; {t("National overview")}
+              &rarr; केंद्रीय पडताळणी कक्ष / National Control Tower
             </Link>
           </div>
         </div>

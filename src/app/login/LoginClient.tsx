@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLanguage } from "@/components/LanguageProvider";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -385,57 +386,77 @@ export default function LoginClient({ isDemo = false }: Props) {
   }
 
   return (
-    <section className="max-w-5xl mx-auto px-4 py-8 sm:py-10 space-y-6">
+    <section className="max-w-5xl mx-auto px-4 py-4 sm:py-6 space-y-4">
+      {/* Maharashtra.gov.in Official Breadcrumb */}
+      <div className="bg-[#EAEFF5] border border-[#CBD5E1] px-4 py-1.5 rounded-[2px] text-xs text-[#334155] flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 text-[11px]">
+          <Link href="/" className="text-[#205081] font-semibold hover:underline">
+            मुख्य पृष्ठ / Home
+          </Link>
+          <span className="text-[#94A3B8]">&gt;</span>
+          <span className="text-[#205081] font-semibold">
+            एकात्मिक सेवा पोर्टल / Integrated Services
+          </span>
+          <span className="text-[#94A3B8]">&gt;</span>
+          <span className="text-[#102A43] font-bold">
+            शासकीय लॉगिन / Official SSO Portal
+          </span>
+        </div>
+        <div className="hidden sm:block text-[10px] font-mono text-[#64748B]">
+          आपले सरकार / MahaOnline SSO Compliant
+        </div>
+      </div>
+
       {/* STEP 1: CREDENTIAL / PHONE LOGIN */}
       {step === "login" && (
-        <div className="bg-white border border-[#D8DEE6] p-6 sm:p-8 rounded-[4px] shadow-xs">
-          <div className="border-b border-[#D8DEE6] pb-4">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#C87524]">
-              SATYAPAN · Official Portal
+        <div className="bg-white border-l-4 border-l-[#FF9933] border-y border-r border-[#CBD5E1] p-5 sm:p-6 rounded-[2px] shadow-xs">
+          <div className="border-b border-[#CBD5E1] pb-4">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#205081]">
+              महाराष्ट्र शासन • तंत्रशिक्षण संचालनालय • Unified Single Sign-On (SSO)
             </span>
             <h1 className="text-xl sm:text-2xl font-bold text-[#102A43] mt-1">
-              {locale === "hi" ? "अधिकारी एवं हितधारक लॉगिन" : "Official Portal Sign-In"}
+              {locale === "hi" ? "अधिकारी व नागरिक प्रवेशद्वार / Official Sign-In" : "Official Portal Sign-In"}
             </h1>
-            <p className="text-xs sm:text-sm text-[#5B6573] mt-1 leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#64748B] mt-1 leading-relaxed">
               {locale === "hi"
-                ? "संस्थागत सीट लेजर या केंद्रीय प्रशासनिक कार्यक्षेत्र में प्रवेश हेतु अपना अधिकृत विवरण दर्ज करें।"
+                ? "संस्थागत जागा लेजर, केंद्रीय नियंत्रण कक्ष किंवा नागरिक सेवेत प्रवेश करण्यासाठी आपले नोंदणीकृत तपशील प्रविष्ट करा."
                 : "Sign in with your registered email or mobile number to access your designated workspace."}
             </p>
           </div>
 
           {expiredLink && (
-            <p role="status" className="mt-4 border-l-4 border-[#986500] bg-[#FFF7E6] p-3 text-sm text-[#684600]">
+            <p role="status" className="mt-4 border-l-4 border-l-[#D97706] bg-[#FFFBEB] p-3 text-xs text-[#92400E] border-y border-r border-[#FEDF89] rounded-[2px]">
               {t("This sign-in link is invalid or has expired. Request a new password reset link.")}
             </p>
           )}
           {passwordChanged && (
-            <p role="status" className="mt-4 border-l-4 border-[#237A52] bg-[#EDF7F1] p-3 text-sm text-[#205E40]">
+            <p role="status" className="mt-4 border-l-4 border-l-[#059669] bg-[#ECFDF5] p-3 text-xs text-[#065F46] border-y border-r border-[#A7F3D0] rounded-[2px]">
               {t("Your password was updated. Sign in again with the new password.")}
             </p>
           )}
 
           {/* Quick tab switch to direct roles if in demo mode */}
           {isDemo && (
-            <div className="mt-5 p-3.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div className="mt-4 p-3 bg-[#F4F6F9] border border-[#CBD5E1] rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
               <span className="text-[#334155]">
-                <strong>{locale === "hi" ? "पूर्वावलोकन विकल्प:" : "Demonstration Access:"}</strong>{" "}
+                <strong>{locale === "hi" ? "थेट चाचणी पर्याय / Direct Access:" : "Demonstration Access:"}</strong>{" "}
                 {locale === "hi"
-                  ? "आप बिना क्रेडेंशियल दर्ज किए सीधे पद एवं कार्यक्षेत्र का चयन भी कर सकते हैं।"
+                  ? "आपण थेट पद व कार्यक्षेत्र निवडून पोर्टलचे अवलोकन करू शकता."
                   : "You can skip entering credentials and browse by role directly."}
               </span>
               <button
                 type="button"
                 onClick={() => setStep("role_select")}
-                className="text-[#17365D] font-bold hover:underline self-start sm:self-auto cursor-pointer"
+                className="text-[#205081] font-bold hover:underline self-start sm:self-auto cursor-pointer"
               >
-                {locale === "hi" ? "भूमिका चयन पर जाएँ →" : "Direct Role Selection →"}
+                {locale === "hi" ? "थेट पद निवडा / Select Role →" : "Direct Role Selection →"}
               </button>
             </div>
           )}
 
           <div className="mt-6 max-w-md mx-auto">
             {/* Sub-tabs: Email & Password vs Phone & OTP */}
-            <div className="flex border-b border-[#D8DEE6] mb-5">
+            <div className="flex border-b border-[#CBD5E1] mb-5">
               <button
                 type="button"
                 onClick={() => {
@@ -445,11 +466,11 @@ export default function LoginClient({ isDemo = false }: Props) {
                 }}
                 className={`flex-1 py-2 text-xs font-bold uppercase tracking-wider text-center border-b-2 transition-colors cursor-pointer ${
                   authMethod === "password"
-                    ? "border-[#17365D] text-[#17365D] bg-[#F4F6F8]"
-                    : "border-transparent text-[#5B6573] hover:text-[#17365D]"
+                    ? "border-[#205081] text-[#205081] bg-[#EAEFF5]"
+                    : "border-transparent text-[#64748B] hover:text-[#205081]"
                 }`}
               >
-                {locale === "hi" ? "ईमेल एवं पासवर्ड" : "Email & Password"}
+                {locale === "hi" ? "ईमेल व पासवर्ड" : "Email & Password"}
               </button>
               <button
                 type="button"
@@ -460,22 +481,22 @@ export default function LoginClient({ isDemo = false }: Props) {
                 }}
                 className={`flex-1 py-2 text-xs font-bold uppercase tracking-wider text-center border-b-2 transition-colors cursor-pointer ${
                   authMethod === "otp"
-                    ? "border-[#17365D] text-[#17365D] bg-[#F4F6F8]"
-                    : "border-transparent text-[#5B6573] hover:text-[#17365D]"
+                    ? "border-[#205081] text-[#205081] bg-[#EAEFF5]"
+                    : "border-transparent text-[#64748B] hover:text-[#205081]"
                 }`}
               >
-                {locale === "hi" ? "मोबाइल नंबर (SMS OTP)" : "Mobile Number (SMS OTP)"}
+                {locale === "hi" ? "मोबाईल ओटीपी (SMS OTP)" : "Mobile Number (SMS OTP)"}
               </button>
             </div>
 
             {/* Error & Success Notices */}
             {error && (
-              <p id="login-error" role="alert" className="mb-4 border-l-4 border-[#B42318] bg-[#FDF0EF] p-3 text-xs text-[#7A1B14]">
+              <p id="login-error" role="alert" className="mb-4 border-l-4 border-l-[#B42318] bg-[#FEF2F2] p-3 text-xs text-[#B42318] border-y border-r border-[#FECDCA] rounded-[2px]">
                 {error}
               </p>
             )}
             {otpSuccessNotice && (
-              <p role="status" className="mb-4 border-l-4 border-[#237A52] bg-[#EDF7F1] p-3 text-xs font-medium text-[#205E40]">
+              <p role="status" className="mb-4 border-l-4 border-l-[#059669] bg-[#ECFDF5] p-3 text-xs font-medium text-[#065F46] border-y border-r border-[#A7F3D0] rounded-[2px]">
                 {otpSuccessNotice}
               </p>
             )}
@@ -484,8 +505,8 @@ export default function LoginClient({ isDemo = false }: Props) {
             {authMethod === "password" && (
               <form onSubmit={submitLiveCredentials} className="space-y-4" aria-busy={busy}>
                 <div>
-                  <label htmlFor="login-email" className="block text-xs font-semibold text-[#202B36] mb-1">
-                    {locale === "hi" ? "आधिकारिक ईमेल पता" : "Official Work Email"}
+                  <label htmlFor="login-email" className="block text-xs font-bold text-[#102A43] mb-1">
+                    {locale === "hi" ? "अधिकृत ईमेल पत्ता / Official Email" : "Official Work Email"}
                   </label>
                   <input
                     id="login-email"
@@ -497,13 +518,13 @@ export default function LoginClient({ isDemo = false }: Props) {
                     maxLength={254}
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
-                    className="w-full px-3 py-2 border border-[#8B95A1] bg-white text-[#202B36] text-xs rounded-[2px]"
+                    className="w-full px-3 py-2 border border-[#CBD5E1] bg-white text-[#102A43] text-xs rounded-[2px] focus:outline-none focus:border-[#205081]"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="login-password" className="block text-xs font-semibold text-[#202B36] mb-1">
-                    {locale === "hi" ? "पासवर्ड" : "Password"}
+                  <label htmlFor="login-password" className="block text-xs font-bold text-[#102A43] mb-1">
+                    {locale === "hi" ? "पासवर्ड / Password" : "Password"}
                   </label>
                   <div className="flex">
                     <input
@@ -514,14 +535,14 @@ export default function LoginClient({ isDemo = false }: Props) {
                       placeholder="••••••••"
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
-                      className="w-full min-w-0 px-3 py-2 border border-[#8B95A1] bg-white text-[#202B36] text-xs rounded-l-[2px]"
+                      className="w-full min-w-0 px-3 py-2 border border-[#CBD5E1] bg-white text-[#102A43] text-xs rounded-l-[2px] focus:outline-none focus:border-[#205081]"
                     />
                     <button
                       type="button"
-                      className="border border-l-0 border-[#8B95A1] px-3 text-xs font-semibold text-[#17365D] bg-[#F4F6F8] rounded-r-[2px] cursor-pointer"
+                      className="border border-l-0 border-[#CBD5E1] px-3 text-xs font-bold text-[#205081] bg-[#F4F6F9] hover:bg-[#EAEFF5] rounded-r-[2px] cursor-pointer"
                       onClick={() => setShowPassword((value) => !value)}
                     >
-                      {showPassword ? (locale === "hi" ? "छिपाएँ" : "Hide") : (locale === "hi" ? "देखें" : "Show")}
+                      {showPassword ? (locale === "hi" ? "लपवा" : "Hide") : (locale === "hi" ? "पहा" : "Show")}
                     </button>
                   </div>
                 </div>
@@ -529,21 +550,21 @@ export default function LoginClient({ isDemo = false }: Props) {
                 <button
                   type="submit"
                   disabled={busy}
-                  className="w-full bg-[#17365D] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#102A43] disabled:opacity-60 rounded-[2px] transition-colors cursor-pointer"
+                  className="w-full bg-[#205081] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#112D4E] disabled:opacity-60 rounded-[2px] transition-colors cursor-pointer shadow-xs"
                 >
-                  {busy ? (locale === "hi" ? "प्रमाणीकरण हो रहा है…" : "Verifying…") : (locale === "hi" ? "लॉगिन करें एवं पद चुनें →" : "Sign In & Choose Role →")}
+                  {busy ? (locale === "hi" ? "तपासणी सुरू आहे…" : "Verifying…") : (locale === "hi" ? "प्रवेश करा व पद निवडा / Sign In →" : "Sign In & Choose Role →")}
                 </button>
 
-                <div className="mt-3 flex items-center justify-between text-xs text-[#5B6573]">
-                  <a className="font-semibold text-[#17365D] hover:underline" href="/forgot-password">
-                    {locale === "hi" ? "पासवर्ड भूल गए?" : "Forgot password?"}
+                <div className="mt-3 flex items-center justify-between text-xs text-[#64748B]">
+                  <a className="font-bold text-[#205081] hover:underline" href="/forgot-password">
+                    {locale === "hi" ? "पासवर्ड विसरलात?" : "Forgot password?"}
                   </a>
                   <button
                     type="button"
                     onClick={() => { setAuthMethod("otp"); setError(""); setOtpSuccessNotice(""); }}
-                    className="text-[#17365D] font-semibold hover:underline"
+                    className="text-[#205081] font-bold hover:underline"
                   >
-                    {locale === "hi" ? "मोबाइल OTP से लॉगिन करें" : "Use Phone & OTP"} &rarr;
+                    {locale === "hi" ? "मोबाईल OTP द्वारे प्रवेश" : "Use Phone & OTP"} &rarr;
                   </button>
                 </div>
               </form>
@@ -555,15 +576,15 @@ export default function LoginClient({ isDemo = false }: Props) {
                 {!otpSent ? (
                   <form onSubmit={handleSendOtp} className="space-y-4" aria-busy={busy}>
                     <div>
-                      <label htmlFor="login-phone" className="block text-xs font-semibold text-[#202B36] mb-1">
-                        {locale === "hi" ? "पंजीकृत मोबाइल नंबर" : "Registered Mobile Number"}
+                      <label htmlFor="login-phone" className="block text-xs font-bold text-[#102A43] mb-1">
+                        {locale === "hi" ? "नोंदणीकृत मोबाईल नंबर / Registered Mobile" : "Registered Mobile Number"}
                       </label>
                       <div className="flex">
                         <select
                           value={countryCode}
                           onChange={(e) => setCountryCode(e.target.value)}
                           aria-label="Country Code"
-                          className="px-2.5 py-2 border border-r-0 border-[#8B95A1] bg-[#F8FAFC] text-xs font-semibold text-[#102A43] rounded-l-[2px]"
+                          className="px-2.5 py-2 border border-r-0 border-[#CBD5E1] bg-[#F4F6F9] text-xs font-bold text-[#102A43] rounded-l-[2px]"
                         >
                           <option value="+91">+91 (India)</option>
                           <option value="+1">+1 (USA/Canada)</option>
@@ -582,12 +603,12 @@ export default function LoginClient({ isDemo = false }: Props) {
                           maxLength={15}
                           value={phoneNumber}
                           onChange={(e) => setPhoneNumber(e.target.value.replace(/[^\d\s]/g, ""))}
-                          className="w-full min-w-0 px-3 py-2 border border-[#8B95A1] bg-white text-[#202B36] text-xs rounded-r-[2px] font-mono"
+                          className="w-full min-w-0 px-3 py-2 border border-[#CBD5E1] bg-white text-[#102A43] text-xs rounded-r-[2px] font-mono focus:outline-none focus:border-[#205081]"
                         />
                       </div>
-                      <p className="mt-1 text-[11px] text-[#5B6573]">
+                      <p className="mt-1 text-[11px] text-[#64748B]">
                         {countryCode === "+91"
-                          ? (locale === "hi" ? "अपना 10 अंकों का पंजीकृत मोबाइल नंबर दर्ज करें।" : "Enter your registered 10-digit mobile number.")
+                          ? (locale === "hi" ? "आपला १० अंकी नोंदणीकृत मोबाईल नंबर टाका." : "Enter your registered 10-digit mobile number.")
                           : "Include your international mobile number without leading zeros."}
                       </p>
                     </div>
@@ -595,41 +616,41 @@ export default function LoginClient({ isDemo = false }: Props) {
                     <button
                       type="submit"
                       disabled={busy || !phoneNumber.trim()}
-                      className="w-full bg-[#17365D] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#102A43] disabled:opacity-60 rounded-[2px] transition-colors cursor-pointer"
+                      className="w-full bg-[#205081] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#112D4E] disabled:opacity-60 rounded-[2px] transition-colors cursor-pointer shadow-xs"
                     >
-                      {busy ? (locale === "hi" ? "OTP भेजा जा रहा है…" : "Sending OTP…") : (locale === "hi" ? "OTP भेजें →" : "Send OTP →")}
+                      {busy ? (locale === "hi" ? "OTP पाठवत आहे…" : "Sending OTP…") : (locale === "hi" ? "OTP पाठवा / Send OTP →" : "Send OTP →")}
                     </button>
 
-                    <div className="mt-3 flex items-center justify-between text-xs text-[#5B6573]">
+                    <div className="mt-3 flex items-center justify-between text-xs text-[#64748B]">
                       <button
                         type="button"
                         onClick={() => { setAuthMethod("password"); setError(""); setOtpSuccessNotice(""); }}
-                        className="text-[#17365D] font-semibold hover:underline"
+                        className="text-[#205081] font-bold hover:underline"
                       >
-                        &larr; {locale === "hi" ? "पासवर्ड लॉगिन का उपयोग करें" : "Use Password Login"}
+                        &larr; {locale === "hi" ? "पासवर्ड लॉगिन वापरा" : "Use Password Login"}
                       </button>
-                      <span className="text-[11px]">Valid for 10 minutes</span>
+                      <span className="text-[11px]">१० मिनिटांसाठी वैध / Valid for 10 min</span>
                     </div>
                   </form>
                 ) : (
                   <form onSubmit={handleVerifyOtp} className="space-y-4" aria-busy={busy}>
-                    <div className="bg-[#F8FAFC] border border-[#CBD5E1] p-3 rounded-[2px] text-xs text-[#334155] flex items-center justify-between">
+                    <div className="bg-[#F4F6F9] border border-[#CBD5E1] p-3 rounded-[2px] text-xs text-[#334155] flex items-center justify-between">
                       <div>
-                        <div className="font-semibold text-[#102A43]">{countryCode} {phoneNumber}</div>
-                        <div className="text-[11px] text-[#64748B]">SMS OTP Delivered</div>
+                        <div className="font-bold text-[#102A43]">{countryCode} {phoneNumber}</div>
+                        <div className="text-[11px] text-[#64748B]">SMS OTP पाठवला आहे</div>
                       </div>
                       <button
                         type="button"
                         onClick={() => { setOtpSent(false); setOtpCode(""); setError(""); setOtpSuccessNotice(""); }}
-                        className="text-xs font-bold text-[#17365D] hover:underline cursor-pointer"
+                        className="text-xs font-bold text-[#205081] hover:underline cursor-pointer"
                       >
-                        Change
+                        बदला / Change
                       </button>
                     </div>
 
                     <div>
-                      <label htmlFor="login-otp" className="block text-xs font-semibold text-[#202B36] mb-1">
-                        {locale === "hi" ? "6 अंकों का OTP दर्ज करें" : "Enter 6-digit OTP code"}
+                      <label htmlFor="login-otp" className="block text-xs font-bold text-[#102A43] mb-1">
+                        {locale === "hi" ? "६ अंकी OTP प्रविष्ट करा" : "Enter 6-digit OTP code"}
                       </label>
                       <input
                         id="login-otp"
@@ -643,38 +664,38 @@ export default function LoginClient({ isDemo = false }: Props) {
                         placeholder="••••••"
                         value={otpCode}
                         onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                        className="w-full px-3 py-2 border-2 border-[#17365D] bg-white text-[#202B36] text-lg font-mono tracking-widest text-center rounded-[2px]"
+                        className="w-full px-3 py-2 border-2 border-[#205081] bg-white text-[#102A43] text-lg font-mono tracking-widest text-center rounded-[2px] focus:outline-none"
                       />
                     </div>
 
                     <button
                       type="submit"
                       disabled={busy || otpCode.length !== 6}
-                      className="w-full bg-[#17365D] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#102A43] disabled:opacity-60 rounded-[2px] transition-colors cursor-pointer"
+                      className="w-full bg-[#205081] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#112D4E] disabled:opacity-60 rounded-[2px] transition-colors cursor-pointer shadow-xs"
                     >
-                      {busy ? (locale === "hi" ? "सत्यापन जारी है…" : "Verifying…") : (locale === "hi" ? "OTP सत्यापित करें एवं पद चुनें →" : "Verify & Choose Role →")}
+                      {busy ? (locale === "hi" ? "पडताळणी सुरू आहे…" : "Verifying…") : (locale === "hi" ? "सत्यापित करा व पद निवडा / Verify →" : "Verify & Choose Role →")}
                     </button>
 
                     <div className="flex items-center justify-between text-xs pt-1">
                       <button
                         type="button"
                         onClick={() => { setAuthMethod("password"); setError(""); setOtpSuccessNotice(""); }}
-                        className="text-[#17365D] font-semibold hover:underline cursor-pointer"
+                        className="text-[#205081] font-bold hover:underline cursor-pointer"
                       >
-                        &larr; {locale === "hi" ? "पासवर्ड का उपयोग करें" : "Use Password"}
+                        &larr; {locale === "hi" ? "पासवर्ड वापरा" : "Use Password"}
                       </button>
 
                       {otpCooldown > 0 ? (
-                        <span className="text-[#5B6573] font-mono text-[11px]">
+                        <span className="text-[#64748B] font-mono text-[11px]">
                           Resend in {otpCooldown}s
                         </span>
                       ) : (
                         <button
                           type="button"
                           onClick={() => handleSendOtp()}
-                          className="font-bold text-[#C87524] hover:underline cursor-pointer"
+                          className="font-bold text-[#FF9933] hover:underline cursor-pointer"
                         >
-                          {locale === "hi" ? "OTP पुनः भेजें" : "Resend OTP"}
+                          {locale === "hi" ? "OTP पुन्हा पाठवा" : "Resend OTP"}
                         </button>
                       )}
                     </div>
@@ -688,26 +709,26 @@ export default function LoginClient({ isDemo = false }: Props) {
 
       {/* STEP 2: POST-LOGIN ROLE SELECTION (RBAC SCREEN) */}
       {step === "role_select" && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Identity Header Banner */}
-          <div className="bg-white border border-[#D8DEE6] p-6 rounded-[4px] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="bg-white border-l-4 border-l-[#FF9933] border-y border-r border-[#CBD5E1] p-4 sm:p-5 rounded-[2px] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#059669] bg-[#ECFDF5] border border-[#A7F3D0] px-2 py-0.5 rounded-[2px]">
                   {locale === "hi" ? "प्रमाणीकृत सत्र" : "Authenticated Session"}
                 </span>
                 {authenticatedUser && (
-                  <span className="text-xs font-mono font-semibold text-[#17365D]">
+                  <span className="text-xs font-mono font-bold text-[#205081]">
                     {authenticatedUser.identifier}
                   </span>
                 )}
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold text-[#102A43] mt-2">
-                {locale === "hi" ? "अपने आधिकारिक पद एवं कार्यक्षेत्र का चयन करें" : "Select Your Official Portal Role"}
+              <h1 className="text-xl sm:text-2xl font-bold text-[#102A43] mt-1.5">
+                {locale === "hi" ? "आपले अधिकृत पद व कार्यक्षेत्र निवडा" : "Select Your Official Portal Role"}
               </h1>
-              <p className="text-xs sm:text-sm text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#64748B] mt-0.5 max-w-2xl leading-relaxed">
                 {locale === "hi"
-                  ? "अपने पदीय कर्तव्यों के अनुसार उपयुक्त भूमिका चुनें। प्रत्येक भूमिका को डेटा सुरक्षा नियमों के तहत केवल निर्धारित सुविधाओं तक सीमित अधिकार दिए जाते हैं।"
+                  ? "आपल्या पदानुसार योग्य भूमिका निवडा. शासकीय नियमांनुसार प्रत्येक भूमिकेला केवळ अधिकृत सेवांचा अधिकार देण्यात आला आहे."
                   : "Choose the role matching your authorized duties. Access to portal modules, student records, and reports is strictly determined by this selection."}
               </p>
             </div>
@@ -720,31 +741,31 @@ export default function LoginClient({ isDemo = false }: Props) {
                 setOtpSent(false);
                 setOtpCode("");
               }}
-              className="px-3.5 py-1.5 border border-[#8B95A1] text-xs font-semibold text-[#17365D] hover:bg-[#F4F6F8] rounded-[2px] transition-colors self-start md:self-auto cursor-pointer"
+              className="px-3 py-1.5 border border-[#205081] text-xs font-bold text-[#205081] hover:bg-[#F4F6F9] rounded-[2px] transition-colors self-start md:self-auto cursor-pointer"
             >
-              {locale === "hi" ? "खाता बदलें / साइन आउट" : "Change Account / Sign Out"}
+              {locale === "hi" ? "खाते बदला / बाहेर पडा" : "Change Account / Sign Out"}
             </button>
           </div>
 
           {error && (
-            <p role="alert" className="border-l-4 border-[#B42318] bg-[#FDF0EF] p-3 text-xs text-[#7A1B14] rounded-[2px]">
+            <p role="alert" className="border-l-4 border-l-[#B42318] bg-[#FEF2F2] p-3 text-xs text-[#B42318] border-y border-r border-[#FECDCA] rounded-[2px]">
               {error}
             </p>
           )}
 
           {/* 5 Distinct Official Role Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {portalRoles.map((roleItem) => {
               const isSelected = switchingPersona === roleItem.id;
               return (
                 <div
                   key={roleItem.id}
-                  className="bg-white border border-[#CBD5E1] border-t-4 border-t-[#17365D] rounded-[4px] p-5 flex flex-col justify-between hover:shadow-md transition-shadow"
+                  className="bg-white border border-[#CBD5E1] border-t-4 border-t-[#205081] rounded-[2px] p-4 sm:p-5 flex flex-col justify-between shadow-xs hover:border-[#205081] transition-colors"
                 >
                   <div className="space-y-3">
                     {/* Header Tag & Role Title */}
-                    <div className="flex items-center justify-between gap-2 border-b border-[#E2E8F0] pb-2.5">
-                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 bg-[#F4F6F8] border border-[#CBD5E1] text-[#17365D] font-bold">
+                    <div className="flex items-center justify-between gap-2 border-b border-[#CBD5E1] pb-2">
+                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 bg-[#EAEFF5] border border-[#CBD5E1] text-[#205081] font-bold rounded-[2px]">
                         {locale === "hi" ? roleItem.scopeTagHi : roleItem.scopeTagEn}
                       </span>
                       <span className="text-[11px] font-mono text-[#64748B]">{roleItem.email}</span>
@@ -754,7 +775,7 @@ export default function LoginClient({ isDemo = false }: Props) {
                       <h2 className="text-base font-bold text-[#102A43]">
                         {locale === "hi" ? roleItem.titleHi : roleItem.titleEn}
                       </h2>
-                      <div className="text-xs font-semibold text-[#C87524]">
+                      <div className="text-xs font-bold text-[#205081] mt-0.5">
                         {locale === "hi" ? roleItem.orgHi : roleItem.orgEn}
                       </div>
                       <p className="text-xs text-[#334155] mt-1.5 leading-relaxed">
@@ -763,15 +784,15 @@ export default function LoginClient({ isDemo = false }: Props) {
                     </div>
 
                     {/* Permissions: Allowed vs Restricted */}
-                    <div className="pt-2 space-y-2 border-t border-[#F1F5F9] text-[11px]">
+                    <div className="pt-2 space-y-2 border-t border-[#CBD5E1] text-[11px]">
                       <div>
-                        <span className="font-bold text-[#237A52] uppercase text-[10px] tracking-wider block mb-1">
-                          {locale === "hi" ? "अनुमत कार्य (Permitted Features):" : "Permitted Features:"}
+                        <span className="font-bold text-[#059669] uppercase text-[10px] tracking-wider block mb-1">
+                          {locale === "hi" ? "अनुमत अधिकार (Permitted Features):" : "Permitted Features:"}
                         </span>
                         <ul className="space-y-1 text-[#334155]">
                           {(locale === "hi" ? roleItem.allowedFeaturesHi : roleItem.allowedFeaturesEn).map((feat, idx) => (
                             <li key={idx} className="flex items-start gap-1.5">
-                              <span className="text-[#237A52] font-bold">&bull;</span>
+                              <span className="text-[#059669] font-bold">&bull;</span>
                               <span>{feat}</span>
                             </li>
                           ))}
@@ -795,15 +816,15 @@ export default function LoginClient({ isDemo = false }: Props) {
                   </div>
 
                   {/* Role Entry Action Button */}
-                  <div className="pt-4 mt-4 border-t border-[#E2E8F0]">
+                  <div className="pt-4 mt-4 border-t border-[#CBD5E1]">
                     <button
                       type="button"
                       disabled={Boolean(switchingPersona)}
                       onClick={() => handleRoleSelect(roleItem)}
-                      className="w-full py-2.5 px-3 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-bold rounded-[2px] transition-colors cursor-pointer disabled:opacity-50 text-center"
+                      className="w-full py-2 px-3 bg-[#205081] hover:bg-[#112D4E] text-white text-xs font-bold rounded-[2px] transition-colors cursor-pointer disabled:opacity-50 text-center shadow-xs"
                     >
                       {isSelected
-                        ? (locale === "hi" ? "सत्र प्रारंभ हो रहा है…" : "Starting Session…")
+                        ? (locale === "hi" ? "सत्र सुरू होत आहे…" : "Starting Session…")
                         : `${locale === "hi" ? roleItem.buttonLabelHi : roleItem.buttonLabelEn} →`}
                     </button>
                   </div>
@@ -815,9 +836,9 @@ export default function LoginClient({ isDemo = false }: Props) {
       )}
 
       {/* Footer Info Notice */}
-      <div className="text-xs text-[#5B6573] border-t border-[#D8DEE6] pt-4 flex flex-col sm:flex-row justify-between gap-2">
+      <div className="text-xs text-[#64748B] border-t border-[#CBD5E1] pt-3 flex flex-col sm:flex-row justify-between gap-2">
         <span>{t("Accounts are issued by an authorized platform administrator. Never share administrative credentials.")}</span>
-        <span className="font-mono text-[11px] text-[#17365D]">SATYAPAN V2.0 · Team PRAMAANIT</span>
+        <span className="font-mono text-[11px] text-[#205081] font-bold">सत्यापन २०२६-२७ · महाराष्ट्र शासन</span>
       </div>
     </section>
   );

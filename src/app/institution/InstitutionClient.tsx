@@ -75,26 +75,52 @@ export default function InstitutionClient({
   const isOverCapacity = currentInst.actual_enrolment > totalCap;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 space-y-6">
-      {/* Page Title & Institution Switcher */}
-      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4">
+      {/* Maharashtra.gov.in Official Breadcrumb */}
+      <div className="bg-[#EAEFF5] border border-[#CBD5E1] px-4 py-1.5 rounded-[2px] text-xs text-[#334155] flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 text-[11px]">
+          <Link href="/" className="text-[#205081] font-semibold hover:underline">
+            मुख्य पृष्ठ / Home
+          </Link>
+          <span className="text-[#94A3B8]">&gt;</span>
+          <span className="text-[#205081] font-semibold">
+            महाविद्यालयीन प्रशासन / College Administration
+          </span>
+          <span className="text-[#94A3B8]">&gt;</span>
+          <span className="text-[#102A43] font-bold">
+            जागा व प्रवेश नियंत्रण / Seats &amp; Enrolment
+          </span>
+        </div>
+        <div className="hidden sm:block text-[10px] font-mono text-[#64748B]">
+          सत्र २०२६-२७ / AY 2026-27 | GIGW Compliant
+        </div>
+      </div>
+
+      {/* 1. Maharashtra.gov.in Department Header Block */}
+      <div className="bg-white border-l-4 border-l-[#FF9933] border-y border-r border-[#CBD5E1] p-4 sm:p-5 rounded-[2px] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#102A43]">
-            College Seats &amp; Enrolment
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" aria-hidden="true" />
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#205081]">
+              महाराष्ट्र शासन • तंत्रशिक्षण संचालनालय • Directorate of Technical Education
+            </span>
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#102A43] mt-1">
+            महाविद्यालयीन जागा व प्रवेश नियंत्रण / College Seats &amp; Enrolment
           </h1>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
           <div className="flex items-center space-x-2">
-            <label htmlFor="inst-select" className="text-xs font-semibold text-[#5B6573]">
-              {t("Select Institution:")}
+            <label htmlFor="inst-select" className="text-xs font-semibold text-[#64748B]">
+              महाविद्यालय / College:
             </label>
             <select
               id="inst-select"
               aria-label={t("Select Institution:")}
               value={selectedInstId}
               onChange={(e) => { setSelectedInstId(e.target.value); setPage(0); }}
-              className="px-3 py-1.5 bg-white border border-[#D8DEE6] text-xs font-semibold text-[#17365D] rounded-[2px] focus:outline-none focus:border-[#17365D] cursor-pointer"
+              className="px-3 py-1.5 bg-white border border-[#CBD5E1] text-xs font-semibold text-[#205081] rounded-[2px] focus:outline-none focus:border-[#205081] cursor-pointer"
             >
               {initialInstitutions.map((inst) => (
                 <option key={inst.id} value={inst.id}>
@@ -106,43 +132,43 @@ export default function InstitutionClient({
 
           <Link
             href={`/institution/upload?instId=${currentInst.id}`}
-            className="px-3.5 py-1.5 bg-[#C87524] hover:bg-[#a65f1a] text-white text-xs font-semibold rounded-[2px] transition-colors"
+            className="px-3.5 py-1.5 bg-[#205081] hover:bg-[#112D4E] text-white text-xs font-bold rounded-[2px] transition-colors shadow-xs"
           >
-            {t("Upload Admission CSV")}
+            विद्यार्थी सूची अपलोड / Upload CSV
           </Link>
         </div>
       </div>
 
-      {/* Sample Data Informational Banner */}
-      <div className="bg-[#F8FAFC] border-l-4 border-[#17365D] border border-[#CBD5E1] p-3 rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#334155]">
+      {/* Official Government Notice Bar */}
+      <div className="bg-[#FFFBEB] border-l-4 border-l-[#FF9933] border-y border-r border-[#CBD5E1] px-4 py-2.5 rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#334155]">
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-[#102A43]">Notice:</span>
-          <span>Sample institutional records active. Upload student CSV to refresh live data.</span>
+          <span className="font-bold text-[#102A43]">सूचना / Notice:</span>
+          <span>संस्थेची सक्रिय प्रवेश नोंदवही खाली दर्शविली आहे. नवीन प्रवेश यादी अद्यतनित करण्यासाठी CSV अपलोड करा.</span>
         </div>
         <Link
           href={`/institution/upload?instId=${currentInst.id}`}
-          className="text-[#17365D] font-bold hover:underline whitespace-nowrap self-start sm:self-auto"
+          className="text-[#205081] font-bold hover:underline whitespace-nowrap self-start sm:self-auto"
         >
-          Upload New CSV &rarr;
+          नवीन CSV अपलोड करा / Upload &rarr;
         </Link>
       </div>
 
-      {/* College Seat Capacity Ledger */}
-      <div className="bg-white border border-[#D8DEE6] rounded-[2px] p-5 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#D8DEE6] gap-2">
+      {/* College Seat Capacity Ledger (Government Grid Format) */}
+      <div className="bg-white border border-[#CBD5E1] rounded-[2px] p-4 sm:p-5 space-y-4 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#CBD5E1] gap-2">
           <div>
-            <div className="text-xs font-mono font-bold text-[#C87524]">
-              AICTE CODE: {currentInst.aicte_code}
+            <div className="text-xs font-mono font-bold text-[#205081]">
+              AICTE मान्यता क्रमांक / CODE: {currentInst.aicte_code}
             </div>
-            <h2 className="text-base font-bold text-[#17365D]">{currentInst.name}</h2>
-            <div className="text-xs text-[#5B6573]">{currentInst.state} Technical Education Board</div>
+            <h2 className="text-base font-bold text-[#102A43]">{currentInst.name}</h2>
+            <div className="text-xs text-[#64748B]">{currentInst.state} राज्य तंत्रशिक्षण मंडळ / Technical Education Board</div>
           </div>
 
           <div className="text-left sm:text-right font-mono">
-            <div className="text-[10px] text-[#5B6573] uppercase">{t("Seat Utilization Rate")}</div>
+            <div className="text-[10px] text-[#64748B] uppercase font-bold">जागा वापर दर / Seat Utilization</div>
             <div
               className={`text-xl font-bold ${
-                isOverCapacity ? "text-[#B42318]" : "text-[#237A52]"
+                isOverCapacity ? "text-[#B42318]" : "text-[#059669]"
               }`}
             >
               {currentInst.actual_enrolment} / {totalCap} Seats ({enrolmentPct}%)
@@ -152,132 +178,144 @@ export default function InstitutionClient({
 
         {/* Linear Progress Bar */}
         <div className="space-y-1">
-          <div className="h-2 w-full bg-[#F4F6F8] border border-[#D8DEE6] overflow-hidden">
+          <div className="h-2.5 w-full bg-[#EAEFF5] border border-[#CBD5E1] rounded-[2px] overflow-hidden">
             <div
               className={`h-full transition-all ${
                 isOverCapacity
                   ? "bg-[#B42318]"
                   : enrolmentPct > 90
-                  ? "bg-[#986500]"
-                  : "bg-[#237A52]"
+                  ? "bg-[#D97706]"
+                  : "bg-[#059669]"
               }`}
               style={{ width: `${Math.min(enrolmentPct, 100)}%` }}
             />
           </div>
-          <div className="flex flex-wrap justify-between gap-1 text-[11px] text-[#5B6573] font-mono">
-            <span>{t("Sanctioned Intake:")} {currentInst.approved_intake}</span>
-            <span>{t("Supernumerary Capacity:")} +{currentInst.supernumerary_capacity}</span>
-            <span>{t("Total Ceiling:")} {totalCap}</span>
+          <div className="flex flex-wrap justify-between gap-1 text-[11px] text-[#64748B] font-mono">
+            <span>मंजूर जागा / Sanctioned: {currentInst.approved_intake}</span>
+            <span>अतिरीक्त कोटा / Supernumerary: +{currentInst.supernumerary_capacity}</span>
+            <span>कमाल मर्यादा / Total Ceiling: {totalCap}</span>
           </div>
         </div>
 
-        {/* Unified Institutional Audit Breakdown */}
-        <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-[4px] p-3 divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] grid grid-cols-2 sm:grid-cols-4 text-xs">
+        {/* Unified Institutional Audit Breakdown (Administrative Grid) */}
+        <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-[2px] p-3 divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] grid grid-cols-2 sm:grid-cols-4 text-xs">
           <div className="px-3 py-1">
-            <span className="text-[#64748B] text-[11px] block">{t("Approved intake reference")}</span>
-            <span className="text-base font-bold text-[#102A43] font-mono">{currentInst.approved_intake} seats</span>
+            <span className="text-[#64748B] text-[10px] font-bold uppercase block">मंजूर जागा / Approved</span>
+            <span className="text-base font-bold text-[#102A43] font-mono">{currentInst.approved_intake}</span>
           </div>
           <div className="px-3 py-1">
-            <span className="text-[#64748B] text-[11px] block">{t("Actual Admissions")}</span>
-            <span className="text-base font-bold text-[#102A43] font-mono">{currentInst.actual_enrolment} enrolled</span>
+            <span className="text-[#64748B] text-[10px] font-bold uppercase block">प्रत्यक्ष प्रवेश / Enrolled</span>
+            <span className="text-base font-bold text-[#102A43] font-mono">{currentInst.actual_enrolment}</span>
           </div>
           <div className="px-3 py-1">
-            <span className="text-[#64748B] text-[11px] block">{t("Flagged Admissions")}</span>
-            <span className="text-base font-bold text-[#102A43] font-mono">{currentInst.flagged_students} flagged</span>
+            <span className="text-[#64748B] text-[10px] font-bold uppercase block">पडताळणी प्रलंबित / Flagged</span>
+            <span className="text-base font-bold text-[#B42318] font-mono">{currentInst.flagged_students}</span>
           </div>
           <div className="px-3 py-1">
-            <span className="text-[#64748B] text-[11px] block">{t("Integrity Index")}</span>
-            <span className="text-base font-bold text-[#102A43] font-mono">{currentInst.avg_integrity_score} / 100</span>
+            <span className="text-[#64748B] text-[10px] font-bold uppercase block">सत्यता निर्देशांक / Score</span>
+            <span className="text-base font-bold text-[#059669] font-mono">{currentInst.avg_integrity_score} / 100</span>
           </div>
         </div>
       </div>
 
-      {/* Student Admission Roster Table */}
-      <div className="bg-white border border-[#D8DEE6] rounded-[2px] overflow-hidden">
-        <div className="p-4 border-b border-[#D8DEE6] flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#F4F6F8]">
+      {/* Student Admission Roster Table (Maharashtra Portal GR Table Style) */}
+      <div className="bg-white border border-[#CBD5E1] rounded-[2px] shadow-xs overflow-hidden">
+        <div className="p-4 border-b border-[#CBD5E1] flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#EAEFF5]">
           <div>
-            <h3 className="text-sm font-bold text-[#17365D] uppercase tracking-wider">
-              {t("Enrolment Admission Roster")} ({totalStudents})
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#205081]">
+              महाविद्यालयीन विद्यार्थी प्रवेश नोंदवही / Enrolment Roster
+            </div>
+            <h3 className="text-sm sm:text-base font-bold text-[#102A43] mt-0.5">
+              प्रवेशित विद्यार्थी यादी / Student Admission List ({totalStudents})
             </h3>
-            <p className="text-xs text-[#5B6573]">
-              {currentInst.name}
-            </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
             <input
               type="text"
-              aria-label={t("Filter by Student Name or Roll...")}
-              placeholder={t("Filter by Student Name or Roll...")}
+              aria-label="विद्यार्थी नाव किंवा रोल नंबर शोधा..."
+              placeholder="नाव किंवा रोल नंबर शोधा..."
               value={searchQuery}
               onChange={(e) => { setSearchQuery(e.target.value); setPage(0); }}
-              className="px-3 py-1.5 bg-white border border-[#D8DEE6] text-xs text-[#202B36] rounded-[2px] focus:outline-none focus:border-[#17365D] w-full sm:w-64"
+              className="px-3 py-1.5 bg-white border border-[#CBD5E1] text-xs text-[#102A43] rounded-[2px] focus:outline-none focus:border-[#205081] w-full sm:w-64"
             />
 
             <select
-              aria-label={t("Compliance Status")}
+              aria-label="स्थिती / Status"
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setPage(0); }}
-              className="px-3 py-1.5 bg-white border border-[#D8DEE6] text-xs text-[#202B36] rounded-[2px] focus:outline-none focus:border-[#17365D] cursor-pointer"
+              className="px-3 py-1.5 bg-white border border-[#CBD5E1] text-xs text-[#102A43] font-semibold rounded-[2px] focus:outline-none focus:border-[#205081] cursor-pointer"
             >
-              <option value="ALL">{t("All Statuses")}</option>
-              <option value="VERIFIED">{t("Verified Records")}</option>
-              <option value="FLAGGED">{t("Flagged Records")}</option>
+              <option value="ALL">सर्व स्थिती / All Statuses</option>
+              <option value="VERIFIED">प्रमाणित / Verified Records</option>
+              <option value="FLAGGED">पडताळणी प्रलंबित / Flagged Records</option>
             </select>
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse min-w-[800px]">
-            <thead className="bg-[#F4F6F8] text-[#5B6573] uppercase text-[10px] tracking-wider font-semibold border-b border-[#D8DEE6]">
+          <table className="w-full text-left text-xs border-collapse min-w-[850px]">
+            <thead className="bg-[#205081] text-white uppercase text-[10px] font-bold">
               <tr>
-                <th scope="col" className="py-2.5 px-4 font-mono">{t("Roll / Student ID")}</th>
-                <th scope="col" className="py-2.5 px-4">{t("Student Name")}</th>
-                <th scope="col" className="py-2.5 px-4 font-mono">{t("Masked APAAR ID")}</th>
-                <th scope="col" className="py-2.5 px-4">{t("Degree Program")}</th>
-                <th scope="col" className="py-2.5 px-4">{t("Quota / Category")}</th>
-                <th scope="col" className="py-2.5 px-4 font-mono text-center">{t("Score")}</th>
-                <th scope="col" className="py-2.5 px-4">{t("Compliance Status")}</th>
-                <th scope="col" className="py-2.5 px-4 text-right">{t("Actions")}</th>
+                <th scope="col" className="w-12 py-2.5 px-3 border-r border-[#112D4E] text-center">क्र.</th>
+                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E] font-mono">रोल / Roll No.</th>
+                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">विद्यार्थी नाव / Full Name</th>
+                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E] font-mono">अपार आयडी / APAAR</th>
+                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">अभ्यासक्रम / Program</th>
+                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">प्रवर्ग / Quota</th>
+                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E] font-mono text-center">अंक / Score</th>
+                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E] text-center">स्थिती / Status</th>
+                <th scope="col" className="py-2.5 px-3 text-center w-24">तपशील / Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#D8DEE6] text-[#202B36]">
+            <tbody className="divide-y divide-[#CBD5E1] text-[#102A43]">
               {students.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-8 text-center text-[#5B6573]">
-                    {loadError || (isLoading ? t("Loading…") : t("No accounts match your search."))}
+                  <td colSpan={9} className="py-8 text-center text-xs text-[#64748B]">
+                    {loadError || (isLoading ? "माहिती लोड होत आहे... / Loading…" : "नोंद आढळली नाही / No records match criteria.")}
                   </td>
                 </tr>
               ) : (
-                students.map((stu) => (
-                  <tr key={stu.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="py-3 px-4 font-mono font-semibold text-[#17365D]">
+                students.map((stu, idx) => (
+                  <tr
+                    key={stu.id}
+                    className={`transition-colors ${
+                      idx % 2 === 0
+                        ? "bg-white hover:bg-[#EAEFF5]"
+                        : "bg-[#F4F6F9] hover:bg-[#EAEFF5]"
+                    }`}
+                  >
+                    <td className="py-2.5 px-3 text-center font-bold text-[#64748B] border-r border-[#CBD5E1]">
+                      {page * 50 + idx + 1}
+                    </td>
+
+                    <td className="py-2.5 px-3 font-mono font-bold text-[#205081] border-r border-[#CBD5E1]">
                       {stu.institutional_student_id}
                     </td>
 
-                    <td className="py-3 px-4 font-medium text-[#202B36]">
+                    <td className="py-2.5 px-3 font-bold text-[#102A43] border-r border-[#CBD5E1]">
                       {stu.full_name}
                     </td>
 
-                    <td className="py-3 px-4 font-mono text-[#5B6573]">
+                    <td className="py-2.5 px-3 font-mono text-[#334155] border-r border-[#CBD5E1]">
                       {stu.masked_apaar}
                     </td>
 
-                    <td className="py-3 px-4 text-[#5B6573]">
+                    <td className="py-2.5 px-3 text-[#334155] border-r border-[#CBD5E1]">
                       {stu.program}
                     </td>
 
-                    <td className="py-3 px-4 whitespace-nowrap uppercase font-mono text-[10px] text-[#5B6573]">
+                    <td className="py-2.5 px-3 whitespace-nowrap uppercase font-mono text-[10px] text-[#475569] border-r border-[#CBD5E1]">
                       {stu.nationality_type} / {stu.social_category || "GEN"}
                     </td>
 
-                    <td className="py-3 px-4 font-mono font-bold text-center">
+                    <td className="py-2.5 px-3 font-mono font-bold text-center border-r border-[#CBD5E1]">
                       <span
                         className={
                           stu.integrity_score >= 90
-                            ? "text-[#237A52]"
+                            ? "text-[#059669]"
                             : stu.integrity_score >= 70
-                            ? "text-[#986500]"
+                            ? "text-[#D97706]"
                             : "text-[#B42318]"
                         }
                       >
@@ -285,24 +323,25 @@ export default function InstitutionClient({
                       </span>
                     </td>
 
-                    <td className="py-3 px-4 whitespace-nowrap">
+                    <td className="py-2.5 px-3 whitespace-nowrap text-center border-r border-[#CBD5E1]">
                       <span
-                        className={`px-2 py-0.5 text-[10px] font-mono font-bold uppercase rounded-[2px] border ${
+                        className={`inline-block px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase rounded-[2px] border ${
                           stu.enrolment_status === "verified"
-                            ? "bg-white text-[#237A52] border-[#237A52]"
-                            : "bg-white text-[#B42318] border-[#B42318]"
+                            ? "bg-[#ECFDF5] text-[#059669] border-[#A7F3D0]"
+                            : "bg-[#FEF2F2] text-[#B42318] border-[#FECDCA]"
                         }`}
                       >
-                        {stu.enrolment_status}
+                        {stu.enrolment_status === "verified" ? "प्रमाणित" : "विसंगत / FLAGGED"}
                       </span>
                     </td>
 
-                    <td className="py-3 px-4 text-right whitespace-nowrap">
+                    <td className="py-2.5 px-3 text-center whitespace-nowrap">
                       <Link
                         href={`/aicte/students/${stu.id}`}
-                        className="text-xs font-semibold text-[#17365D] hover:underline"
+                        className="inline-flex items-center gap-1 bg-[#205081] text-white hover:bg-[#112D4E] px-2.5 py-1 text-xs font-bold rounded-[2px] transition-colors"
                       >
-                        {t("Inspect")} &rarr;
+                        <span>पहा</span>
+                        <span aria-hidden="true">&rarr;</span>
                       </Link>
                     </td>
                   </tr>
@@ -311,28 +350,28 @@ export default function InstitutionClient({
             </tbody>
           </table>
         </div>
-        <div className="p-3 bg-[#F4F6F8] border-t border-[#D8DEE6] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-[11px] text-[#5B6573]">
+        <div className="p-3 bg-[#EAEFF5] border-t border-[#CBD5E1] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-[11px] text-[#64748B]">
           <span aria-live="polite">
             {isLoading
-              ? t("Loading…")
-              : `${t("Page")} ${page + 1} (${totalStudents === 0 ? 0 : page * 50 + 1}–${Math.min((page + 1) * 50, totalStudents)} / ${totalStudents})`}
+              ? "माहिती लोड होत आहे... / Loading…"
+              : `पृष्ठ / Page ${page + 1} (${totalStudents === 0 ? 0 : page * 50 + 1}–${Math.min((page + 1) * 50, totalStudents)} / एकूण ${totalStudents})`}
           </span>
           <div className="flex gap-2">
             <button
               type="button"
               disabled={page === 0 || isLoading}
               onClick={() => setPage((value) => Math.max(0, value - 1))}
-              className="border border-[#8B95A1] px-3 py-1.5 font-semibold text-[#17365D] bg-white hover:bg-[#F4F6F8] disabled:opacity-50 cursor-pointer"
+              className="border border-[#205081] px-3 py-1 font-bold text-xs text-[#205081] bg-white hover:bg-[#F4F6F9] disabled:opacity-50 rounded-[2px] cursor-pointer"
             >
-              {t("Previous")}
+              मागील / Previous
             </button>
             <button
               type="button"
               disabled={(page + 1) * 50 >= totalStudents || isLoading}
               onClick={() => setPage((value) => value + 1)}
-              className="border border-[#8B95A1] px-3 py-1.5 font-semibold text-[#17365D] bg-white hover:bg-[#F4F6F8] disabled:opacity-50 cursor-pointer"
+              className="border border-[#205081] px-3 py-1 font-bold text-xs text-[#205081] bg-white hover:bg-[#F4F6F9] disabled:opacity-50 rounded-[2px] cursor-pointer"
             >
-              {t("Next")}
+              पुढील / Next
             </button>
           </div>
         </div>
