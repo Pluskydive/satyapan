@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
-import { generateSignedCredentialPayload } from "@/lib/security";
+import { generateDemoCredentialPayload } from "@/lib/security";
 
 interface Props {
-  student: any;
+  student: Parameters<typeof generateDemoCredentialPayload>[0] & { enrolment_status: string };
 }
 
 export default function CertificateClient({ student }: Props) {
-  const payload = generateSignedCredentialPayload(student);
+  const payload = generateDemoCredentialPayload(student);
   const qrString = JSON.stringify(payload);
 
   const handlePrint = () => {
@@ -39,30 +39,30 @@ export default function CertificateClient({ student }: Props) {
         </div>
       </div>
 
-      {/* Official Certificate Canvas */}
+      {/* Synthetic record summary; it is not an official credential. */}
       <div className="bg-white border-4 border-[#17365D] p-8 sm:p-12 text-[#202B36] space-y-8 relative shadow-sm">
         {/* Border Accent */}
         <div className="border border-[#C87524] p-6 sm:p-8 space-y-8">
           {/* Institutional Heading */}
           <div className="text-center space-y-1 pb-6 border-b border-[#D8DEE6]">
             <div className="text-[11px] font-bold text-[#5B6573] uppercase tracking-widest">
-              अखिल भारतीय तकनीकी शिक्षा परिषद | All India Council for Technical Education
+              SATYAPAN · SIH 2026 PROTOTYPE
             </div>
             <div className="text-xs font-semibold text-[#5B6573]">
-              Ministry of Education, Government of India
+              Synthetic demonstration data · Not an official government record
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-[#17365D] tracking-tight pt-2">
-              VERIFIED ACADEMIC CREDENTIAL CERTIFICATE
+              SAMPLE ENROLMENT RECORD
             </h1>
             <div className="text-xs font-mono text-[#5B6573]">
-              Issued under AICTE Enrolment Integrity Framework & APAAR National Registry
+              This screen does not verify a real student&apos;s enrolment
             </div>
           </div>
 
           {/* Certificate Body */}
           <div className="space-y-4 text-center max-w-2xl mx-auto py-2">
             <p className="text-xs text-[#5B6573] uppercase tracking-wider">
-              This is to certify that the student record identified below has been verified and registered on the national technical enrolment ledger:
+              The following generated sample is shown to demonstrate a possible record summary:
             </p>
 
             <div className="text-2xl sm:text-3xl font-bold text-[#17365D] font-serif py-1">
@@ -70,7 +70,7 @@ export default function CertificateClient({ student }: Props) {
             </div>
 
             <p className="text-xs text-[#5B6573] leading-relaxed">
-              is a bona fide enrolled student of <strong>{student.institutions?.name}</strong> (AICTE Approval Code: <span className="font-mono">{student.institutions?.aicte_code}</span>), pursuing the approved technical degree program of:
+              is listed in the sample dataset for <strong>{student.institutions?.name}</strong> ({student.institutions?.aicte_code}), in the programme:
             </p>
 
             <div className="text-base sm:text-lg font-bold text-[#202B36] bg-[#F4F6F8] py-2 px-4 border border-[#D8DEE6] inline-block">
@@ -107,27 +107,27 @@ export default function CertificateClient({ student }: Props) {
               </div>
               <div className="text-left space-y-1">
                 <div className="text-[10px] font-bold text-[#17365D] uppercase tracking-wider">
-                  Tamper-Evident Signed QR
+                  Sample QR data
                 </div>
                 <div className="text-[10px] text-[#5B6573] max-w-xs leading-tight">
-                  Contains asymmetric cryptographic proof verifiable offline by authorized employers, universities, and DigiLocker readers.
+                  This QR contains synthetic demonstration data only. It has no cryptographic signature and cannot be used as proof of enrolment.
                 </div>
                 <div className="text-[9px] font-mono text-[#5B6573]">
-                  Seal: {payload.cryptographic_seal}
+                  Demo reference: {payload.demonstration_reference}
                 </div>
               </div>
             </div>
 
-            {/* Authoritative Seal Text */}
+            {/* Prototype attribution */}
             <div className="text-right space-y-1 sm:self-end">
               <div className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
-                Member Secretary
+                Demonstration output
               </div>
               <div className="text-[10px] text-[#5B6573]">
-                All India Council for Technical Education
+                Not issued by AICTE or a government authority
               </div>
               <div className="text-[10px] font-mono text-[#5B6573] pt-1">
-                Certificate ID: {payload.certificate_id}
+                Generated: {new Date(payload.timestamp).toLocaleString()}
               </div>
             </div>
           </div>

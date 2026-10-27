@@ -527,7 +527,7 @@ class SatyapanStore {
           dob_year: r.dob_year ? Number(r.dob_year) : null,
           gender: r.gender || 'Other',
           social_category: r.social_category || 'General',
-          nationality_type: (r.nationality_type as any) || 'indian',
+          nationality_type: r.nationality_type || 'indian',
           program: r.program || 'Technical Degree',
           admission_year: Number(r.admission_year) || 2026,
           admission_date: r.admission_date || new Date().toISOString().split('T')[0],
@@ -560,7 +560,6 @@ class SatyapanStore {
 
 // Singleton global mock store attached to globalThis in Node to preserve state across API routes
 declare global {
-  // eslint-disable-next-line no-var
   var __SATYAPAN_STORE__: SatyapanStore | undefined;
 }
 

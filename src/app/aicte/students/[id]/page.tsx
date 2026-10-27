@@ -2,16 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { dataProvider } from "@/lib/supabase";
 import { formatMaskedApaar, getScoreStyle, getSeverityStyle } from "@/lib/security";
-
-export async function generateStaticParams() {
-  return [
-    { id: "stu-1" },
-    { id: "stu-10" },
-    { id: "stu-20" },
-    { id: "stu-30" },
-    { id: "stu-40" },
-  ];
-}
+import type { ValidationFlag } from "@/lib/types";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -19,14 +10,15 @@ interface PageProps {
 
 export default async function StudentRiskPage({ params }: PageProps) {
   const { id } = await params;
-  const { data: student } = await dataProvider.getStudentById(id);
+  const { data: student, mode } = await dataProvider.getStudentById(id);
 
   if (!student) {
     notFound();
   }
 
   const scoreStyle = getScoreStyle(student.integrity_score);
-  const flags = student.flags || [];
+  const flags = (student.flags || []) as ValidationFlag[];
+  const maskedApaar = student.masked_apaar ?? formatMaskedApaar(student.apaar_id);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6 space-y-6">
@@ -45,7 +37,7 @@ export default async function StudentRiskPage({ params }: PageProps) {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">
-              Regulatory Case Record
+              {mode === "demo" ? "Sample record · Demonstration only" : "Authorized institutional record"}
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-0.5">
               {student.full_name}
@@ -53,7 +45,7 @@ export default async function StudentRiskPage({ params }: PageProps) {
             <div className="flex flex-wrap items-center gap-3 text-xs text-[#5B6573] mt-1 font-mono">
               <span>Roll ID: {student.institutional_student_id}</span>
               <span>|</span>
-              <span>APAAR ID: {formatMaskedApaar(student.apaar_id)}</span>
+              <span>APAAR ID: {maskedApaar}</span>
               <span>|</span>
               <span>Program: {student.program}</span>
             </div>
@@ -61,12 +53,14 @@ export default async function StudentRiskPage({ params }: PageProps) {
 
           <div className="flex items-center space-x-3 self-start sm:self-auto">
             <div className="text-right">
-              <div className="text-[10px] font-semibold text-[#5B6573] uppercase">
-                Integrity Score
-              </div>
-              <div className={`text-2xl font-bold font-mono ${scoreStyle.color}`}>
-                {student.integrity_score} / 100
-              </div>
+              {mode === "demo" ? (
+                <>
+                  <div className="text-[10px] font-semibold text-[#5B6573] uppercase">Sample integrity score</div>
+                  <div className={`text-2xl font-bold font-mono ${scoreStyle.color}`}>{student.integrity_score} / 100</div>
+                </>
+              ) : (
+                <div className="text-xs font-semibold text-[#5B6573]">Stored enrolment status</div>
+              )}
             </div>
             <span
               className={`px-2.5 py-1 text-xs font-bold uppercase rounded-[2px] border ${
@@ -88,20 +82,20 @@ export default async function StudentRiskPage({ params }: PageProps) {
           <div className="bg-white border border-[#D8DEE6] rounded-[2px] overflow-hidden">
             <div className="bg-[#F4F6F8] px-4 py-2.5 border-b border-[#D8DEE6] flex items-center justify-between">
               <span className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
-                Integrity Engine Violations ({flags.length} Open)
+                {mode === "demo" ? `Sample review flags (${flags.length})` : `Review flags (${flags.length})`}
               </span>
               <span className="text-[11px] font-mono text-[#5B6573]">
-                Section 10 AICTE Audit Matrix
+                {mode === "demo" ? "Demonstration rules" : "Current record flags"}
               </span>
             </div>
 
             {flags.length === 0 ? (
               <div className="p-8 text-center text-xs text-[#5B6573]">
-                No active violations detected. This record conforms to all statutory admission requirements.
+                No open sample findings for this record.
               </div>
             ) : (
               <div className="divide-y divide-[#D8DEE6]">
-                {flags.map((flag: any) => {
+                {flags.map((flag) => {
                   const sev = getSeverityStyle(flag.severity);
                   return (
                     <div key={flag.id} className="p-4 space-y-2">
@@ -128,7 +122,7 @@ export default async function StudentRiskPage({ params }: PageProps) {
 
                       <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6] text-xs mt-2 rounded-[2px]">
                         <div className="font-semibold text-[#17365D] uppercase text-[10px] tracking-wider mb-0.5">
-                          Recommended Council Enforcement Action:
+                          Suggested next step:
                         </div>
                         <div className="text-[#202B36] leading-relaxed text-[11px]">
                           {flag.recommended_action}
@@ -172,12 +166,6 @@ export default async function StudentRiskPage({ params }: PageProps) {
                   <td className="py-2.5 px-4 uppercase font-mono text-[#202B36]">{student.nationality_type}</td>
                 </tr>
                 <tr>
-                  <td className="py-2.5 px-4 text-[#5B6573] font-medium">Social Category</td>
-                  <td className="py-2.5 px-4 font-mono text-[#202B36]">
-                    {student.social_category || "NOT SPECIFIED"}
-                  </td>
-                </tr>
-                <tr>
                   <td className="py-2.5 px-4 text-[#5B6573] font-medium">Date of Admission</td>
                   <td className="py-2.5 px-4 font-mono text-[#202B36]">{student.admission_date || "—"}</td>
                 </tr>
@@ -189,18 +177,18 @@ export default async function StudentRiskPage({ params }: PageProps) {
             </table>
           </div>
 
-          <div className="bg-white border border-[#D8DEE6] p-4 rounded-[2px] space-y-2 text-xs">
+          {mode === "demo" && <div className="bg-white border border-[#D8DEE6] p-4 rounded-[2px] space-y-2 text-xs">
             <div className="font-bold text-[#17365D] uppercase text-[11px] tracking-wider">
-              Statutory Credential & Verification
+              Sample record outputs
             </div>
             <p className="text-[#5B6573] text-[11px] leading-relaxed">
-              Generate an official verifiable academic certificate displaying student roll ID and masked APAAR with offline signed QR (AICTE Requirement 10).
+              Create a printable sample summary. It is not an official credential or proof of enrolment.
             </p>
             <Link
               href={`/verify/certificate/${student.id}`}
               className="inline-block w-full py-2 text-center font-bold text-white bg-[#17365D] hover:bg-[#102A43] rounded-[2px] transition-colors text-xs"
             >
-              Generate Verifiable Certificate &rarr;
+              View sample summary &rarr;
             </Link>
             <Link
               href={`/verify?code=SATYA-${student.institutional_student_id}`}
@@ -208,7 +196,7 @@ export default async function StudentRiskPage({ params }: PageProps) {
             >
               Simulate Employer Verification &rarr;
             </Link>
-          </div>
+          </div>}
         </div>
       </div>
     </div>

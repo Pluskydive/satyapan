@@ -1,39 +1,53 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import { useSearchParams } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
+import { applySelectiveDisclosure } from "@/lib/security";
+import type { VerificationRequest } from "@/lib/types";
+
+type VerificationView = {
+  request: Pick<VerificationRequest, "verification_code" | "verifier_type" | "consent_granted">;
+  demonstration: boolean;
+  student_preview?: { masked_name?: string } | null;
+  disclosed_data?: ReturnType<typeof applySelectiveDisclosure> | null;
+};
+
+type VerificationApiResponse = VerificationView & { error?: unknown };
+
+const subscribeToNoChanges = () => () => {};
+const getBrowserOrigin = () => window.location.origin;
+const getServerOrigin = () => "";
+
+async function fetchVerification(code: string): Promise<VerificationView> {
+  const response = await fetch(`/api/verify?code=${encodeURIComponent(code)}`);
+  const data = await response.json() as VerificationApiResponse;
+  if (!response.ok) {
+    throw new Error(typeof data.error === "string" ? data.error : "Verification record not found.");
+  }
+  return data;
+}
 
 export default function VerifyClient() {
   const searchParams = useSearchParams();
   const [code, setCode] = useState<string>(
     searchParams.get("code") || "SATYA-2026-TCS"
   );
-  const [verificationResult, setVerificationResult] = useState<any | null>(null);
+  const [verificationResult, setVerificationResult] = useState<VerificationView | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isGrantingConsent, setIsGrantingConsent] = useState(false);
-  const [currentOrigin, setCurrentOrigin] = useState("");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setCurrentOrigin(window.location.origin);
-    }
-  }, []);
+  const currentOrigin = useSyncExternalStore(subscribeToNoChanges, getBrowserOrigin, getServerOrigin);
 
   const handleLookup = async (codeToLookup: string) => {
     if (!codeToLookup) return;
     try {
       setIsLoading(true);
       setError(null);
-      const res = await fetch(`/api/verify?code=${encodeURIComponent(codeToLookup)}`);
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Verification record not found.");
-      }
+      const data = await fetchVerification(codeToLookup);
       setVerificationResult(data);
-    } catch (err: any) {
-      setError(err.message || "Failed to locate verification record.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to locate verification record.");
       setVerificationResult(null);
     } finally {
       setIsLoading(false);
@@ -43,11 +57,25 @@ export default function VerifyClient() {
   useEffect(() => {
     const urlCode = searchParams.get("code");
     if (urlCode) {
+      // Keep the editable field in sync when a QR link changes the query string.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCode(urlCode);
-      handleLookup(urlCode);
-    } else {
-      handleLookup("SATYA-2026-TCS");
     }
+
+    let active = true;
+    void fetchVerification(urlCode || "SATYA-2026-TCS")
+      .then((result) => {
+        if (!active) return;
+        setVerificationResult(result);
+        setError(null);
+      })
+      .catch((err: unknown) => {
+        if (!active) return;
+        setError(err instanceof Error ? err.message : "Failed to locate verification record.");
+        setVerificationResult(null);
+      });
+
+    return () => { active = false; };
   }, [searchParams]);
 
   const handleGrantConsent = async () => {
@@ -62,17 +90,17 @@ export default function VerifyClient() {
           code: verificationResult.request.verification_code,
         }),
       });
-      const data = await res.json();
+      const data = await res.json() as VerificationApiResponse & { request: VerificationView["request"] };
       if (!res.ok) {
-        throw new Error(data.error || "Consent authorization transaction failed.");
+        throw new Error(typeof data.error === "string" ? data.error : "Consent authorization transaction failed.");
       }
-      setVerificationResult((prev: any) => ({
+      setVerificationResult((prev) => prev ? {
         ...prev,
         request: data.request,
         disclosed_data: data.disclosed_data,
-      }));
-    } catch (err: any) {
-      alert("Error: " + err.message);
+      } : prev);
+    } catch (err: unknown) {
+      alert("Error: " + (err instanceof Error ? err.message : "Consent authorization transaction failed."));
     } finally {
       setIsGrantingConsent(false);
     }

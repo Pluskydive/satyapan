@@ -1,44 +1,43 @@
 import { NextResponse } from "next/server";
 import { getSatyapanStore } from "@/lib/mockData";
 import { applySelectiveDisclosure } from "@/lib/security";
+import { apiFailure, demoApiUnavailable, readJsonBody, RequestInputError, sameOriginFailure } from "@/lib/api-utils";
+import { assertDemoMode } from "@/lib/runtime-mode";
 
 export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const code = searchParams.get("code")?.trim().toUpperCase();
+  const unavailable = demoApiUnavailable();
+  if (unavailable) return unavailable;
 
-    if (!code) {
-      return NextResponse.json({ error: "Verification code required" }, { status: 400 });
+  try {
+    assertDemoMode();
+    const code = new URL(request.url).searchParams.get("code")?.trim().toUpperCase();
+    if (!code || code.length > 64) {
+      throw new RequestInputError("Enter a valid demonstration code.");
     }
 
     const store = getSatyapanStore();
-
-    // Look for existing verification request or match student directly
     let verReq = store.verificationRequests.find(
-      (v) => v.verification_code.toUpperCase() === code
+      (item) => item.verification_code.toUpperCase() === code
     );
 
-    // If code matches a student ID or APAAR, dynamically generate or fetch a request
-    if (!verReq) {
+    // Demo QR codes may use an institution roll number; APAAR values are never lookup keys.
+    if (!verReq && /^SATYA-STU-[A-Z0-9-]{1,32}$/.test(code)) {
+      const rollId = code.slice("SATYA-".length);
       const student = store.students.find(
-        (s) =>
-          s.id.toUpperCase() === code ||
-          s.institutional_student_id.toUpperCase() === code ||
-          s.apaar_id === code
+        (item) => item.institutional_student_id.toUpperCase() === rollId
       );
-
       if (student) {
         verReq = {
-          id: `ver-${Date.now()}`,
+          id: `demo-ver-${student.id}`,
           student_id: student.id,
-          verifier_type: "Standard Employer Verification",
-          verifier_name: "Industry Recruitment Partner",
-          purpose: "Pre-employment academic credential check",
+          verifier_type: "Demonstration employer",
+          verifier_name: "SIH 2026 synthetic-data demonstration",
+          purpose: "Show the consent-gated verification workflow",
           requested_fields: ["enrolment_status", "program", "institution", "admission_year"],
           disclosed_fields: {},
           consent_granted: false,
           result: "pending",
-          verification_code: `SATYA-${student.institutional_student_id}`,
+          verification_code: code,
           created_at: new Date().toISOString(),
         };
         store.verificationRequests.push(verReq);
@@ -46,92 +45,86 @@ export async function GET(request: Request) {
     }
 
     if (!verReq) {
-      return NextResponse.json(
-        { error: "Invalid verification code or QR token" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "We couldn't find that demonstration request." }, { status: 404 });
     }
 
-    const student = store.students.find((s) => s.id === verReq!.student_id);
+    const student = store.students.find((item) => item.id === verReq!.student_id);
     const institution = student
-      ? store.institutions.find((i) => i.id === student.institution_id)
+      ? store.institutions.find((item) => item.id === student.institution_id)
       : null;
 
-    const studentWithInst = student
-      ? { ...student, institutions: institution }
-      : null;
-
-    return NextResponse.json({
-      request: verReq,
-      student_preview: {
-        masked_name: student
-          ? student.full_name.charAt(0) + "••••• " + student.full_name.split(" ").slice(-1)[0]
-          : "••••",
-        program: student?.program,
-        institution_name: institution?.name,
-        admission_year: student?.admission_year,
+    return NextResponse.json(
+      {
+        request: verReq,
+        demonstration: true,
+        student_preview: {
+          masked_name: student
+            ? `${student.full_name.charAt(0)}••••• ${student.full_name.split(" ").slice(-1)[0]}`
+            : "••••",
+          program: student?.program,
+          institution_name: institution?.name,
+          admission_year: student?.admission_year,
+        },
+        disclosed_data:
+          verReq.consent_granted && student
+            ? applySelectiveDisclosure({ ...student, institutions: institution })
+            : null,
       },
-      disclosed_data: verReq.consent_granted && studentWithInst
-        ? applySelectiveDisclosure(studentWithInst)
-        : null,
-    });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Verification failed" }, { status: 500 });
+      { headers: { "Cache-Control": "private, no-store" } }
+    );
+  } catch (error: unknown) {
+    return apiFailure(error, "We couldn't load this request. Check the code and try again.");
   }
 }
 
 export async function POST(request: Request) {
+  const unavailable = demoApiUnavailable();
+  if (unavailable) return unavailable;
+  const originFailure = sameOriginFailure(request);
+  if (originFailure) return originFailure;
+
   try {
-    const body = await request.json();
-    const { action, code } = body;
+    assertDemoMode();
+    const body = await readJsonBody<{ action?: unknown; code?: unknown }>(request, 8_000);
+    if (body.action !== "grant_consent" || typeof body.code !== "string" || body.code.length > 64) {
+      throw new RequestInputError("This demonstration action is not available.");
+    }
+    const code = body.code.trim().toUpperCase();
 
     const store = getSatyapanStore();
     const verReq = store.verificationRequests.find(
-      (v) => v.verification_code.toUpperCase() === code?.toUpperCase()
+      (item) => item.verification_code.toUpperCase() === code
     );
-
     if (!verReq) {
-      return NextResponse.json({ error: "Verification request not found" }, { status: 404 });
+      return NextResponse.json({ error: "We couldn't find that demonstration request." }, { status: 404 });
     }
 
-    if (action === "grant_consent") {
-      verReq.consent_granted = true;
-      verReq.result = "verified";
+    const student = store.students.find((item) => item.id === verReq.student_id);
+    const institution = student
+      ? store.institutions.find((item) => item.id === student.institution_id)
+      : null;
+    const disclosed = student
+      ? applySelectiveDisclosure({ ...student, institutions: institution })
+      : {};
 
-      const student = store.students.find((s) => s.id === verReq.student_id);
-      const institution = student
-        ? store.institutions.find((i) => i.id === student.institution_id)
-        : null;
+    verReq.consent_granted = true;
+    verReq.result = "verified";
+    verReq.disclosed_fields = disclosed;
+    store.auditLogs.unshift({
+      id: `demo-audit-${Date.now()}`,
+      actor_role: "student",
+      action: "DEMO_CONSENT_GRANTED",
+      entity: "verification_requests",
+      entity_id: verReq.id,
+      created_at: new Date().toISOString(),
+      after_data: { demonstration: true, verifier: verReq.verifier_name },
+    });
 
-      const selective = student
-        ? applySelectiveDisclosure({ ...student, institutions: institution })
-        : {};
-
-      verReq.disclosed_fields = selective;
-
-      // Log in audit trail
-      store.auditLogs.unshift({
-        id: `audit-${Date.now()}`,
-        actor_role: "student",
-        action: "CONSENT_GRANTED_VERIFICATION",
-        entity: "verification_requests",
-        entity_id: verReq.id,
-        created_at: new Date().toISOString(),
-        after_data: {
-          verifier: verReq.verifier_name,
-          verification_code: verReq.verification_code,
-        },
-      });
-
-      return NextResponse.json({
-        success: true,
-        request: verReq,
-        disclosed_data: selective,
-      });
-    }
-
-    return NextResponse.json({ error: "Invalid action" }, { status: 400 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Consent operation failed" }, { status: 500 });
+    return NextResponse.json(
+      { success: true, request: verReq, disclosed_data: disclosed, demonstration: true },
+      { headers: { "Cache-Control": "private, no-store" } }
+    );
+  } catch (error: unknown) {
+    return apiFailure(error, "We couldn't complete this demonstration action. Please try again.");
   }
 }

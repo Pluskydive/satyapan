@@ -46,6 +46,8 @@ export interface Student {
   institutions?: Partial<Institution>;
 }
 
+export type StudentRosterRecord = Omit<Student, 'apaar_id'> & { masked_apaar: string };
+
 export interface ValidationFlag {
   id: string;
   student_id: string;
@@ -57,8 +59,8 @@ export interface ValidationFlag {
   recommended_action: string;
   status: 'open' | 'investigating' | 'resolved' | 'dismissed';
   created_at: string;
-  students?: Partial<Student>;
-  institutions?: Partial<Institution>;
+  students?: Partial<Student> | null;
+  institutions?: Partial<Institution> | null;
 }
 
 export interface VerificationRequest {

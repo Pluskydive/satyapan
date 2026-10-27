@@ -1,7 +1,5 @@
 /**
- * SATYAPAN Security, Privacy & Integrity Utilities
- * Digital Personal Data Protection (DPDP) Act 2023 Compliance
- * & Cryptographic Verifiable Credential Generation (Requirement 10)
+ * SATYAPAN input-safety and demonstration helpers.
  */
 
 import { FlagSeverity } from './types';
@@ -16,7 +14,7 @@ export function isValidApaar(apaar?: string | null): boolean {
 }
 
 /**
- * Masks a 12-digit APAAR ID in compliance with DPDP Act 2023.
+ * Masks an APAAR-like identifier for display in the demonstration.
  * Returns "XXXX-XXXX-1234" to prevent PII exposure across public and institutional views.
  */
 export function formatMaskedApaar(apaar?: string | null): string {
@@ -52,11 +50,10 @@ export function sanitizeRecordRow<T extends Record<string, unknown>>(row: T): T 
 }
 
 /**
- * Generates an offline-verifiable, cryptographically signed payload for degree certificates & ID cards
- * Conforms to Requirement 10 of AICTE Problem Statement.
- * Contains issuer authority, student roll, masked APAAR, program, and tamper-evident HMAC seal.
+ * Produces a synthetic QR payload for a UI demonstration. It is not a credential,
+ * cryptographic signature, or proof of enrolment.
  */
-export function generateSignedCredentialPayload(student: {
+export function generateDemoCredentialPayload(student: {
   id: string;
   institutional_student_id: string;
   apaar_id: string | null;
@@ -65,35 +62,23 @@ export function generateSignedCredentialPayload(student: {
   admission_year: number;
   institutions?: { name?: string; aicte_code?: string; state?: string } | null;
 }) {
-  const rawString = `${student.id}|${student.institutional_student_id}|${student.apaar_id || 'NONE'}|${student.admission_year}|AICTE-CENTRAL`;
-  // Simple deterministic hash representation for evaluation
-  let hash = 0;
-  for (let i = 0; i < rawString.length; i++) {
-    hash = (hash << 5) - hash + rawString.charCodeAt(i);
-    hash |= 0;
-  }
-  const hexHash = Math.abs(hash).toString(16).padStart(8, '0').toUpperCase();
-  const signature = `SIG-AICTE-2026-${hexHash}`;
-
   return {
-    issuer: 'ALL INDIA COUNCIL FOR TECHNICAL EDUCATION',
-    standard: 'AICTE-APAAR-VC-v2.4',
+    record_type: 'Synthetic Satyapan demonstration record',
+    demonstration_only: true,
     student_name: student.full_name,
     institutional_id: student.institutional_student_id,
     masked_apaar: formatMaskedApaar(student.apaar_id),
-    institution_code: student.institutions?.aicte_code || 'AICTE-XXXX',
-    institution_name: student.institutions?.name || 'Accredited Technical Institute',
+    institution_code: student.institutions?.aicte_code || 'DEMO-0000',
+    institution_name: student.institutions?.name || 'Demonstration institution',
     program: student.program,
     admission_year: student.admission_year,
-    certificate_id: `CERT-AICTE-${student.institutional_student_id}-2026`,
+    demonstration_reference: `DEMO-${student.institutional_student_id}`,
     timestamp: new Date().toISOString(),
-    cryptographic_seal: signature,
   };
 }
 
 /**
- * DPDP Act 2023 Selective Disclosure Filter for Employer Verifiers.
- * Strictly withholds personal identifiers (caste, gender, DOB) from third parties.
+ * Demonstration disclosure example that excludes demographic attributes.
  */
 export function applySelectiveDisclosure(student: {
   full_name: string;
@@ -107,9 +92,9 @@ export function applySelectiveDisclosure(student: {
     enrolment_status: student.enrolment_status,
     program: student.program,
     admission_year: student.admission_year,
-    institution_name: student.institutions?.name || 'Verified AICTE Institution',
-    institution_code: student.institutions?.aicte_code || 'AICTE-XXXX',
-    verification_standard: 'AICTE-APAAR Enrolment Integrity Standard v2.4',
+    institution_name: student.institutions?.name || 'Demonstration institution',
+    institution_code: student.institutions?.aicte_code || 'DEMO-0000',
+    demonstration_only: true,
     timestamp: new Date().toISOString(),
   };
 }

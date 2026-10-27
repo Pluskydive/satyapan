@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
-import { getSatyapanStore } from "@/lib/mockData";
+import { dataProvider } from "@/lib/supabase";
+import { apiFailure, demoApiUnavailable } from "@/lib/api-utils";
 
 export async function GET() {
+  const unavailable = demoApiUnavailable();
+  if (unavailable) return unavailable;
   try {
-    const store = getSatyapanStore();
-    return NextResponse.json(store.auditLogs);
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to fetch audit logs" }, { status: 500 });
+    const { data } = await dataProvider.getAuditLogs(200);
+    return NextResponse.json(data, { headers: { "Cache-Control": "private, no-store" } });
+  } catch (error: unknown) {
+    return apiFailure(error, "We couldn't load the activity history. Please try again.");
   }
 }

@@ -1,229 +1,282 @@
-import { createClient } from '@supabase/supabase-js';
-import { getSatyapanStore } from './mockData';
+import "server-only";
 
-// Safe URL & Key parsing so createClient never throws an "Invalid supabaseUrl" error
-// during static analysis or initial evaluation before real keys are inserted into .env.local
-const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseUrl =
-  rawUrl && rawUrl.startsWith("http") && !rawUrl.includes("your_project_url")
-    ? rawUrl
-    : "https://placeholder-satyapan.supabase.co";
+import { AuthorizationError, getCurrentUserContext, requireRole } from "@/lib/authz";
+import { getSatyapanStore } from "@/lib/mockData";
+import { getRuntimeMode } from "@/lib/runtime-mode";
+import { formatMaskedApaar } from "@/lib/security";
+import type { AuditLog, Student, StudentRosterRecord, ValidationFlag } from "@/lib/types";
 
-const rawKey =
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const supabaseKey =
-  rawKey && !rawKey.includes("your_") && rawKey.length > 20
-    ? rawKey
-    : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.dummy-signature-for-satyapan-build";
-
-// Standard Supabase client per Step 18 of build guide
-export const supabaseAdmin = createClient(supabaseUrl, supabaseKey, {
-  auth: {
-    persistSession: false,
-    autoRefreshToken: false,
-  },
-});
-
-/**
- * Checks if live Supabase credentials are configured in the current environment
- */
-export function isLiveSupabaseConfigured(): boolean {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return false;
-  if (url.includes('your_project_url') || key.includes('your_') || url.includes('placeholder')) {
-    return false;
-  }
-  return true;
+function assertAvailable() {
+  if (getRuntimeMode() === "disabled") throw new Error("SATYAPAN_RUNTIME_DISABLED");
 }
 
 /**
- * Unified data access helper: Queries Supabase when configured,
- * or effortlessly falls back to Satyapan's high-fidelity in-memory Integrity Engine.
- * This guarantees the system NEVER crashes during SIH live demonstrations.
+ * Server-side repository. The demo store is synthetic and in-memory. Live mode
+ * uses the signed-in user's cookie-backed Supabase session so RLS remains active.
  */
 export const dataProvider = {
-  isLive: isLiveSupabaseConfigured(),
+  get isLive() {
+    return getRuntimeMode() === "live";
+  },
 
   async runIntegrityChecks() {
-    if (isLiveSupabaseConfigured()) {
-      const { error } = await supabaseAdmin.rpc('run_integrity_checks');
-      if (!error) return { success: true, mode: 'supabase_live' };
-    }
-    // High-Fidelity Local Engine
-    const store = getSatyapanStore();
-    const result = store.runIntegrityChecks();
-    return { success: true, mode: 'local_engine', ...result };
+    assertAvailable();
+    if (getRuntimeMode() === "live") throw new Error("SATYAPAN_LIVE_OPERATION_DISABLED");
+    const result = getSatyapanStore().runIntegrityChecks();
+    return { success: true, mode: "demo" as const, ...result };
   },
 
   async getNationalSummary() {
-    if (isLiveSupabaseConfigured()) {
-      const { data, error } = await supabaseAdmin
-        .from('v_national_summary')
-        .select('*')
-        .single();
-      if (!error && data) return { data, mode: 'supabase_live' };
+    assertAvailable();
+    if (getRuntimeMode() === "demo") {
+      return { data: getSatyapanStore().getNationalSummary(), mode: "demo" as const };
     }
-    const store = getSatyapanStore();
-    return { data: store.getNationalSummary(), mode: 'local_engine' };
+    const { supabase } = await getCurrentUserContext();
+    const { data, error } = await supabase.from("v_national_summary").select("*").single();
+    if (error || !data) throw new Error("SATYAPAN_DATA_UNAVAILABLE");
+    return { data, mode: "live" as const };
   },
 
   async getStateSummary() {
-    if (isLiveSupabaseConfigured()) {
-      const { data, error } = await supabaseAdmin
-        .from('v_state_summary')
-        .select('*');
-      if (!error && data) return { data, mode: 'supabase_live' };
+    assertAvailable();
+    if (getRuntimeMode() === "demo") {
+      return { data: getSatyapanStore().getStateSummary(), mode: "demo" as const };
     }
-    const store = getSatyapanStore();
-    return { data: store.getStateSummary(), mode: 'local_engine' };
+    const { supabase } = await getCurrentUserContext();
+    const { data, error } = await supabase
+      .from("v_state_summary")
+      .select("*")
+      .order("students", { ascending: false })
+      .limit(100);
+    if (error || !data) throw new Error("SATYAPAN_DATA_UNAVAILABLE");
+    return { data, mode: "live" as const };
   },
 
   async getInstitutionSummary(institutionId?: string) {
-    if (isLiveSupabaseConfigured()) {
-      let query = supabaseAdmin.from('v_institution_summary').select('*');
-      if (institutionId) {
-        query = query.or(`id.eq.${institutionId},aicte_code.eq.${institutionId}`);
-      }
-      const { data, error } = await query;
-      if (!error && data) return { data, mode: 'supabase_live' };
+    assertAvailable();
+    if (getRuntimeMode() === "demo") {
+      return { data: getSatyapanStore().getInstitutionSummary(institutionId), mode: "demo" as const };
     }
-    const store = getSatyapanStore();
-    return { data: store.getInstitutionSummary(institutionId), mode: 'local_engine' };
+
+    const { supabase, profile } = await getCurrentUserContext();
+    const isGlobal = profile.role === "platform_admin" || profile.role === "reviewer";
+    if (!isGlobal && institutionId && institutionId !== profile.institution_id) {
+      throw new AuthorizationError(403);
+    }
+
+    let query = supabase.from("v_institution_summary").select("*");
+    const target = isGlobal ? institutionId : profile.institution_id;
+    if (target) {
+      query = /^[0-9a-f-]{36}$/i.test(target)
+        ? query.eq("id", target)
+        : query.eq("aicte_code", target);
+    }
+    const { data, error } = await query.order("name", { ascending: true }).limit(500);
+    if (error || !data) throw new Error("SATYAPAN_DATA_UNAVAILABLE");
+    return { data, mode: "live" as const };
   },
 
   async getOpenFlags() {
-    if (isLiveSupabaseConfigured()) {
-      const { data, error } = await supabaseAdmin
-        .from('validation_flags')
-        .select(`
-          *,
-          students (
-            id,
-            full_name,
-            apaar_id,
-            program,
-            integrity_score
-          ),
-          institutions (
-            id,
-            name,
-            state
-          )
-        `)
-        .eq('status', 'open')
-        .order('created_at', { ascending: false });
-      if (!error && data) return { data, mode: 'supabase_live' };
+    assertAvailable();
+    if (getRuntimeMode() === "demo") {
+      const store = getSatyapanStore();
+      const data = store.flags
+        .filter((flag) => flag.status === "open")
+        .map((flag) => {
+          const student = store.students.find((item) => item.id === flag.student_id);
+          const institution = store.institutions.find((item) => item.id === flag.institution_id);
+          return {
+            ...flag,
+            students: student
+              ? { id: student.id, full_name: student.full_name, apaar_id: formatMaskedApaar(student.apaar_id), program: student.program, integrity_score: student.integrity_score }
+              : null,
+            institutions: institution ? { id: institution.id, name: institution.name, state: institution.state } : null,
+          };
+        })
+        .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))
+        .slice(0, 200);
+      return { data, mode: "demo" as const };
     }
-    const store = getSatyapanStore();
-    const flagsWithRelations = store.flags
-      .filter((f) => f.status === 'open')
-      .map((f) => {
-        const student = store.students.find((s) => s.id === f.student_id);
-        const institution = store.institutions.find((i) => i.id === f.institution_id);
-        return {
-          ...f,
-          students: student
-            ? {
-                id: student.id,
-                full_name: student.full_name,
-                apaar_id: student.apaar_id,
-                program: student.program,
-                integrity_score: student.integrity_score,
-              }
-            : null,
-          institutions: institution
-            ? {
-                id: institution.id,
-                name: institution.name,
-                state: institution.state,
-              }
-            : null,
-        };
-      })
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-    return { data: flagsWithRelations, mode: 'local_engine' };
+    const { supabase } = await getCurrentUserContext();
+    const { data, error } = await supabase
+      .from("validation_flags")
+      .select("id,student_id,institution_id,rule_code,severity,title,explanation,recommended_action,status,created_at,students(id,full_name,institutional_student_id,program,integrity_score),institutions(id,name,state)")
+      .eq("status", "open")
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (error || !data) throw new Error("SATYAPAN_DATA_UNAVAILABLE");
+    const safeData = data.map((row) => ({
+      ...row,
+      students: Array.isArray(row.students) ? row.students[0] ?? null : row.students,
+      institutions: Array.isArray(row.institutions) ? row.institutions[0] ?? null : row.institutions,
+    })) as ValidationFlag[];
+    return { data: safeData, mode: "live" as const };
   },
 
   async getStudentById(idOrInstitutionalId: string) {
-    if (isLiveSupabaseConfigured()) {
-      const { data, error } = await supabaseAdmin
-        .from('students')
-        .select(`
-          *,
-          institutions (
-            id,
-            name,
-            aicte_code,
-            state,
-            approved_intake,
-            supernumerary_capacity
-          )
-        `)
-        .or(`id.eq.${idOrInstitutionalId},institutional_student_id.eq.${idOrInstitutionalId}`)
-        .single();
-      if (!error && data) {
-        // Also fetch flags
-        const { data: flags } = await supabaseAdmin
-          .from('validation_flags')
-          .select('*')
-          .eq('student_id', data.id);
-        return { data: { ...data, flags: flags || [] }, mode: 'supabase_live' };
-      }
+    assertAvailable();
+    if (getRuntimeMode() === "demo") {
+      const store = getSatyapanStore();
+      const student = store.students.find(
+        (item) => item.id === idOrInstitutionalId || item.institutional_student_id === idOrInstitutionalId
+      );
+      if (!student) return { data: null, mode: "demo" as const };
+      const institution = store.institutions.find((item) => item.id === student.institution_id);
+      const flags = store.flags.filter((flag) => flag.student_id === student.id);
+      const apaarId = student.apaar_id;
+      const safeStudent = {
+        id: student.id,
+        institutional_student_id: student.institutional_student_id,
+        institution_id: student.institution_id,
+        full_name: student.full_name,
+        nationality_type: student.nationality_type,
+        program: student.program,
+        admission_year: student.admission_year,
+        admission_date: student.admission_date,
+        enrolment_status: student.enrolment_status,
+        integrity_score: student.integrity_score,
+        created_at: student.created_at,
+        updated_at: student.updated_at,
+      };
+      return {
+        data: { ...safeStudent, apaar_id: null, masked_apaar: formatMaskedApaar(apaarId), institutions: institution, flags },
+        mode: "demo" as const,
+      };
     }
-    const store = getSatyapanStore();
-    const student = store.students.find(
-      (s) => s.id === idOrInstitutionalId || s.institutional_student_id === idOrInstitutionalId
-    );
-    if (!student) return { data: null, mode: 'local_engine' };
-    const institution = store.institutions.find((i) => i.id === student.institution_id);
-    const flags = store.flags.filter((f) => f.student_id === student.id);
+
+    const { supabase } = await getCurrentUserContext();
+    const isUuid = /^[0-9a-f-]{36}$/i.test(idOrInstitutionalId);
+    let query = supabase
+      .from("v_student_records")
+      .select("id,masked_apaar,institutional_student_id,institution_id,full_name,nationality_type,program,admission_year,admission_date,enrolment_status,integrity_score,created_at,updated_at");
+    query = isUuid ? query.eq("id", idOrInstitutionalId) : query.eq("institutional_student_id", idOrInstitutionalId);
+    const { data, error } = await query.maybeSingle();
+    if (error) throw new Error("SATYAPAN_DATA_UNAVAILABLE");
+    if (!data) return { data: null, mode: "live" as const };
+    const [institutionResult, flagsResult] = await Promise.all([
+      supabase.from("institutions")
+        .select("id,name,aicte_code,state,approved_intake,supernumerary_capacity")
+        .eq("id", data.institution_id)
+        .maybeSingle(),
+      supabase.from("validation_flags")
+        .select("id,student_id,institution_id,rule_code,severity,title,explanation,recommended_action,status,created_at")
+        .eq("student_id", data.id)
+        .order("created_at", { ascending: false }),
+    ]);
+    if (institutionResult.error || flagsResult.error) throw new Error("SATYAPAN_DATA_UNAVAILABLE");
     return {
       data: {
-        ...student,
-        institutions: institution,
-        flags,
+        ...data,
+        apaar_id: null,
+        institutions: institutionResult.data,
+        flags: flagsResult.data ?? [],
       },
-      mode: 'local_engine',
+      mode: "live" as const,
     };
   },
 
-  async uploadStudents(institutionId: string, rows: any[]) {
-    if (isLiveSupabaseConfigured()) {
-      const formatted = rows.map((r: any) => ({
-        apaar_id: r.apaar_id || null,
-        institutional_student_id: r.institutional_student_id,
-        institution_id: institutionId,
-        full_name: r.full_name,
-        dob_year: Number(r.dob_year) || null,
-        gender: r.gender,
-        social_category: r.social_category,
-        nationality_type: r.nationality_type || 'indian',
-        program: r.program,
-        admission_year: Number(r.admission_year),
-        admission_date: r.admission_date || null,
-        enrolment_status: 'pending_apaar_validation',
-      }));
-
-      const { data, error } = await supabaseAdmin
-        .from('students')
-        .upsert(formatted, {
-          onConflict: 'institution_id,institutional_student_id,admission_year',
-        })
-        .select();
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      await supabaseAdmin.rpc('run_integrity_checks');
-      return { inserted: data?.length ?? 0, mode: 'supabase_live' };
+  async getInstitutionStudents(institutionId?: string, limit = 50, offset = 0, search = "", status = "ALL") {
+    assertAvailable();
+    const safeLimit = Math.max(1, Math.min(500, Math.floor(limit)));
+    const safeOffset = Math.max(0, Math.floor(offset));
+    if (getRuntimeMode() === "demo") {
+      const store = getSatyapanStore();
+      const target = institutionId || store.institutions[0]?.id;
+      const queryText = search.trim().toLocaleLowerCase();
+      const filtered = store.students.filter((student) => {
+        if (student.institution_id !== target) return false;
+        if (status !== "ALL" && student.enrolment_status.toUpperCase() !== status) return false;
+        if (!queryText) return true;
+        return student.full_name.toLocaleLowerCase().includes(queryText)
+          || student.institutional_student_id.toLocaleLowerCase().includes(queryText)
+          || student.program.toLocaleLowerCase().includes(queryText)
+          || Boolean(student.apaar_id?.includes(queryText));
+      });
+      const safeRows: StudentRosterRecord[] = filtered.slice(safeOffset, safeOffset + safeLimit).map((student) => {
+        const { apaar_id, ...safeStudent } = student;
+        return { ...safeStudent, masked_apaar: formatMaskedApaar(apaar_id) };
+      });
+      return {
+        data: safeRows,
+        total: filtered.length,
+        mode: "demo" as const,
+      };
     }
 
-    const store = getSatyapanStore();
-    const result = store.upsertStudents(institutionId, rows);
-    return { inserted: result.inserted + result.updated, mode: 'local_engine' };
+    const { supabase, profile } = await getCurrentUserContext();
+    const isGlobal = profile.role === "platform_admin" || profile.role === "reviewer";
+    if (!isGlobal && institutionId && institutionId !== profile.institution_id) {
+      throw new AuthorizationError(403);
+    }
+    const target = isGlobal ? institutionId : profile.institution_id;
+    let query = supabase
+      .from("v_student_records")
+      .select("id,masked_apaar,institutional_student_id,institution_id,full_name,program,admission_year,enrolment_status,integrity_score,nationality_type,created_at,updated_at", { count: "exact" })
+      .order("institutional_student_id", { ascending: true })
+      .range(safeOffset, safeOffset + safeLimit - 1);
+    if (target) query = query.eq("institution_id", target);
+    if (status !== "ALL" && ["VERIFIED", "FLAGGED", "PENDING_APAAR_VALIDATION"].includes(status)) {
+      query = query.eq("enrolment_status", status.toLocaleLowerCase());
+    }
+    const safeSearch = search.trim().slice(0, 80).replace(/[^\p{L}\p{N} ._@-]/gu, "");
+    if (safeSearch) {
+      query = query.or(`full_name.ilike.%${safeSearch}%,institutional_student_id.ilike.%${safeSearch}%,program.ilike.%${safeSearch}%`);
+    }
+    const { data, error, count } = await query;
+    if (error || !data) throw new Error("SATYAPAN_DATA_UNAVAILABLE");
+    const safeRows = data as unknown as StudentRosterRecord[];
+    return { data: safeRows, total: count ?? data.length, mode: "live" as const };
+  },
+
+  async getAuditLogs(limit = 200) {
+    assertAvailable();
+    const safeLimit = Math.max(1, Math.min(500, Math.floor(limit)));
+    if (getRuntimeMode() === "demo") {
+      return { data: getSatyapanStore().auditLogs.slice(0, safeLimit), mode: "demo" as const };
+    }
+    const { supabase } = await requireRole("platform_admin", "reviewer");
+    const { data, error } = await supabase
+      .from("audit_logs")
+      .select("id,actor_id,actor_role,action,entity,entity_id,created_at")
+      .order("created_at", { ascending: false })
+      .limit(safeLimit);
+    if (error || !data) throw new Error("SATYAPAN_DATA_UNAVAILABLE");
+    return { data: data as AuditLog[], mode: "live" as const };
+  },
+
+  async uploadStudents(institutionId: string, rows: Array<Partial<Student>>) {
+    assertAvailable();
+    if (getRuntimeMode() === "demo") {
+      const store = getSatyapanStore();
+      if (!store.institutions.some((institution) => institution.id === institutionId)) {
+        throw new Error("SATYAPAN_INVALID_INSTITUTION");
+      }
+      const result = store.upsertStudents(institutionId, rows);
+      return { inserted: result.inserted + result.updated, mode: "demo" as const };
+    }
+
+    const { supabase, profile } = await requireRole("institution_admin", "institution_staff");
+    if (profile.institution_id !== institutionId) throw new AuthorizationError(403);
+    const formatted = rows.map((row) => ({
+      apaar_id: row.apaar_id || null,
+      institutional_student_id: row.institutional_student_id,
+      institution_id: institutionId,
+      full_name: row.full_name,
+      dob_year: row.dob_year ? Number(row.dob_year) : null,
+      gender: row.gender || null,
+      social_category: row.social_category || null,
+      nationality_type: row.nationality_type || "indian",
+      program: row.program,
+      admission_year: Number(row.admission_year),
+      admission_date: row.admission_date || null,
+    }));
+    const query = supabase.from("students");
+    const { data, error } = profile.role === "institution_admin"
+      ? await query.upsert(formatted, { onConflict: "institution_id,institutional_student_id,admission_year" }).select("id")
+      : await query.insert(formatted).select("id");
+    if (error?.code === "23505") throw new Error("SATYAPAN_DUPLICATE_UPLOAD");
+    if (error || !data) throw new Error("SATYAPAN_UPLOAD_FAILED");
+    return { inserted: data.length, mode: "live" as const };
   },
 };

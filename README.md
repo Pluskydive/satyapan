@@ -1,91 +1,79 @@
-# SATYAPAN (सत्यापन) — SIH 2026 Official Technical Submission
+# Satyapan — SIH 2026 prototype
 
-> **AICTE Enrolment Integrity & APAAR Continuous Verification System**  
-> Problem Statement: Elimination of Ghost Admissions, Intake Ceilings Compliance & DPDP Act 2023 Gated Verification.
+Satyapan is a prototype for exploring institution-scoped enrolment review workflows. It is not an official AICTE or Government of India service, is not a regulatory decision system, and does not produce certified NIRF, NAAC or NBA reports. The live data path is not ready for real student records until the database migration, provider settings, privacy review and security verification below are completed.
 
----
+## Local demonstration
 
-## 🚀 Live Demo & Quick Launch
+Requirements: Node.js 20.9 or newer and npm.
 
-The production server is currently built and running locally at:
-👉 **[http://localhost:3000](http://localhost:3000)**
+```powershell
+npm install
+$env:SATYAPAN_MODE = "demo"
+npm run dev
+```
 
-### Key Portals
-- **Landing / Unified Command Center**: [http://localhost:3000](http://localhost:3000)
-- **AICTE Central Control Tower**: [http://localhost:3000/aicte](http://localhost:3000/aicte)
-- **Institution Seat Ledger & Roster**: [http://localhost:3000/institution](http://localhost:3000/institution)
-- **Bulk CSV Data Ingestion**: [http://localhost:3000/institution/upload](http://localhost:3000/institution/upload)
-- **Consent-Gated QR Verification**: [http://localhost:3000/verify](http://localhost:3000/verify)
-- **Tamper-Evident Security & Audit Trail**: [http://localhost:3000/audit](http://localhost:3000/audit)
+Open `http://localhost:3000`. Demo records are synthetic and held in temporary application memory. Do not enter personal or real student information. Demo mode does not provide user accounts and does not persist uploads.
 
----
+## Authentication and roles
 
-## 🛡️ Hackathon Evaluation Quick Test Tokens
+There is no public registration. Platform administrators invite accounts and assign one of these roles:
 
-| Token / Roll | Scenario Demonstrated | What to Observe |
-| :--- | :--- | :--- |
-| `SATYA-2026-TCS` | Employer Background Check | DPDP Act consent gate. Candidate details withheld until student grants digital consent. |
-| `STU-10` | Invalid APAAR ID | 5-digit identifier (`12345`) triggers `INVALID_APAAR` high flag. |
-| `STU-20` | Multi-College Double Admission | Student enrolled simultaneously at Sunrise Institute and Nova Engineering College triggers `CROSS_INSTITUTION_OVERLAP` critical flag. |
-| `STU-30` | Late Admission Cutoff Breach | Admission date (`2026-12-01`) recorded past October 15 reporting deadline triggers `LATE_ADMISSION`. |
-| `STU-40` | Nationality Discrepancy | NRI status without category documentation triggers `NATIONALITY_INCONSISTENCY`. |
+| Role | View | Create/update | Export/review | Account administration |
+| --- | --- | --- | --- | --- |
+| Platform administrator | Cross-institution summaries and records, masked identifiers | No student edits | Read audit events and export permitted summaries | Invite users, assign roles and institutions, activate/deactivate accounts |
+| Institution administrator | Assigned institution records and review flags | Insert or update records for that institution | Export the institution's permitted summaries | None |
+| Institution staff | Assigned institution records and review flags | Insert records for that institution; no updates or deletes | Export the institution's permitted summaries | None |
+| Reviewer | Cross-institution records and review flags | Change review status; no student-record edits | Read audit events and export permitted summaries | None |
 
----
+Database RLS is intended to enforce the same record scope. Raw APAAR values and demographic fields are not directly selectable by application roles; application views return masked APAAR values. User-profile role and institution fields cannot be changed through the public application API. Account changes go through a server-checked, serialized database function and write an audit event. Deactivation removes refresh sessions; existing access-token JWTs may remain valid until expiry, while application RLS checks block inactive profiles.
 
-## ⚡ Zero-Crash Architecture: Dual-Engine Design
+## Supabase setup for a separate test project
 
-1. **Live Supabase Mode**:
-   When `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are provided in `.env.local`, the platform queries live Supabase tables and triggers the PostgreSQL stored procedure `run_integrity_checks()`.
-2. **Resilient Local Simulation Mode (Offline Hackathon Mode)**:
-   If keys are not configured or if the venue Wi-Fi drops, Satyapan automatically falls back to its built-in in-memory engine pre-seeded with 5 accredited institutions, 301 students, and the exact demo anomalies. **The platform never crashes with a 500 connection refused.**
+Do not use the demo seed data for live mode. Work in a separate non-production Supabase project first.
 
----
+1. Create a Supabase project and configure the email provider and SMTP delivery. Use administrator invitations; disable public sign-up.
+2. In the SQL editor, apply `supabase/schema.sql`, then `supabase/migrations/20261027090000_auth_and_rls.sql`. Review both against your current schema first. This repository does not apply migrations automatically.
+3. Create and verify the first administrator account through Supabase Auth. In the SQL editor, edit and run `supabase/bootstrap_first_platform_admin.sql` for that verified account. Keep the project owner credentials private.
+4. Configure Auth's Site URL to the production origin. Allow the exact callback routes for local and production, for example `http://localhost:3000/auth/callback` and `https://your-domain.example/auth/callback`. Configure invite and recovery email templates to use the Supabase PKCE link flow.
+5. Configure environment variables. `SUPABASE_SECRET_KEY` is preferred; `SUPABASE_SERVICE_ROLE_KEY` is accepted for legacy projects. Either secret is server-only and must never use a `NEXT_PUBLIC_` prefix.
+6. Set `NEXT_PUBLIC_SITE_URL` to the exact site origin used for invitations. Keep `SATYAPAN_MODE=live` off until the separate test project has passed the RLS and account-flow checks.
 
-## 🔒 Cybersecurity & Regulatory Compliance (DPDP Act 2023)
+Copy `.env.example` to `.env.local` and fill it locally. Never commit `.env.local` or paste secret values into chat.
 
-- **CWE-1236 CSV Formula Injection Defense**: All uploaded spreadsheet inputs are sanitized by neutralizing spreadsheet formula triggers (`=`, `+`, `-`, `@`, `\t`, `\r`).
-- **APAAR 12-Digit Masking**: Full APAAR numbers are masked as `XXXX-XXXX-1234` in compliance with DPDP Act 2023.
-- **Privacy-Preserving Selective Disclosure**: Employers and verifiers only see confirmation of enrollment, program, college, and academic year. Sensitive PII (caste, gender, DOB) is withheld.
-- **Tamper-Evident Audit Ledger**: All actions are logged into `audit_logs` and `admission_events`.
+## Environment variable names
 
----
+- `SATYAPAN_MODE`: `demo` for synthetic data, `live` to opt into authenticated Supabase mode.
+- `NEXT_PUBLIC_SUPABASE_URL`: Supabase project URL.
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` or `NEXT_PUBLIC_SUPABASE_ANON_KEY`: public client key.
+- `SUPABASE_SECRET_KEY` or legacy `SUPABASE_SERVICE_ROLE_KEY`: server-only key used only for user administration.
+- `NEXT_PUBLIC_SITE_URL`: exact application origin used to build invitation links.
 
-## 📦 Setting Up Supabase Database (Person A)
+Without an explicit mode and valid public Supabase configuration, the app fails closed. Production must set the mode explicitly.
 
-1. Open your Supabase project SQL Editor.
-2. Run the SQL script located in `supabase/schema.sql` (Creates tables, enums, indexes, `run_integrity_checks()` function, and views).
-3. Run the seed script in `supabase/seed.sql` (Populates 5 institutions, 300 students, and the 4 hackathon test anomalies).
-4. Copy your **Project URL**, **Anon Key**, and **Service Role Key** into `.env.local`:
-   ```bash
-   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-   ```
+## Database access checks
 
----
+`supabase/tests/rls_access.test.sql` covers anonymous reads, profile role changes, raw APAAR column access, institution isolation, staff update denial, reviewer scope and audit privacy. Run it only against a disposable Supabase test database after applying the schema and migration, using Supabase CLI/pgTAP. The current workstation did not have Supabase CLI or `psql`, so the SQL has not been executed here.
 
-## 🚀 Deployment to Vercel (Person B)
+Also verify through a browser and direct API requests in that isolated project:
 
-1. Push this repository to GitHub:
-   ```bash
-   git remote add origin https://github.com/<your-username>/satyapan-sih.git
-   git push -u origin main
-   ```
-2. Import the repository into [Vercel](https://vercel.com).
-3. Add the three environment variables:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-4. Click **Deploy**.
+- No session: pages redirect to sign-in; protected APIs return 401.
+- Expired/revoked session: protected reads fail and mutation requests are rejected.
+- Pending/deactivated account: no protected page or database record access.
+- Each role: only its documented capabilities work.
+- Institution A cannot read, add, update or export Institution B records by changing a path, query or body.
+- Invitation, email confirmation, password reset, expired/reused link, password change and logout.
+- Verify that service-role credentials are absent from browser bundles and client requests.
 
----
+These live checks have not been performed by this repository session because no connected Supabase test project was supplied. Do not treat the presence of tests or a successful build as a security certification.
 
-## 🎙️ What to Say During the Hackathon Demo
+## Quality checks
 
-> *"AICTE currently receives mostly claimed enrolment numbers from institutions. Satyapan converts those numbers into confirmed student-level records linked to APAAR ID."*
->
-> *"Colleges upload admission data through CSV or API. Our system validates APAAR IDs, tracks approved intake through a Seat Ledger, and automatically detects duplicate admissions, excess enrolment, category inconsistencies, and late admissions."*
->
-> *"Instead of simply marking a record as suspicious, every student receives an Integrity Score with clear reasons and recommended actions. AICTE gets a real-time Control Tower, institutions get a portal to resolve issues, and employers can verify students through consent-based QR verification."*
->
-> *"We integrate with the APAAR, ABC, and DigiLocker ecosystem rather than replacing it. Our contribution is the missing enrolment-integrity layer that helps AICTE move from annual reporting to continuous, trustworthy verification."*
+```powershell
+npm run lint
+npx tsc --noEmit
+npm run build
+```
+
+## Deployment gate
+
+The current changes are local only. Before any real deployment, apply and verify the reviewed schema/migration in a separate test project, configure provider emails and exact redirects, bootstrap a second administrator, test RLS and all roles, review the session lifetime settings, run the checks above, and complete privacy/legal and operational review. Do not upload actual student data to the SIH demonstration deployment.

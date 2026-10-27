@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { dataProvider } from "@/lib/supabase";
+import { apiFailure, demoApiUnavailable } from "@/lib/api-utils";
 
 export async function GET() {
+  const unavailable = demoApiUnavailable();
+  if (unavailable) return unavailable;
   try {
     const { data } = await dataProvider.getOpenFlags();
-    return NextResponse.json(data);
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to fetch validation flags" }, { status: 500 });
+    return NextResponse.json(data, { headers: { "Cache-Control": "private, no-store" } });
+  } catch (error: unknown) {
+    return apiFailure(error, "We couldn't load the review items. Please try again.");
   }
 }
