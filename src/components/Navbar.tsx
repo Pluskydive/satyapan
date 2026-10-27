@@ -89,12 +89,8 @@ export default function Navbar({ mode, viewer }: Props) {
       <div className="w-full bg-[#102A43] text-white text-[11px] border-b border-[#1E3A5F]">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-1.5 flex flex-wrap items-center justify-between gap-2">
           {/* Left: Product & Team Badge */}
-          <div className="flex items-center space-x-2.5 text-slate-200">
-            <img
-              src="/pramaanit-logo.jpg"
-              alt="Team PRAMAANIT Logo"
-              className="h-5 w-auto rounded-[2px] bg-white p-0.5 object-contain"
-            />
+          <div className="flex items-center space-x-2 text-slate-200">
+            <span className="font-bold text-[#F59E0B]">TEAM PRAMAANIT</span>
             <span className="text-slate-500" aria-hidden="true">|</span>
             <span className="text-slate-300">
               {locale === "hi"
