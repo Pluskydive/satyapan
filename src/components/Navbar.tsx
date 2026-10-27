@@ -182,7 +182,7 @@ export default function Navbar({ mode, viewer }: Props) {
             <div className="leading-tight">
               <Link href="/" className="group inline-block">
                 <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#102A43] group-hover:text-[#17365D]">
-                  सत्यापन <span className="text-base sm:text-lg font-bold text-[#17365D]">| SATYAPAN</span>
+                  सत्यापन <span className="font-black text-[#102A43]">| SATYAPAN</span>
                 </h1>
                 <div className="text-[11px] font-bold text-[#17365D]">
                   राष्ट्रीय छात्र नामांकन सत्यनिष्ठा एवं अपार रजिस्ट्री
