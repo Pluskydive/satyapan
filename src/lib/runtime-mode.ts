@@ -20,15 +20,11 @@ export function getSupabasePublicConfig() {
  * Route handlers still enforce authentication, role checks, and database RLS.
  */
 export function getRuntimeMode(): RuntimeMode {
-  if (process.env.SATYAPAN_MODE === "demo") return "demo";
   if (process.env.SATYAPAN_MODE === "live" && getSupabasePublicConfig()) return "live";
+  if (process.env.SATYAPAN_MODE === "disabled") return "disabled";
 
-  // Local development remains easy to start. Production must opt in explicitly.
-  if (process.env.NODE_ENV === "development" && !process.env.SATYAPAN_MODE) {
-    return "demo";
-  }
-
-  return "disabled";
+  // Default to demo mode everywhere (local, preview, and production) unless explicitly disabled or configured for live
+  return "demo";
 }
 
 export function assertDemoMode(): void {
