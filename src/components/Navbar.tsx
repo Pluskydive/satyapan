@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 import type { AppRole } from "@/lib/authz";
 import type { RuntimeMode } from "@/lib/runtime-mode";
@@ -19,6 +19,38 @@ export default function Navbar({ mode, viewer }: Props) {
   const [isRunning, setIsRunning] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notice, setNotice] = useState("");
+  const [fontSize, setFontSize] = useState<"small" | "normal" | "large">("normal");
+
+  const applyFontSize = (size: "small" | "normal" | "large") => {
+    setFontSize(size);
+    try {
+      localStorage.setItem("satyapan_font_size", size);
+    } catch {
+      // Ignore
+    }
+    if (typeof document !== "undefined") {
+      if (size === "small") {
+        document.documentElement.style.fontSize = "14px";
+      } else if (size === "large") {
+        document.documentElement.style.fontSize = "18px";
+      } else {
+        document.documentElement.style.fontSize = "16px";
+      }
+    }
+  };
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("satyapan_font_size");
+      if (saved === "small") {
+        document.documentElement.style.fontSize = "14px";
+      } else if (saved === "large") {
+        document.documentElement.style.fontSize = "18px";
+      }
+    } catch {
+      // Ignore
+    }
+  }, []);
 
   const isDemo = mode === "demo";
   const isAuthScreen = ["/login", "/forgot-password", "/account/password", "/access-pending"].some(
@@ -26,15 +58,15 @@ export default function Navbar({ mode, viewer }: Props) {
   );
 
   const navLinks = [
-    { href: "/", label: "Home", roles: [] },
-    { href: "/aicte", label: "Control Tower", roles: ["platform_admin", "institution_admin", "institution_staff", "reviewer"] },
-    { href: "/institution", label: "Seat Ledgers", roles: ["platform_admin", "institution_admin", "institution_staff", "reviewer"] },
-    { href: "/institution/upload", label: "CSV Ingestion", roles: ["institution_admin", "institution_staff"] },
-    { href: "/verify", label: "Credential Verification", roles: [] },
-    { href: "/aicte/reports", label: "NIRF / NAAC Reports", roles: ["platform_admin", "institution_admin", "institution_staff", "reviewer"] },
-    { href: "/audit", label: "Audit Ledger", roles: ["platform_admin", "reviewer"] },
-    { href: "/institution/api", label: "ERP API Gateway", roles: ["platform_admin", "institution_admin"] },
-    ...(viewer?.role === "platform_admin" ? [{ href: "/admin/users", label: "User Accounts", roles: ["platform_admin"] }] : []),
+    { href: "/", label: "Home", hiLabel: "मुख्यपृष्ठ", roles: [] },
+    { href: "/aicte", label: "National Overview", hiLabel: "राष्ट्रीय विवरण", roles: ["platform_admin", "institution_admin", "institution_staff", "reviewer"] },
+    { href: "/institution", label: "College Seats", hiLabel: "कॉलेज सीटें", roles: ["platform_admin", "institution_admin", "institution_staff", "reviewer"] },
+    { href: "/institution/upload", label: "Upload Students", hiLabel: "छात्र अपलोड", roles: ["institution_admin", "institution_staff"] },
+    { href: "/verify", label: "Verify Degree", hiLabel: "प्रमाणपत्र सत्यापन", roles: [] },
+    { href: "/aicte/reports", label: "Reports", hiLabel: "रिपोर्ट", roles: ["platform_admin", "institution_admin", "institution_staff", "reviewer"] },
+    { href: "/audit", label: "Activity Log", hiLabel: "गतिविधि लॉग", roles: ["platform_admin", "reviewer"] },
+    { href: "/institution/api", label: "Connect Software", hiLabel: "सॉफ्टवेयर लिंक", roles: ["platform_admin", "institution_admin"] },
+    ...(viewer?.role === "platform_admin" ? [{ href: "/admin/users", label: "User Accounts", hiLabel: "खाते", roles: ["platform_admin"] }] : []),
   ].filter((link) => link.roles.length === 0 || (!!viewer && link.roles.includes(viewer.role)));
 
   const handleRunIntegrity = async () => {
@@ -99,10 +131,43 @@ export default function Navbar({ mode, viewer }: Props) {
               })}
             </span>
             <span className="hidden sm:inline text-slate-500" aria-hidden="true">|</span>
-            <div className="hidden md:flex items-center space-x-1 text-[10px] font-mono" title="Text Resize">
-              <span className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 text-slate-300 cursor-pointer hover:bg-slate-700">A-</span>
-              <span className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 text-slate-300 cursor-pointer hover:bg-slate-700 font-bold">A</span>
-              <span className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 text-slate-300 cursor-pointer hover:bg-slate-700">A+</span>
+            <div className="hidden md:flex items-center space-x-1 text-[11px] font-mono" title="Change Text Size">
+              <button
+                type="button"
+                onClick={() => applyFontSize("small")}
+                aria-label="Small font size"
+                className={`px-1.5 py-0.5 border text-xs cursor-pointer transition-colors ${
+                  fontSize === "small"
+                    ? "bg-[#F59E0B] border-[#F59E0B] text-[#102A43] font-bold"
+                    : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                A-
+              </button>
+              <button
+                type="button"
+                onClick={() => applyFontSize("normal")}
+                aria-label="Normal font size"
+                className={`px-1.5 py-0.5 border text-xs cursor-pointer transition-colors ${
+                  fontSize === "normal"
+                    ? "bg-[#F59E0B] border-[#F59E0B] text-[#102A43] font-bold"
+                    : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                A
+              </button>
+              <button
+                type="button"
+                onClick={() => applyFontSize("large")}
+                aria-label="Large font size"
+                className={`px-1.5 py-0.5 border text-xs cursor-pointer transition-colors ${
+                  fontSize === "large"
+                    ? "bg-[#F59E0B] border-[#F59E0B] text-[#102A43] font-bold"
+                    : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                A+
+              </button>
             </div>
             <span className="text-slate-500" aria-hidden="true">|</span>
             <button
@@ -236,7 +301,7 @@ export default function Navbar({ mode, viewer }: Props) {
                         : "text-slate-200 border-transparent hover:text-white hover:bg-[#17365D]/60"
                     }`}
                   >
-                    {t(link.label)}
+                    {locale === "hi" ? link.hiLabel : link.label}
                   </Link>
                 );
               })}
