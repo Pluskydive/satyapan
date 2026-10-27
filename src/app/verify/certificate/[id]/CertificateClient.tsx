@@ -54,8 +54,8 @@ export default function CertificateClient({ student }: Props) {
             <h1 className="text-2xl sm:text-3xl font-black text-[#17365D] tracking-tight pt-2">
               VERIFIED ACADEMIC ENROLMENT CREDENTIAL
             </h1>
-            <div className="text-xs font-mono text-[#059669] font-bold">
-              ✓ Cryptographically Verified via APAAR ID Registry
+            <div className="text-xs font-mono text-[#059669] font-bold uppercase tracking-wider">
+              Cryptographically Verified via APAAR ID Registry
             </div>
           </div>
 

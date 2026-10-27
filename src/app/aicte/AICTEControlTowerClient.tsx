@@ -346,7 +346,7 @@ export default function AICTEControlTowerClient({
         <div className="flex flex-col justify-between gap-4 border-b border-[#D8DEE6] bg-[#F4F6F8] p-5 md:flex-row md:items-center">
           <div>
             <div className="text-[10px] font-bold uppercase tracking-wider text-[#5B6573]">
-              Autonomous Anomaly Inspection
+              Automated Record Verification
             </div>
             <h2 className="text-base font-bold text-[#17365D]">
               {t("Discrepancy queue")} <span className="font-normal text-[#5B6573]">({flags.length} {t("Records") || "records"})</span>

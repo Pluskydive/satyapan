@@ -21,7 +21,7 @@ export const INITIAL_INSTITUTIONS: Institution[] = [
   {
     id: 'inst-1001',
     aicte_code: 'AICTE-1001',
-    name: 'Sunrise Institute of Technology',
+    name: 'Government Engineering College (Sample Inst. 1)',
     state: 'Maharashtra',
     district: 'Pune',
     approved_intake: 240,

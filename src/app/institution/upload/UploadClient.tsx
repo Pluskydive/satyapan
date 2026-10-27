@@ -354,7 +354,7 @@ function UploadContent() {
             </div>
             <div className="text-xs text-[#5B6573] mt-1">
               Synchronized {uploadResult.inserted} admission records into the institutional roster.
-              The autonomous Integrity Engine was triggered and updated all compliance scores.
+              The automated verification checks were run and all records were refreshed.
             </div>
           </div>
           <div className="flex items-center space-x-3 pt-1">
@@ -380,7 +380,7 @@ function UploadContent() {
 
 export default function UploadClient() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-[#5B6573]">Loading Ingestion Terminal...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-[#5B6573]">Loading Student Admission Upload...</div>}>
       <UploadContent />
     </Suspense>
   );

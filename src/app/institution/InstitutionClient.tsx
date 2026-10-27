@@ -116,6 +116,20 @@ export default function InstitutionClient({
         </div>
       </div>
 
+      {/* Sample Data Informational Banner */}
+      <div className="bg-[#F8FAFC] border-l-4 border-[#17365D] border border-[#CBD5E1] p-3.5 rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#334155]">
+        <div className="flex items-center gap-2">
+          <span className="font-semibold text-[#102A43]">Notice:</span>
+          <span>Showing placeholder college records for demonstration. You can upload a new student admissions CSV at any time to replace this with your institution&apos;s live data.</span>
+        </div>
+        <Link
+          href={`/institution/upload?instId=${currentInst.id}`}
+          className="text-[#17365D] font-bold hover:underline whitespace-nowrap self-start sm:self-auto"
+        >
+          Upload New CSV &rarr;
+        </Link>
+      </div>
+
       {/* College Seat Capacity Ledger */}
       <div className="bg-white border border-[#D8DEE6] rounded-[2px] p-5 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#D8DEE6] gap-2">
