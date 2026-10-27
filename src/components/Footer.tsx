@@ -23,8 +23,8 @@ export default function Footer() {
             </div>
             <div className="text-[11px] text-slate-300 leading-snug">
               <strong className="text-white block">राष्ट्रीय छात्र नामांकन सत्यनिष्ठा एवं अपार रजिस्ट्री</strong>
-              <span>National Student Enrolment Integrity & APAAR Registry Platform</span>
-              <span className="block text-slate-400 mt-1">AICTE Enrolment Verification & Institutional Reconciliation</span>
+              <span>National Student Enrolment Integrity &amp; APAAR Registry Platform</span>
+              <span className="block text-slate-400 mt-1">Enrolment Verification &amp; Institutional Reconciliation</span>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed pt-1">
               {locale === "hi"
@@ -115,7 +115,7 @@ export default function Footer() {
                 <span className="text-slate-500">&rsaquo;</span> Frequently Asked Questions (FAQ)
               </li>
               <li className="flex items-center gap-1.5 hover:text-white cursor-pointer">
-                <span className="text-slate-500">&rsaquo;</span> GIGW 3.0 Compliance
+                <span className="text-slate-500">&rsaquo;</span> System Documentation
               </li>
             </ul>
             <div className="mt-4 pt-3 border-t border-slate-700/60 text-[10px] text-slate-400">
@@ -127,11 +127,10 @@ export default function Footer() {
         {/* Bottom Legal & Attribution */}
         <div className="pt-6 flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-400">
           <div>
-            &copy; 2026 SATYAPAN · Designed & Developed by{" "}
-            <span className="text-white font-semibold">Team PRAMAANIT</span>. All rights reserved.
+            &copy; 2026 SATYAPAN. All rights reserved.
           </div>
           <div className="flex items-center space-x-4 text-[10px]">
-            <span>AICTE Enrolment Integrity Solution</span>
+            <span>Developed by <strong className="text-slate-200">Team PRAMAANIT</strong></span>
             <span className="text-slate-600">|</span>
             <span>Version 2026.1</span>
           </div>

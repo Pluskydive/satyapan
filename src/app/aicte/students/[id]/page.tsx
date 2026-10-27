@@ -42,7 +42,7 @@ export default async function StudentRiskPage({ params }: PageProps) {
           href="/aicte"
           className="text-xs font-semibold text-[#17365D] hover:underline"
         >
-          &larr; Return to AICTE National Control Tower
+          &larr; Return to National Overview
         </Link>
       </div>
 

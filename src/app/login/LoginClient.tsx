@@ -51,10 +51,10 @@ export default function LoginClient({ isDemo = false }: Props) {
       role: "platform_admin",
       email: "admin@aicte.gov.in",
       institutionId: "",
-      title: "AICTE Central Administrator",
+      title: "Central Administrator",
       org: "Apex Technical Education Regulatory Authority",
       scopeTag: "Full Platform Authority",
-      description: "Full national governance authority. Access National Control Tower, cross-state seat ledgers, NIRF/NAAC regulatory reports, tamper-evident audit logs, and administrative user provisioning.",
+      description: "Full platform governance authority. Access National Overview, cross-state seat ledgers, NIRF/NAAC regulatory reports, tamper-evident audit logs, and user provisioning.",
       destination: "/aicte",
       buttonLabel: "Launch Central Command",
     },
@@ -185,7 +185,7 @@ export default function LoginClient({ isDemo = false }: Props) {
             Account Login
           </h1>
           <p className="text-xs sm:text-sm text-[#5B6573] mt-1">
-            Sign in to access your college or AICTE administration workspace.
+            Sign in to access your institutional or central administration workspace.
           </p>
         </div>
 
@@ -367,7 +367,7 @@ export default function LoginClient({ isDemo = false }: Props) {
 
         <div className="text-xs text-[#5B6573] mt-8 border-t border-[#D8DEE6] pt-4 flex flex-col sm:flex-row justify-between gap-2">
           <span>{t("Accounts are issued by an authorized platform administrator. Never share administrative credentials.")}</span>
-          <span className="font-mono text-[11px] text-[#17365D]">AICTE SATYAPAN V2.0</span>
+          <span className="font-mono text-[11px] text-[#17365D]">SATYAPAN V2.0 · Team PRAMAANIT</span>
         </div>
       </div>
     </section>

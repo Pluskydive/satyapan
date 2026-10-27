@@ -94,8 +94,8 @@ export default function Navbar({ mode, viewer }: Props) {
             <span className="text-slate-500" aria-hidden="true">|</span>
             <span className="text-slate-300">
               {locale === "hi"
-                ? "अखिल भारतीय तकनीकी शिक्षा परिषद (AICTE) आधारित समाधान"
-                : "AICTE Student Enrolment Integrity Solution"}
+                ? "छात्र नामांकन सत्यनिष्ठा समाधान"
+                : "Student Enrolment Integrity Solution"}
             </span>
           </div>
 
@@ -182,10 +182,10 @@ export default function Navbar({ mode, viewer }: Props) {
                   सत्यापन <span className="text-base sm:text-lg font-bold text-[#17365D]">| SATYAPAN</span>
                 </h1>
                 <div className="text-[11px] font-bold text-[#17365D]">
-                  अखिल भारतीय तकनीकी शिक्षा परिषद (AICTE)
+                  राष्ट्रीय छात्र नामांकन सत्यनिष्ठा एवं अपार रजिस्ट्री
                 </div>
                 <div className="text-[10px] font-medium text-[#5B6573]">
-                  All India Council for Technical Education
+                  National Student Enrolment Integrity &amp; APAAR Registry Platform
                 </div>
               </Link>
             </div>
@@ -196,8 +196,11 @@ export default function Navbar({ mode, viewer }: Props) {
             {!isAuthScreen && (
               <div className="flex items-center gap-2 bg-[#F8FAFC] border border-[#CBD5E1] px-3 py-1.5 text-xs rounded-[4px]">
                 <div className="w-2 h-2 rounded-full bg-[#10B981]" aria-hidden="true" />
+                <span className="text-[#5B6573] font-medium text-[11px]">
+                  {locale === "hi" ? "लॉग इन:" : "Logged in as:"}
+                </span>
                 <span className="font-bold text-[#102A43]">
-                  {viewer?.role === "platform_admin" && (locale === "hi" ? "AICTE केंद्रीय प्रशासक" : "AICTE Central Admin")}
+                  {viewer?.role === "platform_admin" && (locale === "hi" ? "केंद्रीय प्रशासक" : "Central Admin")}
                   {viewer?.role === "institution_admin" && (locale === "hi" ? "संस्थान कुलसचिव" : "College Registrar")}
                   {viewer?.role === "institution_staff" && (locale === "hi" ? "संस्थान कर्मचारी" : "College Staff")}
                   {viewer?.role === "reviewer" && (locale === "hi" ? "ऑडिटर" : "Auditor")}

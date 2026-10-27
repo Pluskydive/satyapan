@@ -40,3 +40,15 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #5B6573;
 }
+
+/* Subpage layout container resets for clean two-column grid */
+.subpage-content-wrapper > div,
+.subpage-content-wrapper > section,
+.subpage-content-wrapper > main {
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+}

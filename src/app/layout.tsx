@@ -5,6 +5,7 @@ import { connection } from "next/server";
 import { cookies } from "next/headers";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AppShell from "@/components/AppShell";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { getCurrentUserContext, type UserProfile } from "@/lib/authz";
 import { getRuntimeMode } from "@/lib/runtime-mode";
@@ -19,8 +20,8 @@ const publicSans = Public_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "SATYAPAN (सत्यापन) | AICTE National Enrolment Integrity & APAAR Registry",
-  description: "Official National Student Enrolment Integrity and APAAR Registry System. Designed and engineered by Team PRAMAANIT for All India Council for Technical Education (AICTE).",
+  title: "SATYAPAN (सत्यापन) | Enrolment Integrity Platform",
+  description: "National Student Enrolment Integrity and APAAR Registry Platform. Developed by Team PRAMAANIT.",
   robots: { index: false, follow: false },
 };
 
@@ -66,7 +67,9 @@ export default async function RootLayout({
           <Suspense fallback={<div className="h-28 bg-[#17365D]" />}>
             <Navbar mode={mode} viewer={viewer ? { email: viewer.email, role: viewer.role } : null} />
           </Suspense>
-          <main className="flex-1 w-full">{children}</main>
+          <main className="flex-1 w-full" id="main-content">
+            <AppShell>{children}</AppShell>
+          </main>
           <Footer />
         </LanguageProvider>
       </body>

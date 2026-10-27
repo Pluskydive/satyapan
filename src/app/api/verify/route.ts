@@ -31,7 +31,7 @@ export async function GET(request: Request) {
           id: `demo-ver-${student.id}`,
           student_id: student.id,
           verifier_type: "Demonstration employer",
-          verifier_name: "SIH 2026 synthetic-data demonstration",
+          verifier_name: "Academic Verification Gateway",
           purpose: "Show the consent-gated verification workflow",
           requested_fields: ["enrolment_status", "program", "institution", "admission_year"],
           disclosed_fields: {},

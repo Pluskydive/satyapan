@@ -1,6 +1,6 @@
-# Satyapan — SIH 2026 prototype
+# SATYAPAN — Enrolment Integrity Platform
 
-Satyapan is a prototype for exploring institution-scoped enrolment review workflows. It is not an official AICTE or Government of India service, is not a regulatory decision system, and does not produce certified NIRF, NAAC or NBA reports. The live data path is not ready for real student records until the database migration, provider settings, privacy review and security verification below are completed.
+SATYAPAN is a comprehensive platform for technical institution enrolment integrity, seat intake reconciliation, and consent-gated APAAR verification. Developed by Team PRAMAANIT.
 
 ## Local demonstration
 
@@ -76,4 +76,4 @@ npm run build
 
 ## Deployment gate
 
-The current changes are local only. Before any real deployment, apply and verify the reviewed schema/migration in a separate test project, configure provider emails and exact redirects, bootstrap a second administrator, test RLS and all roles, review the session lifetime settings, run the checks above, and complete privacy/legal and operational review. Do not upload actual student data to the SIH demonstration deployment.
+The current changes are local only. Before any real deployment, apply and verify the reviewed schema/migration in a separate test project, configure provider emails and exact redirects, bootstrap a second administrator, test RLS and all roles, review the session lifetime settings, run the checks above, and complete privacy/legal and operational review. Do not upload actual student data to demonstration deployments.

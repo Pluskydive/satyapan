@@ -27,7 +27,7 @@ export default async function HomePage() {
             <div className="flex items-center space-x-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" aria-hidden="true" />
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-200">
-                {isHi ? "AICTE छात्र नामांकन सत्यनिष्ठा पोर्टल" : "AICTE Student Admission Integrity Portal"}
+                {isHi ? "छात्र नामांकन सत्यनिष्ठा एवं अपार पोर्टल" : "Student Admission Integrity & APAAR Portal"}
               </span>
             </div>
 
@@ -68,8 +68,8 @@ export default async function HomePage() {
         <div className="bg-[#0B1E32] px-6 py-2.5 border-t border-[#1E3A5F] flex flex-wrap items-center justify-between text-[11px] text-slate-300">
           <div>
             {isHi
-              ? "अखिल भारतीय तकनीकी शिक्षा परिषद (AICTE) अनुमोदित संस्थानों और विश्वविद्यालयों के लिए।"
-              : "All India Council for Technical Education (AICTE) · Technical College Portal"}
+              ? "तकनीकी शिक्षा संस्थानों और विश्वविद्यालयों के लिए केंद्रीय पोर्टल।"
+              : "Central Enrolment Platform for Technical Institutions & Universities"}
           </div>
           <div className="text-[11px] text-slate-300">
             {isHi ? "डिजिटल भारत पहल" : "National Academic Governance"}
@@ -85,7 +85,7 @@ export default async function HomePage() {
             {/* Bold Pill Section Banner */}
             <div className="inline-flex items-center gap-2 bg-[#17365D] text-white text-xs font-black uppercase tracking-wider px-4 py-2 rounded-[4px] shadow-xs">
               <span className="text-sm">🏛️</span>
-              <span>{isHi ? "कॉलेज सेवाएँ (COLLEGE SERVICES)" : "COLLEGE SERVICES"}</span>
+              <span>{isHi ? "कॉलेज सेवाएँ" : "COLLEGE SERVICES"}</span>
             </div>
 
             <div className="space-y-4">
@@ -177,7 +177,7 @@ export default async function HomePage() {
             {/* Bold Pill Section Banner */}
             <div className="inline-flex items-center gap-2 bg-[#4338CA] text-white text-xs font-black uppercase tracking-wider px-4 py-2 rounded-[4px] shadow-xs">
               <span className="text-sm">⚙️</span>
-              <span>{isHi ? "नागरिक एवं विनियामक सेवाएँ (SERVICES)" : "SERVICES & OVERSIGHT"}</span>
+              <span>{isHi ? "नागरिक एवं विनियामक सेवाएँ" : "SERVICES & OVERSIGHT"}</span>
             </div>
 
             <div className="space-y-4">
