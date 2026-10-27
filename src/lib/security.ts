@@ -31,11 +31,11 @@ export function formatMaskedApaar(apaar?: string | null): string {
  */
 export function sanitizeCsvField(val: unknown): string {
   if (val === null || val === undefined) return '';
-  const str = String(val).trim();
-  if (/^[=+\-@\t\r]/.test(str)) {
-    return `'${str}`;
+  const raw = String(val);
+  if (/^[\s]*[=+\-@\t\r]/.test(raw) || /^[\t\r]/.test(raw)) {
+    return `'${raw.trim()}`;
   }
-  return str;
+  return raw.trim();
 }
 
 /**

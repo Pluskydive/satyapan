@@ -12,7 +12,7 @@ export function demoApiUnavailable() {
   if (getRuntimeMode() !== "disabled") return null;
 
   return NextResponse.json(
-    { error: "This prototype is not configured to process data in this environment." },
+    { error: "This service is not configured to process data in this environment." },
     { status: 503, headers: { "Cache-Control": "no-store" } }
   );
 }
@@ -97,7 +97,7 @@ export function apiFailure(error: unknown, fallback: string) {
   }
   if (isRuntimeDisabledError(error)) {
     return NextResponse.json(
-      { error: "This prototype is not configured to process data in this environment." },
+      { error: "This service is not configured to process data in this environment." },
       { status: 503, headers: { "Cache-Control": "no-store" } }
     );
   }

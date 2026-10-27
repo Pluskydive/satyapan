@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     };
 
     response.cookies.set("satyapan_demo_role", role, cookieOptions);
-    response.cookies.set("satyapan_demo_email", email || "demo@aicte.gov.in", cookieOptions);
+    response.cookies.set("satyapan_demo_email", email || "admin@satyapan.gov.in", cookieOptions);
     response.cookies.set("satyapan_demo_institution", institutionId, cookieOptions);
 
     return response;

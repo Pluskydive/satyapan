@@ -10,7 +10,7 @@ const PAGE_SIZE = 50;
 const DEMO_ACCOUNTS = [
   {
     user_id: "usr-admin-1",
-    email: "admin@aicte.gov.in",
+    email: "admin@satyapan.gov.in",
     is_email_verified: true,
     role: "platform_admin" as AppRole,
     institution_id: null,

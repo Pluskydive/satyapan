@@ -118,7 +118,7 @@ function UploadContent() {
       header: true,
       skipEmptyLines: true,
       complete: (result) => {
-        processCsvRows(result.data, "sample_aicte_admission_batch.csv");
+        processCsvRows(result.data, "sample_admission_batch.csv");
       },
     });
   };
@@ -128,7 +128,7 @@ function UploadContent() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", "aicte_satyapan_admission_template.csv");
+    link.setAttribute("download", "satyapan_admission_template.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -369,7 +369,7 @@ function UploadContent() {
               href="/aicte"
               className="text-xs font-semibold text-[#17365D] hover:underline"
             >
-              &rarr; {t("Control Tower")}
+              &rarr; {t("National overview")}
             </Link>
           </div>
         </div>

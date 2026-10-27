@@ -48,7 +48,7 @@ export default async function RootLayout({
       viewer = null;
     } else {
       const demoRole = (demoRoleRaw || "platform_admin") as UserProfile["role"];
-      const demoEmail = cookieStore.get("satyapan_demo_email")?.value || "admin@aicte.gov.in";
+      const demoEmail = cookieStore.get("satyapan_demo_email")?.value || "admin@satyapan.gov.in";
       const demoInstId = cookieStore.get("satyapan_demo_institution")?.value || "inst-1001";
       viewer = {
         user_id: "demo-user-id",

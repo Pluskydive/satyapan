@@ -10,7 +10,7 @@ export async function POST() {
   if (unavailable) return unavailable;
 
   return NextResponse.json(
-    { error: "Institution system connections are not enabled in this prototype." },
+    { error: "Institution system connections are not enabled in this deployment." },
     { status: 501, headers: { "Cache-Control": "no-store" } }
   );
 }
