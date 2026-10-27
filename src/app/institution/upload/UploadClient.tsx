@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Papa from "papaparse";
+import { useLanguage } from "@/components/LanguageProvider";
 import { sanitizeRecordRow, isValidApaar } from "@/lib/security";
 import type { InstitutionSummary } from "@/lib/types";
 
@@ -18,6 +19,8 @@ const SAMPLE_CSV_CONTENT = `apaar_id,institutional_student_id,full_name,dob_year
 99999,STU-505,Arjun Mehta,2005,Male,General,indian,B.Tech Mechanical,2026,2026-11-20`;
 
 function UploadContent() {
+  const { locale } = useLanguage();
+  const isHi = locale === "hi";
   const searchParams = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -163,37 +166,39 @@ function UploadContent() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4">
-      {/* Maharashtra.gov.in Official Breadcrumb */}
+      {/* Official Government Breadcrumb */}
       <div className="bg-[#EAEFF5] border border-[#CBD5E1] px-4 py-1.5 rounded-[2px] text-xs text-[#334155] flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 text-[11px]">
           <Link href="/" className="text-[#205081] font-semibold hover:underline">
-            मुख्य पृष्ठ / Home
+            {isHi ? "मुख्य पृष्ठ" : "Home"}
           </Link>
           <span className="text-[#94A3B8]">&gt;</span>
           <Link href="/institution" className="text-[#205081] font-semibold hover:underline">
-            महाविद्यालयीन प्रशासन / College Administration
+            {isHi ? "संस्थान प्रशासन" : "College Administration"}
           </Link>
           <span className="text-[#94A3B8]">&gt;</span>
           <span className="text-[#102A43] font-bold">
-            विद्यार्थी प्रवेश सूची अपलोड / Upload CSV
+            {isHi ? "छात्र सूची अपलोड" : "Upload Enrolment CSV"}
           </span>
         </div>
         <div className="hidden sm:block text-[10px] font-mono text-[#64748B]">
-          मान्यता निकष: AICTE APH २०२६-२७
+          {isHi ? "मान्यता मानदंड: AICTE APH २०२६-२७" : "Compliance: AICTE APH 2026-27"}
         </div>
       </div>
 
-      {/* 1. Maharashtra.gov.in Department Header Block */}
+      {/* 1. Department Header Block */}
       <div className="bg-white border-l-4 border-l-[#FF9933] border-y border-r border-[#CBD5E1] p-4 sm:p-5 rounded-[2px] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" aria-hidden="true" />
             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#205081]">
-              महाराष्ट्र शासन • तंत्रशिक्षण संचालनालय • Student Admission Ingestion
+              {isHi
+                ? "भारत सरकार • तकनीकी शिक्षा नियामक प्राधिकरण • छात्र प्रवेश पंजीकरण"
+                : "GOVERNMENT OF INDIA • AICTE • STUDENT ADMISSION INGESTION"}
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#102A43] mt-1">
-            विद्यार्थी प्रवेश सूची अपलोड / Upload Student Admission List
+            {isHi ? "छात्र प्रवेश सूची अपलोड" : "Upload Student Admission List"}
           </h1>
         </div>
 
@@ -202,14 +207,14 @@ function UploadContent() {
           onClick={handleDownloadTemplate}
           className="px-3.5 py-1.5 bg-white border border-[#205081] hover:bg-[#F4F6F9] text-[#205081] text-xs font-bold rounded-[2px] transition-colors cursor-pointer self-start sm:self-auto shadow-xs"
         >
-          प्रमाणित नमुना CSV डाउनलोड / Download Template
+          {isHi ? "मानक CSV टेम्पलेट डाउनलोड करें" : "Download Standard CSV Template"}
         </button>
       </div>
 
       {/* Step 1: Target Institution Selection */}
       <div className="bg-white border border-[#CBD5E1] p-4 rounded-[2px] space-y-2 shadow-xs">
         <label htmlFor="upload-inst-select" className="text-xs font-bold text-[#205081] uppercase tracking-wider block">
-          टप्पा १: संस्था निवडा / Step 1: Select Reporting Institution
+          {isHi ? "चरण १: रिपोर्टिंग संस्थान चुनें" : "Step 1: Select Reporting Institution"}
         </label>
         <select
           id="upload-inst-select"
@@ -220,7 +225,7 @@ function UploadContent() {
         >
           {institutions.map((inst) => (
             <option key={inst.id} value={inst.id}>
-              {inst.name} ({inst.aicte_code}) - {inst.state} (मंजूर प्रवेश क्षमता: {inst.approved_intake})
+              {inst.name} ({inst.aicte_code}) - {inst.state} ({isHi ? "स्वीकृत क्षमता" : "Sanctioned Intake"}: {inst.approved_intake})
             </option>
           ))}
         </select>
@@ -230,14 +235,14 @@ function UploadContent() {
       <div className="bg-white border border-[#CBD5E1] p-4 sm:p-5 rounded-[2px] space-y-3 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <label className="text-xs font-bold text-[#205081] uppercase tracking-wider block">
-            टप्पा २: प्रवेश सूची फाइल निवडा / Step 2: Select Student CSV File
+            {isHi ? "चरण २: छात्र CSV फाइल चुनें" : "Step 2: Select Student CSV File"}
           </label>
           <button
             type="button"
             onClick={handleLoadSample}
             className="text-xs font-bold text-[#205081] hover:underline cursor-pointer text-left sm:text-right"
           >
-            चाचणी बॅच लोड करा / Load Sample Verification Batch (५ नोंदी)
+            {isHi ? "नमूना सत्यापन बैच लोड करें (५ रिकॉर्ड)" : "Load Sample Verification Batch (5 Records)"}
           </button>
         </div>
 
@@ -262,14 +267,14 @@ function UploadContent() {
             aria-label="Click to select admission CSV file, or drag and drop file here"
           />
           <div className="text-xs sm:text-sm font-bold text-[#205081]">
-            येथे क्लिक करा किंवा CSV फाईल ड्रॅग करून टाका / Click to select admission CSV file
+            {isHi ? "यहाँ क्लिक करें या CSV फ़ाइल खींचकर लाएं" : "Click to select admission CSV file, or drag and drop file here"}
           </div>
           <div className="text-[11px] text-[#64748B]">
-            AICTE APH मानकानुसार UTF-8 एन्कोडेड CSV (.csv) फाइल आवश्यक
+            {isHi ? "AICTE APH मानकों के अनुसार UTF-8 एन्कोडेड CSV (.csv) फ़ाइल आवश्यक" : "UTF-8 encoded CSV (.csv) file required per AICTE APH standards"}
           </div>
           {fileName && (
             <div className="inline-block mt-2 px-3 py-1 bg-white border border-[#205081] text-[#205081] font-mono text-xs font-bold rounded-[2px]">
-              निवडलेली फाईल: {fileName}
+              {isHi ? "चयनित फ़ाइल: " : "Selected File: "}{fileName}
             </div>
           )}
         </div>
@@ -278,7 +283,7 @@ function UploadContent() {
       {/* Error state */}
       {errorMessage && (
         <div role="alert" className="p-3 bg-[#FEF2F2] border-l-4 border-l-[#B42318] border-y border-r border-[#FECDCA] text-xs text-[#B42318] rounded-[2px]">
-          <strong>तपासणी त्रुटी / Validation Error:</strong> {errorMessage}
+          <strong>{isHi ? "सत्यापन त्रुटि: " : "Validation Error: "}</strong> {errorMessage}
         </div>
       )}
 
@@ -287,43 +292,51 @@ function UploadContent() {
         <div className="bg-white border border-[#CBD5E1] rounded-[2px] p-4 sm:p-5 space-y-4 shadow-xs">
           <div className="pb-3 border-b border-[#CBD5E1] flex items-center justify-between">
             <h3 className="text-xs sm:text-sm font-bold text-[#205081] uppercase tracking-wider">
-              फाइल पडताळणी सारांश / Pre-Ingestion File Summary
+              {isHi ? "फ़ाइल सत्यापन सारांश" : "Pre-Ingestion File Summary"}
             </h3>
             <span className="text-xs font-mono text-[#059669] font-bold">
-              प्रारूप सत्यापित / RFC-4180 Valid
+              {isHi ? "प्रारूप सत्यापित" : "RFC-4180 Valid"}
             </span>
           </div>
 
           <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-[2px] p-3 divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] grid grid-cols-2 sm:grid-cols-4 text-xs">
             <div className="px-3 py-1">
-              <span className="text-[#64748B] text-[10px] font-bold uppercase block">एकूण नोंदी / Total Records</span>
+              <span className="text-[#64748B] text-[10px] font-bold uppercase block">
+                {isHi ? "कुल रिकॉर्ड" : "Total Records"}
+              </span>
               <span className="text-base font-bold text-[#102A43] font-mono">{validationStats.total}</span>
             </div>
             <div className="px-3 py-1">
-              <span className="text-[#64748B] text-[10px] font-bold uppercase block">वैध अपार / Valid APAAR</span>
+              <span className="text-[#64748B] text-[10px] font-bold uppercase block">
+                {isHi ? "वैध अपार" : "Valid APAAR"}
+              </span>
               <span className="text-base font-bold text-[#059669] font-mono">{validationStats.validApaar}</span>
             </div>
             <div className="px-3 py-1">
-              <span className="text-[#64748B] text-[10px] font-bold uppercase block">अवैध अपार / Invalid APAAR</span>
+              <span className="text-[#64748B] text-[10px] font-bold uppercase block">
+                {isHi ? "अमान्य अपार" : "Invalid APAAR"}
+              </span>
               <span className="text-base font-bold text-[#B42318] font-mono">{validationStats.invalidApaar}</span>
             </div>
             <div className="px-3 py-1">
-              <span className="text-[#64748B] text-[10px] font-bold uppercase block">संरक्षित फील्ड्स / Sanitized</span>
+              <span className="text-[#64748B] text-[10px] font-bold uppercase block">
+                {isHi ? "सुरक्षित फ़ील्ड्स" : "Sanitized Fields"}
+              </span>
               <span className="text-base font-bold text-[#102A43] font-mono">{validationStats.sanitizedFormulas}</span>
             </div>
           </div>
 
-          {/* Record table preview (GR Table Style) */}
+          {/* Record table preview */}
           <div className="border border-[#CBD5E1] overflow-x-auto max-h-60 rounded-[2px]">
             <table className="w-full text-left text-xs border-collapse min-w-[700px]">
               <thead className="bg-[#205081] text-white uppercase text-[10px] font-bold sticky top-0">
                 <tr>
-                  <th scope="col" className="w-12 py-2 px-3 border-r border-[#112D4E] text-center">क्र.</th>
-                  <th scope="col" className="py-2 px-3 font-mono border-r border-[#112D4E]">रोल / Student ID</th>
-                  <th scope="col" className="py-2 px-3 border-r border-[#112D4E]">विद्यार्थी नाव / Full Name</th>
-                  <th scope="col" className="py-2 px-3 font-mono border-r border-[#112D4E]">अपार आयडी / APAAR</th>
-                  <th scope="col" className="py-2 px-3 border-r border-[#112D4E]">अभ्यासक्रम / Program</th>
-                  <th scope="col" className="py-2 px-3 text-center">प्रवेश दिनांक / Date</th>
+                  <th scope="col" className="w-12 py-2 px-3 border-r border-[#112D4E] text-center">{isHi ? "क्र." : "Sr."}</th>
+                  <th scope="col" className="py-2 px-3 font-mono border-r border-[#112D4E]">{isHi ? "रोल नंबर" : "Student ID"}</th>
+                  <th scope="col" className="py-2 px-3 border-r border-[#112D4E]">{isHi ? "छात्र का नाम" : "Full Name"}</th>
+                  <th scope="col" className="py-2 px-3 font-mono border-r border-[#112D4E]">{isHi ? "अपार आईडी" : "APAAR ID"}</th>
+                  <th scope="col" className="py-2 px-3 border-r border-[#112D4E]">{isHi ? "पाठ्यक्रम" : "Program"}</th>
+                  <th scope="col" className="py-2 px-3 text-center">{isHi ? "प्रवेश तिथि" : "Admission Date"}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#CBD5E1] text-[#102A43] font-mono text-[11px]">
@@ -358,7 +371,9 @@ function UploadContent() {
             disabled={isUploading}
             className="w-full py-2.5 bg-[#205081] hover:bg-[#112D4E] text-white text-xs font-bold rounded-[2px] transition-colors cursor-pointer disabled:opacity-50 shadow-xs"
           >
-            {isUploading ? "पडताळणी व नोंदणी प्रक्रिया सुरू आहे... / Processing..." : `नोंदी प्रमाणित करून जतन करा / Commit Records (${parsedRows.length})`}
+            {isUploading
+              ? (isHi ? "सत्यापन एवं पंजीकरण प्रक्रिया जारी है…" : "Processing & Validating Records...")
+              : (isHi ? `रिकॉर्ड सत्यापित करके सहेजें (${parsedRows.length})` : `Commit & Ingest Records (${parsedRows.length})`)}
           </button>
         </div>
       )}
@@ -368,10 +383,12 @@ function UploadContent() {
         <div role="status" className="bg-[#ECFDF5] border-l-4 border-l-[#059669] p-4 border-y border-r border-[#A7F3D0] rounded-[2px] space-y-3 shadow-xs">
           <div>
             <div className="text-xs font-bold text-[#059669] uppercase">
-              प्रवेश बॅच यशस्वीरित्या नोंदणीकृत करण्यात आली / Batch Ingestion Successful
+              {isHi ? "प्रवेश बैच सफलतापूर्वक पंजीकृत किया गया" : "Batch Ingestion Successful"}
             </div>
             <div className="text-xs text-[#334155] mt-1">
-              संस्थेच्या नोंदवहीत एकूण {uploadResult.inserted} विद्यार्थ्यांची नोंद यशस्वीपणे करण्यात आली आहे. AICTE केंद्रीय तपासणी प्रणालीद्वारे सर्व नोंदींचे पुनरावलोकन पूर्ण झाले आहे.
+              {isHi
+                ? `संस्थान के रजिस्टर में कुल ${uploadResult.inserted} छात्रों का पंजीकरण सफलतापूर्वक कर दिया गया है। AICTE केंद्रीय निरीक्षण प्रणाली द्वारा सभी रिकॉर्ड का सत्यापन पूरा हो गया है।`
+                : `Successfully ingested ${uploadResult.inserted} student enrolment records into the institution registry. Automated integrity rules have been executed.`}
             </div>
           </div>
           <div className="flex items-center space-x-3 pt-1">
@@ -379,14 +396,14 @@ function UploadContent() {
               href="/institution"
               className="text-xs font-bold text-[#205081] hover:underline"
             >
-              &rarr; संस्था नोंदवही पहा / View College Roster
+              {isHi ? "→ कॉलेज रजिस्टर देखें" : "→ View College Roster"}
             </Link>
             <span className="text-[#CBD5E1]">|</span>
             <Link
               href="/aicte"
               className="text-xs font-bold text-[#205081] hover:underline"
             >
-              &rarr; केंद्रीय पडताळणी कक्ष / National Control Tower
+              {isHi ? "→ राष्ट्रीय नियंत्रण कक्ष" : "→ National Control Tower"}
             </Link>
           </div>
         </div>

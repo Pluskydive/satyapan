@@ -55,7 +55,8 @@ const knownAccountApiErrors = new Set([
 ]);
 
 export default function UserManagementClient() {
-  const { t } = useLanguage();
+  const { locale, t } = useLanguage();
+  const isHi = locale === "hi";
   const [users, setUsers] = useState<Account[]>([]);
   const [institutions, setInstitutions] = useState<Institution[]>([]);
   const [edits, setEdits] = useState<Record<string, AccountEdit>>({});
@@ -177,19 +178,19 @@ export default function UserManagementClient() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4">
-      {/* Maharashtra.gov.in Official Breadcrumb */}
+      {/* Official Government Breadcrumb */}
       <div className="bg-[#EAEFF5] border border-[#CBD5E1] px-4 py-1.5 rounded-[2px] text-xs text-[#334155] flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 text-[11px]">
           <Link href="/" className="text-[#205081] font-semibold hover:underline">
-            मुख्य पृष्ठ / Home
+            {isHi ? "मुख्य पृष्ठ" : "Home"}
           </Link>
           <span className="text-[#94A3B8]">&gt;</span>
           <span className="text-[#205081] font-semibold">
-            प्रणाली प्रशासन / System Administration
+            {isHi ? "प्रणाली प्रशासन" : "System Administration"}
           </span>
           <span className="text-[#94A3B8]">&gt;</span>
           <span className="text-[#102A43] font-bold">
-            वापरकर्ता व खाते नियंत्रण / User Accounts
+            {isHi ? "उपयोगकर्ता खाते" : "User Accounts"}
           </span>
         </div>
         <div className="hidden sm:block text-[10px] font-mono text-[#64748B]">
@@ -197,11 +198,19 @@ export default function UserManagementClient() {
         </div>
       </div>
 
-      {/* 1. Maharashtra.gov.in Department Header Block */}
+      {/* 1. Official Government Header Block */}
       <div className="bg-white border-l-4 border-l-[#FF9933] border-y border-r border-[#CBD5E1] p-4 sm:p-5 rounded-[2px] shadow-xs">
-        <p className="text-[10px] tracking-wider uppercase font-bold text-[#205081]">महाराष्ट्र शासन • प्रणाली प्रशासन कक्ष • User Account Governance</p>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#102A43] mt-1">वापरकर्ता खाती व अधिकार वाटप / User Accounts &amp; Permissions</h1>
-        <p className="text-xs text-[#64748B] mt-1">केवळ मुख्य प्रशासक नवीन वापरकर्त्यांना निमंत्रण देऊ शकतात आणि पदानुसार प्रवेश अधिकार वाटप करू शकतात.</p>
+        <p className="text-[10px] tracking-wider uppercase font-bold text-[#205081]">
+          {isHi ? "भारत सरकार • प्रणाली प्रशासन कक्ष • उपयोगकर्ता खाता शासन" : "GOVERNMENT OF INDIA • SYSTEM ADMINISTRATION • USER ACCOUNT GOVERNANCE"}
+        </p>
+        <h1 className="text-xl sm:text-2xl font-bold text-[#102A43] mt-1">
+          {isHi ? "उपयोगकर्ता खाते एवं भूमिका अनुमतियाँ" : "User Accounts & Role Permissions"}
+        </h1>
+        <p className="text-xs text-[#64748B] mt-1">
+          {isHi
+            ? "केवल अधिकृत मुख्य प्रशासक नए उपयोगकर्ताओं को आमंत्रित कर सकते हैं और भूमिका-आधारित पहुंच अधिकार आवंटित कर सकते हैं।"
+            : "Authorized platform administrators can invite new personnel and configure role-based access privileges."}
+        </p>
       </div>
 
       {message && <p role="status" className="border-l-4 border-l-[#059669] bg-[#ECFDF5] p-3 text-xs text-[#065F46] border-y border-r border-[#A7F3D0] rounded-[2px]">{message}</p>}
@@ -209,44 +218,52 @@ export default function UserManagementClient() {
 
       {/* Invitation Form (Government Form Style) */}
       <section className="bg-white border border-[#CBD5E1] p-4 sm:p-5 rounded-[2px] shadow-xs" aria-labelledby="invite-heading">
-        <h2 id="invite-heading" className="text-xs sm:text-sm font-bold text-[#205081] uppercase tracking-wider">नवीन वापरकर्त्यास निमंत्रण पाठवा / Invite a User</h2>
+        <h2 id="invite-heading" className="text-xs sm:text-sm font-bold text-[#205081] uppercase tracking-wider">
+          {isHi ? "नए उपयोगकर्ता को आमंत्रित करें" : "Invite a User"}
+        </h2>
         <form onSubmit={invite} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mt-3" aria-busy={busy}>
           <label className="text-xs font-bold text-[#102A43]">
-            ईमेल पत्ता / Email Address
+            {isHi ? "ईमेल पता" : "Email Address"}
             <input type="email" required maxLength={254} autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} className="mt-1 block w-full px-3 py-1.5 border border-[#CBD5E1] bg-white text-xs text-[#102A43] rounded-[2px] focus:outline-none focus:border-[#205081]" />
           </label>
           <label className="text-xs font-bold text-[#102A43]">
-            खाते प्रकार / Role
+            {isHi ? "खाता प्रकार / भूमिका" : "Role"}
             <select value={newRole} onChange={(event) => setNewRole(event.target.value as Role)} className="mt-1 block w-full px-3 py-1.5 border border-[#CBD5E1] bg-white text-xs font-semibold text-[#102A43] rounded-[2px] focus:outline-none focus:border-[#205081] cursor-pointer">
               {roleOptions.map((role) => <option key={role.value} value={role.value}>{t(role.label)}</option>)}
             </select>
           </label>
           <label className="text-xs font-bold text-[#102A43]">
-            संलग्न संस्था / Assigned Institution
+            {isHi ? "संबद्ध संस्थान" : "Assigned Institution"}
             <select required={needsInstitution(newRole)} disabled={!needsInstitution(newRole)} value={needsInstitution(newRole) ? newInstitution : ""} onChange={(event) => setNewInstitution(event.target.value)} className="mt-1 block w-full px-3 py-1.5 border border-[#CBD5E1] bg-white disabled:bg-[#F4F6F9] text-xs font-semibold text-[#102A43] rounded-[2px] focus:outline-none focus:border-[#205081] cursor-pointer">
-              <option value="">संस्था निवडा / Select an institution</option>
+              <option value="">{isHi ? "संस्थान चुनें" : "Select an institution"}</option>
               {institutions.map((institution) => <option key={institution.id} value={institution.id}>{institution.name}</option>)}
             </select>
           </label>
           <div className="flex items-end">
             <button type="submit" disabled={busy || (needsInstitution(newRole) && !newInstitution)} className="w-full bg-[#205081] px-4 py-2 text-xs font-bold text-white hover:bg-[#112D4E] disabled:opacity-60 rounded-[2px] transition-colors cursor-pointer shadow-xs">
-              {busy ? "निमंत्रण पाठवत आहे…" : "निमंत्रण पाठवा / Send Invite"}
+              {busy ? (isHi ? "आमंत्रण भेजा जा रहा है…" : "Sending Invite…") : (isHi ? "आमंत्रण भेजें" : "Send Invite")}
             </button>
           </div>
         </form>
       </section>
 
-      {/* User Accounts Table (Maharashtra Portal GR Table Style) */}
+      {/* User Accounts Table (Government Portal Ledger Table Style) */}
       <section className="bg-white border border-[#CBD5E1] rounded-[2px] overflow-hidden shadow-xs" aria-labelledby="accounts-heading">
         <div className="bg-[#EAEFF5] border-b border-[#CBD5E1] p-3 sm:p-4 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
           <div>
-            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#205081]">नोंदणीकृत प्रशासकीय वापरकर्ते / System Directory</div>
-            <h2 id="accounts-heading" className="text-xs sm:text-sm font-bold text-[#102A43] mt-0.5">वापरकर्ता यादी / User Accounts Directory</h2>
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#205081]">
+              {isHi ? "सिस्टम निर्देशिका • पंजीकृत उपयोगकर्ता" : "System Directory • Registered Personnel"}
+            </div>
+            <h2 id="accounts-heading" className="text-xs sm:text-sm font-bold text-[#102A43] mt-0.5">
+              {isHi ? "उपयोगकर्ता खाता निर्देशिका" : "User Accounts Directory"}
+            </h2>
           </div>
           <form onSubmit={(event) => { event.preventDefault(); setPage(1); void load(1, search); }} className="flex gap-2">
-            <label className="sr-only" htmlFor="account-search">ईमेल शोधा / Search by email</label>
-            <input id="account-search" type="search" value={search} maxLength={80} onChange={(event) => setSearch(event.target.value)} placeholder="ईमेल द्वारे शोधा..." className="min-w-0 px-3 py-1.5 border border-[#CBD5E1] bg-white text-xs text-[#102A43] rounded-[2px] focus:outline-none focus:border-[#205081]" />
-            <button type="submit" className="bg-[#205081] text-white px-3 py-1.5 text-xs font-bold rounded-[2px] hover:bg-[#112D4E] cursor-pointer shadow-xs">शोधा</button>
+            <label className="sr-only" htmlFor="account-search">{isHi ? "ईमेल खोजें" : "Search by email"}</label>
+            <input id="account-search" type="search" value={search} maxLength={80} onChange={(event) => setSearch(event.target.value)} placeholder={isHi ? "ईमेल द्वारा खोजें..." : "Search by email..."} className="min-w-0 px-3 py-1.5 border border-[#CBD5E1] bg-white text-xs text-[#102A43] rounded-[2px] focus:outline-none focus:border-[#205081]" />
+            <button type="submit" className="bg-[#205081] text-white px-3 py-1.5 text-xs font-bold rounded-[2px] hover:bg-[#112D4E] cursor-pointer shadow-xs">
+              {isHi ? "खोजें" : "Search"}
+            </button>
           </form>
         </div>
 
@@ -254,17 +271,23 @@ export default function UserManagementClient() {
           <table className="w-full min-w-[900px] text-left text-xs border-collapse">
             <thead className="bg-[#205081] text-white uppercase text-[10px] font-bold">
               <tr>
-                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">ईमेल / Email</th>
-                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">ईमेल स्थिती / Verification</th>
-                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">खाते प्रकार / Role</th>
-                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">संस्था / Institution</th>
-                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">सक्रिय स्थिती / Status</th>
-                <th scope="col" className="py-2.5 px-3 text-center w-24">कृती / Action</th>
+                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">{isHi ? "ईमेल" : "Email"}</th>
+                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">{isHi ? "सत्यापन स्थिति" : "Verification"}</th>
+                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">{isHi ? "भूमिका" : "Role"}</th>
+                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">{isHi ? "संस्थान" : "Institution"}</th>
+                <th scope="col" className="py-2.5 px-3 border-r border-[#112D4E]">{isHi ? "स्थिति" : "Status"}</th>
+                <th scope="col" className="py-2.5 px-3 text-center w-24">{isHi ? "कार्रवाई" : "Action"}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#CBD5E1] text-[#102A43]">
               {users.length === 0 ? (
-                <tr><td colSpan={6} className="p-8 text-center text-xs text-[#64748B]">{search ? "शोध निकषानुसार खाते आढळले नाही." : "कोणतेही खाते उपलब्ध नाही."}</td></tr>
+                <tr>
+                  <td colSpan={6} className="p-8 text-center text-xs text-[#64748B]">
+                    {search
+                      ? (isHi ? "शोध मानदंडों से मेल खाने वाला कोई खाता नहीं मिला।" : "No accounts match your search criteria.")
+                      : (isHi ? "कोई खाता उपलब्ध नहीं है।" : "No accounts available.")}
+                  </td>
+                </tr>
               ) : users.map((user, idx) => {
                 const edit = edits[user.user_id] || { role: "institution_staff" as Role, institution_id: "", is_active: false };
                 const rowId = user.user_id;
@@ -285,7 +308,7 @@ export default function UserManagementClient() {
                           ? "bg-[#ECFDF5] text-[#059669] border-[#A7F3D0]"
                           : "bg-[#FFFBEB] text-[#D97706] border-[#FEDF89]"
                       }`}>
-                        {user.is_email_verified ? "सत्यापित / Verified" : "अपूर्ण / Pending"}
+                        {user.is_email_verified ? (isHi ? "सत्यापित" : "Verified") : (isHi ? "लंबित" : "Pending")}
                       </span>
                     </td>
                     <td className="px-3 py-2.5 border-r border-[#CBD5E1]">
@@ -327,7 +350,7 @@ export default function UserManagementClient() {
                           }}
                           className="w-full px-2 py-1 border border-[#CBD5E1] bg-white text-xs text-[#102A43] rounded-[2px] focus:outline-none focus:border-[#205081]"
                         >
-                          <option value="">संस्था निवडा / Select</option>
+                          <option value="">{isHi ? "संस्थान चुनें" : "Select"}</option>
                           {institutions.map((institution) => (
                             <option key={institution.id} value={institution.id}>{institution.name}</option>
                           ))}
@@ -354,7 +377,7 @@ export default function UserManagementClient() {
                           className="rounded-[2px] text-[#205081] focus:ring-[#205081]"
                         />
                         <span className="text-xs font-semibold text-[#102A43]">
-                          {edit.is_active ? "सक्रिय / Active" : "निष्क्रिय / Disabled"}
+                          {edit.is_active ? (isHi ? "सक्रिय" : "Active") : (isHi ? "निष्क्रिय" : "Disabled")}
                         </span>
                       </label>
                     </td>
@@ -365,7 +388,7 @@ export default function UserManagementClient() {
                         onClick={() => void save(user)}
                         className="bg-[#205081] text-white hover:bg-[#112D4E] px-2.5 py-1 text-xs font-bold rounded-[2px] transition-colors cursor-pointer disabled:opacity-50 shadow-xs"
                       >
-                        {busyId === rowId ? "जतन होत आहे…" : "जतन करा"}
+                        {busyId === rowId ? (isHi ? "सहेजा जा रहा है…" : "Saving…") : (isHi ? "सहेजें" : "Save")}
                       </button>
                     </td>
                   </tr>
@@ -376,7 +399,7 @@ export default function UserManagementClient() {
         </div>
 
         <div className="border-t border-[#CBD5E1] bg-[#EAEFF5] px-4 py-2.5 flex items-center justify-between text-xs text-[#64748B]">
-          <span className="font-mono">पृष्ठ / Page {page}</span>
+          <span className="font-mono">{isHi ? "पृष्ठ" : "Page"} {page}</span>
           <div className="flex gap-2">
             <button
               type="button"
@@ -384,7 +407,7 @@ export default function UserManagementClient() {
               onClick={() => setPage((value) => Math.max(1, value - 1))}
               className="border border-[#205081] bg-white text-[#205081] px-3 py-1 font-bold rounded-[2px] disabled:opacity-50 hover:bg-[#F4F6F9] cursor-pointer"
             >
-              मागील / Previous
+              {isHi ? "पिछला" : "Previous"}
             </button>
             <button
               type="button"
@@ -392,7 +415,7 @@ export default function UserManagementClient() {
               onClick={() => setPage((value) => value + 1)}
               className="border border-[#205081] bg-white text-[#205081] px-3 py-1 font-bold rounded-[2px] disabled:opacity-50 hover:bg-[#F4F6F9] cursor-pointer"
             >
-              पुढील / Next
+              {isHi ? "अगला" : "Next"}
             </button>
           </div>
         </div>

@@ -27,7 +27,8 @@ export default function AICTEControlTowerClient({
   initialStates,
   initialFlags,
 }: Props) {
-  const { t } = useLanguage();
+  const { locale, t } = useLanguage();
+  const isHi = locale === "hi";
   const [national, setNational] = useState(initialNational);
   const [states, setStates] = useState(initialStates);
   const [flags, setFlags] = useState(initialFlags);
@@ -223,37 +224,39 @@ export default function AICTEControlTowerClient({
 
   return (
     <div className="mx-auto max-w-7xl space-y-4 px-4 py-4 sm:px-6 sm:py-6">
-      {/* Maharashtra.gov.in Official Breadcrumb */}
+      {/* Official Government Breadcrumb */}
       <div className="bg-[#EAEFF5] border border-[#CBD5E1] px-4 py-1.5 rounded-[2px] text-xs text-[#334155] flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 text-[11px]">
           <Link href="/" className="text-[#205081] font-semibold hover:underline">
-            मुख्य पृष्ठ / Home
+            {isHi ? "मुख्य पृष्ठ" : "Home"}
           </Link>
           <span className="text-[#94A3B8]">&gt;</span>
           <span className="text-[#205081] font-semibold">
-            तंत्रशिक्षण संचालनालय, महाराष्ट्र राज्य / DTE Maharashtra &amp; AICTE
+            {isHi ? "अखिल भारतीय तकनीकी शिक्षा परिषद" : "AICTE Regulatory Command"}
           </span>
           <span className="text-[#94A3B8]">&gt;</span>
           <span className="text-[#102A43] font-bold">
-            प्रवेश सत्यनिष्ठा महामंडळ / National Enrolment Ledger
+            {isHi ? "राष्ट्रीय नामांकन नियंत्रण कक्ष" : "National Control Tower"}
           </span>
         </div>
         <div className="hidden sm:block text-[10px] font-mono text-[#64748B]">
-          Academic Year 2026-27 | GIGW Compliant
+          {isHi ? "शैक्षणिक सत्र २०२६-२७ • GIGW अनुपालन" : "Academic Year 2026-27 | GIGW Compliant"}
         </div>
       </div>
 
-      {/* 1. Maharashtra.gov.in Department Header Block */}
+      {/* 1. Department Header Block */}
       <div className="bg-white border-l-4 border-l-[#FF9933] border-y border-r border-[#CBD5E1] p-4 sm:p-5 rounded-[2px] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" aria-hidden="true" />
             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#205081]">
-              महाराष्ट्र शासन • Government of Maharashtra • AICTE Central Registry
+              {isHi
+                ? "भारत सरकार • शिक्षा मंत्रालय • अखिल भारतीय तकनीकी शिक्षा परिषद (AICTE)"
+                : "GOVERNMENT OF INDIA • MINISTRY OF EDUCATION • AICTE CENTRAL REGISTRY"}
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#102A43] mt-1">
-            राष्ट्रीय छात्र प्रवेश आढावा व पडताळणी / National Admission Overview &amp; Verification
+            {isHi ? "राष्ट्रीय छात्र प्रवेश समीक्षा एवं सत्यापन नियंत्रण कक्ष" : "National Admission Overview & Verification Control Tower"}
           </h1>
         </div>
 
@@ -265,7 +268,7 @@ export default function AICTEControlTowerClient({
             className="inline-flex items-center gap-1.5 border border-[#205081] bg-white px-3 py-1.5 text-xs font-semibold text-[#205081] hover:bg-[#F4F6F9] disabled:opacity-50 rounded-[2px] transition-colors cursor-pointer"
           >
             <RotateCw className={`w-3.5 h-3.5 ${isRunning ? "animate-spin" : ""}`} />
-            <span>{isRunning ? t("Refreshing…") : "माहिती अद्यतन करा / Refresh"}</span>
+            <span>{isRunning ? (isHi ? "अद्यतन हो रहा है…" : "Refreshing…") : (isHi ? "डेटा रीफ्रेश करें" : "Refresh Data")}</span>
           </button>
           <button
             type="button"
@@ -274,18 +277,18 @@ export default function AICTEControlTowerClient({
             className="inline-flex items-center gap-1.5 bg-[#205081] hover:bg-[#112D4E] px-3.5 py-1.5 text-xs font-bold text-white disabled:opacity-50 rounded-[2px] transition-colors cursor-pointer shadow-xs"
           >
             <ShieldAlert className="w-3.5 h-3.5 text-[#FF9933]" />
-            <span>{isRunning ? "तपासणी सुरू आहे..." : "नोंदणी पडताळणी / Run Record Check"}</span>
+            <span>{isRunning ? (isHi ? "जाँच चल रही है…" : "Verifying…") : (isHi ? "रिकॉर्ड सत्यापन चलाएं" : "Run Record Check")}</span>
           </button>
         </div>
       </div>
 
-      {/* 2. Maharashtra Government Anomaly Simulation Bench */}
+      {/* 2. Anomaly Simulation Bench */}
       <div className="bg-white border border-[#CBD5E1] border-t-2 border-t-[#FF9933] rounded-[2px] shadow-xs overflow-hidden">
         <div className="bg-[#205081] text-white px-4 py-2.5 flex flex-wrap items-center justify-between text-xs gap-3">
           <div className="flex items-center gap-2">
             <Zap className="w-3.5 h-3.5 text-[#FF9933]" />
             <span className="font-bold uppercase tracking-wider text-[11px] text-white">
-              प्रवेश विसंगती प्रत्यक्ष चाचणी कक्ष / Real-Time Fraud &amp; Anomaly Simulator
+              {isHi ? "लाइव धोखाधड़ी एवं विसंगति सिम्युलेटर (SIH ग्रैंड फिनाले)" : "Real-Time Fraud & Anomaly Simulator (SIH Grand Finale)"}
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -299,7 +302,7 @@ export default function AICTEControlTowerClient({
                   : "bg-[#FF9933] hover:bg-[#E67300] text-[#102A43]"
               } disabled:opacity-50`}
             >
-              Cross-State Collision Test (Pune vs Bengaluru)
+              {isHi ? "दोहरा नामांकन टकराव (पुणे बनाम बेंगलुरु)" : "Cross-State Collision Test (Pune vs Bengaluru)"}
             </button>
             <button
               type="button"
@@ -311,7 +314,7 @@ export default function AICTEControlTowerClient({
                   : "bg-white/10 hover:bg-white/20 text-white border border-white/30"
               } disabled:opacity-50`}
             >
-              Supernumerary Quota Breach Test
+              {isHi ? "सुपरन्यूमरेरी कोटा उल्लंघन परीक्षण" : "Supernumerary Quota Breach Test"}
             </button>
             {simulationMode !== "idle" && (
               <button
@@ -319,7 +322,7 @@ export default function AICTEControlTowerClient({
                 onClick={handleResetSimulation}
                 className="px-2.5 py-1 text-xs font-semibold bg-white/20 hover:bg-white/30 text-white rounded-[2px] transition-colors cursor-pointer"
               >
-                मूळ स्थिती / Reset
+                {isHi ? "रीसेट करें" : "Reset"}
               </button>
             )}
           </div>
@@ -332,12 +335,12 @@ export default function AICTEControlTowerClient({
               <table className="w-full text-xs border border-[#CBD5E1] bg-white">
                 <thead>
                   <tr className="bg-[#205081] text-white text-[11px] font-bold">
-                    <th className="py-2 px-3 text-center w-14 border border-[#112D4E]">क्र. / Sr.</th>
-                    <th className="py-2 px-3 text-left border border-[#112D4E]">तपासणी विषय / Incident</th>
-                    <th className="py-2 px-3 text-left border border-[#112D4E]">महाराष्ट्र राज्य प्रवेश / Primary Allotment (Pune)</th>
-                    <th className="py-2 px-3 text-left border border-[#112D4E]">कर्नाटक राज्य प्रवेश / Conflicting Claim (Bengaluru)</th>
-                    <th className="py-2 px-3 text-left border border-[#112D4E]">शासकीय निर्णय / Regulatory Finding</th>
-                    <th className="py-2 px-3 text-center border border-[#112D4E] w-24">कृती / Action</th>
+                    <th className="py-2 px-3 text-center w-14 border border-[#112D4E]">{isHi ? "क्र." : "Sr."}</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">{isHi ? "घटना विवरण" : "Incident"}</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">{isHi ? "प्राथमिक आवंटन (पुणे)" : "Primary Allotment (Pune)"}</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">{isHi ? "विरोधाभासी दावा (बेंगलुरु)" : "Conflicting Claim (Bengaluru)"}</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">{isHi ? "नियामक निष्कर्ष" : "Regulatory Finding"}</th>
+                    <th className="py-2 px-3 text-center border border-[#112D4E] w-24">{isHi ? "कार्रवाई" : "Action"}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#CBD5E1] text-[#202B36]">
@@ -368,7 +371,7 @@ export default function AICTEControlTowerClient({
                         }}
                         className="px-2.5 py-1 bg-[#205081] hover:bg-[#112D4E] text-white text-xs font-bold rounded-[2px] transition-colors cursor-pointer"
                       >
-                        पहा / View &darr;
+                        {isHi ? "देखें ↓" : "View ↓"}
                       </button>
                     </td>
                   </tr>
@@ -384,12 +387,12 @@ export default function AICTEControlTowerClient({
               <table className="w-full text-xs border border-[#CBD5E1] bg-white">
                 <thead>
                   <tr className="bg-[#205081] text-white text-[11px] font-bold">
-                    <th className="py-2 px-3 text-center w-14 border border-[#112D4E]">क्र. / Sr.</th>
-                    <th className="py-2 px-3 text-left border border-[#112D4E]">संस्था / Reporting Institution</th>
-                    <th className="py-2 px-3 text-left border border-[#112D4E]">प्रवर्ग / Quota Category</th>
-                    <th className="py-2 px-3 text-center border border-[#112D4E]">मंजूर जागा / Ceiling</th>
-                    <th className="py-2 px-3 text-center border border-[#112D4E]">दाखल विद्यार्थी / Enrolled</th>
-                    <th className="py-2 px-3 text-left border border-[#112D4E]">शासकीय स्थिती / Status</th>
+                    <th className="py-2 px-3 text-center w-14 border border-[#112D4E]">{isHi ? "क्र." : "Sr."}</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">{isHi ? "रिपोर्टिंग संस्थान" : "Reporting Institution"}</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">{isHi ? "कोटा प्रवर्ग" : "Quota Category"}</th>
+                    <th className="py-2 px-3 text-center border border-[#112D4E]">{isHi ? "स्वीकृत सीमा" : "Ceiling"}</th>
+                    <th className="py-2 px-3 text-center border border-[#112D4E]">{isHi ? "नामांकित छात्र" : "Enrolled"}</th>
+                    <th className="py-2 px-3 text-left border border-[#112D4E]">{isHi ? "नियामक स्थिति" : "Regulatory Status"}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#CBD5E1] text-[#202B36]">
@@ -412,14 +415,14 @@ export default function AICTEControlTowerClient({
         )}
       </div>
 
-      {/* 3. Maharashtra.gov.in Official Executive Status Ledger */}
+      {/* 3. Official Executive Status Ledger */}
       <div className="bg-white border border-[#CBD5E1] rounded-[2px] shadow-xs overflow-hidden">
         <div className="bg-[#205081] text-white px-4 py-2 flex items-center justify-between text-xs">
           <span className="font-bold uppercase tracking-wider text-[11px]">
-            राज्य व राष्ट्रीय प्रवेश सद्यस्थिती तक्ता / State &amp; National Enrolment Status Ledger
+            {isHi ? "राज्य एवं राष्ट्रीय प्रवेश स्थिति विवरण" : "State & National Enrolment Status Ledger"}
           </span>
           <span className="font-mono text-slate-200 text-[11px]">
-            क्षेत्र / Reporting States: {states.length} • Updated Live
+            {isHi ? `रिपोर्टिंग राज्य: ${states.length} • लाइव अपडेटेड` : `Reporting States: ${states.length} • Updated Live`}
           </span>
         </div>
 
@@ -427,7 +430,7 @@ export default function AICTEControlTowerClient({
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] text-xs">
           <div className="p-3.5 bg-[#F4F6F9]">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-              सत्यनिष्ठा गुण / Integrity Score
+              {isHi ? "सत्यनिष्ठा स्कोर" : "Integrity Score"}
             </span>
             <div className="flex items-baseline gap-1 mt-1">
               <span className="font-mono text-2xl font-black text-[#102A43]">{integrityScore}</span>
@@ -448,7 +451,7 @@ export default function AICTEControlTowerClient({
 
           <div className="p-3.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-              एकूण प्रवेश / Total Admissions
+              {isHi ? "कुल प्रवेश" : "Total Admissions"}
             </span>
             <div className="font-mono text-2xl font-black text-[#102A43] mt-1">
               {totalStudents.toLocaleString()}
@@ -458,7 +461,7 @@ export default function AICTEControlTowerClient({
 
           <div className="p-3.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-              प्रमाणित प्रवेश / Verified
+              {isHi ? "प्रमाणित प्रवेश" : "Verified"}
             </span>
             <div className="font-mono text-2xl font-black text-[#059669] mt-1">
               {verifiedCount.toLocaleString()}
@@ -468,7 +471,7 @@ export default function AICTEControlTowerClient({
 
           <div className="p-3.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-              पडताळणी रांग / Review Queue
+              {isHi ? "समीक्षा कतार" : "Review Queue"}
             </span>
             <div className="font-mono text-2xl font-black text-[#B42318] mt-1">
               {flaggedCount.toLocaleString()}
@@ -478,7 +481,7 @@ export default function AICTEControlTowerClient({
 
           <div className="p-3.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-              नोंदणीकृत महाविद्यालये / Colleges
+              {isHi ? "पंजीकृत कॉलेज" : "Colleges"}
             </span>
             <div className="font-mono text-2xl font-black text-[#102A43] mt-1">
               {national.institutions_reporting}
@@ -488,7 +491,7 @@ export default function AICTEControlTowerClient({
 
           <div className="p-3.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-              राज्य व केंद्रशासित प्रदेश / States
+              {isHi ? "राज्य एवं संघ राज्य" : "States & UTs"}
             </span>
             <div className="font-mono text-2xl font-black text-[#102A43] mt-1">
               {states.length}
@@ -498,7 +501,7 @@ export default function AICTEControlTowerClient({
         </div>
       </div>
 
-      {/* 4. Maharashtra Government Style State & Quota Tables */}
+      {/* 4. State & Quota Tables */}
       <div className="bg-white border border-[#CBD5E1] rounded-[2px] shadow-xs overflow-hidden">
         {/* Government Folder Navigation Tabs */}
         <div className="bg-[#EAEFF5] border-b border-[#CBD5E1] px-4 pt-2 flex flex-wrap items-center justify-between gap-2">
@@ -512,7 +515,7 @@ export default function AICTEControlTowerClient({
                   : "bg-transparent text-[#475569] border-transparent hover:text-[#205081]"
               }`}
             >
-              संयुक्त तक्ता / Unified View
+              {isHi ? "संयुक्त दृश्य" : "Unified View"}
             </button>
             <button
               type="button"
@@ -523,7 +526,7 @@ export default function AICTEControlTowerClient({
                   : "bg-transparent text-[#475569] border-transparent hover:text-[#205081]"
               }`}
             >
-              राज्यनिहाय तक्ता / State-Wise
+              {isHi ? "राज्यवार विवरण" : "State-Wise"}
             </button>
             <button
               type="button"
@@ -534,7 +537,7 @@ export default function AICTEControlTowerClient({
                   : "bg-transparent text-[#475569] border-transparent hover:text-[#205081]"
               }`}
             >
-              प्रवर्गनिहाय कोटा / Quota Distribution
+              {isHi ? "कोटा वितरण" : "Quota Distribution"}
             </button>
           </div>
 
@@ -544,12 +547,12 @@ export default function AICTEControlTowerClient({
         </div>
 
         <div className="p-4 grid grid-cols-1 lg:grid-cols-2 gap-6 bg-white">
-          {/* State Table (Maharashtra Portal Layout) */}
+          {/* State Table */}
           {(activeTab === "both" || activeTab === "states") && (
             <div className={`space-y-2 ${activeTab === "states" ? "lg:col-span-2" : ""}`}>
               <div className="flex items-center justify-between pb-1">
                 <span className="font-bold text-xs uppercase tracking-wider text-[#205081]">
-                  राज्यनिहाय विद्यार्थी संख्या / Admissions by State Jurisdiction
+                  {isHi ? "राज्य क्षेत्राधिकार अनुसार प्रवेश" : "Admissions by State Jurisdiction"}
                 </span>
                 {selectedStateFilter !== "ALL" && (
                   <button
@@ -557,7 +560,7 @@ export default function AICTEControlTowerClient({
                     onClick={() => setSelectedStateFilter("ALL")}
                     className="text-[11px] font-bold text-[#205081] hover:underline cursor-pointer"
                   >
-                    फिल्टर रद्द करा / Clear ({selectedStateFilter})
+                    {isHi ? `फिल्टर हटाएं (${selectedStateFilter})` : `Clear Filter (${selectedStateFilter})`}
                   </button>
                 )}
               </div>
@@ -566,11 +569,11 @@ export default function AICTEControlTowerClient({
                 <table className="w-full text-left text-xs border-collapse">
                   <thead className="bg-[#205081] text-white uppercase text-[10px] font-bold">
                     <tr>
-                      <th className="py-2 px-3 border-r border-[#112D4E] w-12 text-center">क्र.</th>
-                      <th className="py-2 px-3 border-r border-[#112D4E]">राज्य / State or UT</th>
-                      <th className="py-2 px-3 text-right border-r border-[#112D4E]">प्रवेशित विद्यार्थी / Students</th>
-                      <th className="py-2 px-3 text-right border-r border-[#112D4E]">टक्केवारी / Share %</th>
-                      <th className="py-2 px-3 text-center w-24">कृती / Action</th>
+                      <th className="py-2 px-3 border-r border-[#112D4E] w-12 text-center">{isHi ? "क्र." : "Sr."}</th>
+                      <th className="py-2 px-3 border-r border-[#112D4E]">{isHi ? "राज्य / केंद्रशासित प्रदेश" : "State or UT"}</th>
+                      <th className="py-2 px-3 text-right border-r border-[#112D4E]">{isHi ? "प्रवेशित छात्र" : "Students"}</th>
+                      <th className="py-2 px-3 text-right border-r border-[#112D4E]">{isHi ? "हिस्सा %" : "Share %"}</th>
+                      <th className="py-2 px-3 text-center w-24">{isHi ? "कार्रवाई" : "Action"}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#CBD5E1] text-[#202B36]">
@@ -597,7 +600,7 @@ export default function AICTEControlTowerClient({
                               <span className="font-bold text-[#102A43]">{st.state}</span>
                               {isFiltered && (
                                 <span className="text-[9px] bg-[#205081] text-white px-1.5 py-0.2 rounded font-mono">
-                                  निवडलेले / ACTIVE
+                                  {isHi ? "सक्रिय" : "ACTIVE"}
                                 </span>
                               )}
                             </div>
@@ -610,7 +613,7 @@ export default function AICTEControlTowerClient({
                           </td>
                           <td className="py-2.5 px-3 text-center">
                             <span className="text-[11px] text-[#205081] font-bold hover:underline">
-                              {isFiltered ? "रद्द करा" : "फिल्टर"}
+                              {isFiltered ? (isHi ? "हटाएं" : "Clear") : (isHi ? "फिल्टर" : "Filter")}
                             </span>
                           </td>
                         </tr>
@@ -622,12 +625,12 @@ export default function AICTEControlTowerClient({
             </div>
           )}
 
-          {/* Quota Table (Maharashtra Portal Layout) */}
+          {/* Quota Table */}
           {(activeTab === "both" || activeTab === "categories") && (
             <div className={`space-y-2 ${activeTab === "categories" ? "lg:col-span-2" : ""}`}>
               <div className="flex items-center justify-between pb-1">
                 <span className="font-bold text-xs uppercase tracking-wider text-[#205081]">
-                  वैधानिक प्रवर्गनिहाय कोटा / Statutory Quota Allocation
+                  {isHi ? "वैधानिक कोटा आवंटन" : "Statutory Quota Allocation"}
                 </span>
                 <span className="text-[10px] font-mono text-[#64748B]">AICTE APH Limits</span>
               </div>
@@ -636,31 +639,31 @@ export default function AICTEControlTowerClient({
                 <table className="w-full text-left text-xs border-collapse">
                   <thead className="bg-[#205081] text-white uppercase text-[10px] font-bold">
                     <tr>
-                      <th className="py-2 px-3 border-r border-[#112D4E] w-12 text-center">क्र.</th>
-                      <th className="py-2 px-3 border-r border-[#112D4E]">प्रवर्ग / Quota Category</th>
-                      <th className="py-2 px-3 text-right border-r border-[#112D4E]">विद्यार्थी / Count</th>
-                      <th className="py-2 px-3 text-right border-r border-[#112D4E]">प्रमाण / Share %</th>
-                      <th className="py-2 px-3 text-center w-28">स्थिती / Status</th>
+                      <th className="py-2 px-3 border-r border-[#112D4E] w-12 text-center">{isHi ? "क्र." : "Sr."}</th>
+                      <th className="py-2 px-3 border-r border-[#112D4E]">{isHi ? "कोटा प्रवर्ग" : "Quota Category"}</th>
+                      <th className="py-2 px-3 text-right border-r border-[#112D4E]">{isHi ? "छात्र" : "Count"}</th>
+                      <th className="py-2 px-3 text-right border-r border-[#112D4E]">{isHi ? "हिस्सा %" : "Share %"}</th>
+                      <th className="py-2 px-3 text-center w-28">{isHi ? "स्थिति" : "Status"}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#CBD5E1] text-[#202B36]">
                     <tr className="bg-white hover:bg-[#EAEFF5]">
                       <td className="py-2.5 px-3 text-center font-bold text-[#64748B] border-r border-[#CBD5E1]">1</td>
                       <td className="py-2.5 px-3 font-semibold text-[#102A43] border-r border-[#CBD5E1]">
-                        भारतीय सर्वसाधारण व राखीव / Indian Domestic (General/Reserved)
+                        {isHi ? "भारतीय सामान्य एवं आरक्षित" : "Indian Domestic (General/Reserved)"}
                       </td>
                       <td className="py-2.5 px-3 text-right font-mono font-bold border-r border-[#CBD5E1]">{domesticCount.toLocaleString()}</td>
                       <td className="py-2.5 px-3 text-right font-mono border-r border-[#CBD5E1]">{domesticPct}%</td>
                       <td className="py-2.5 px-3 text-center">
                         <span className="px-1.5 py-0.5 bg-[#ECFDF5] text-[#059669] text-[9px] font-mono font-bold rounded-[2px] border border-[#A7F3D0]">
-                          नियमानुसार / VALID
+                          {isHi ? "वैध" : "VALID"}
                         </span>
                       </td>
                     </tr>
                     <tr className="bg-[#F4F6F9] hover:bg-[#EAEFF5]">
                       <td className="py-2.5 px-3 text-center font-bold text-[#64748B] border-r border-[#CBD5E1]">2</td>
                       <td className="py-2.5 px-3 font-semibold text-[#102A43] border-r border-[#CBD5E1]">
-                        अनिवासी भारतीय / Non-Resident Indian (NRI Quota)
+                        {isHi ? "अनिवासी भारतीय (NRI कोटा)" : "Non-Resident Indian (NRI Quota)"}
                       </td>
                       <td className="py-2.5 px-3 text-right font-mono font-bold border-r border-[#CBD5E1]">{effectiveNriStudents.toLocaleString()}</td>
                       <td className="py-2.5 px-3 text-right font-mono border-r border-[#CBD5E1]">{nriPct}%</td>
@@ -672,33 +675,33 @@ export default function AICTEControlTowerClient({
                               : "bg-[#FFFBEB] text-[#D97706] border-[#FEDF89]"
                           }`}
                         >
-                          {simulationMode === "quota_breach" ? "मर्यादा ओलांडली" : "मर्यादेत / IN LIMIT"}
+                          {simulationMode === "quota_breach" ? (isHi ? "सीमा उल्लंघन (+४)" : "BREACH (+4)") : (isHi ? "सीमा में" : "IN LIMIT")}
                         </span>
                       </td>
                     </tr>
                     <tr className="bg-white hover:bg-[#EAEFF5]">
                       <td className="py-2.5 px-3 text-center font-bold text-[#64748B] border-r border-[#CBD5E1]">3</td>
                       <td className="py-2.5 px-3 font-semibold text-[#102A43] border-r border-[#CBD5E1]">
-                        भारतीय वंशाचे नागरिक / Overseas Citizen of India (OCI/PIO)
+                        {isHi ? "भारतीय मूल के विदेशी नागरिक (OCI/PIO)" : "Overseas Citizen of India (OCI/PIO)"}
                       </td>
                       <td className="py-2.5 px-3 text-right font-mono font-bold border-r border-[#CBD5E1]">{national.oci_students.toLocaleString()}</td>
                       <td className="py-2.5 px-3 text-right font-mono border-r border-[#CBD5E1]">{ociPct}%</td>
                       <td className="py-2.5 px-3 text-center">
                         <span className="px-1.5 py-0.5 bg-[#F1F5F9] text-[#475569] text-[9px] font-mono font-bold rounded-[2px] border border-[#CBD5E1]">
-                          प्रमाणित / VALID
+                          {isHi ? "वैध" : "VALID"}
                         </span>
                       </td>
                     </tr>
                     <tr className="bg-[#F4F6F9] hover:bg-[#EAEFF5]">
                       <td className="py-2.5 px-3 text-center font-bold text-[#64748B] border-r border-[#CBD5E1]">4</td>
                       <td className="py-2.5 px-3 font-semibold text-[#102A43] border-r border-[#CBD5E1]">
-                        विदेशी नागरिक / Foreign Nationals (Supernumerary)
+                        {isHi ? "विदेशी नागरिक (अधि-संख्या)" : "Foreign Nationals (Supernumerary)"}
                       </td>
                       <td className="py-2.5 px-3 text-right font-mono font-bold border-r border-[#CBD5E1]">{national.fn_students.toLocaleString()}</td>
                       <td className="py-2.5 px-3 text-right font-mono border-r border-[#CBD5E1]">{fnPct}%</td>
                       <td className="py-2.5 px-3 text-center">
                         <span className="px-1.5 py-0.5 bg-[#F1F5F9] text-[#475569] text-[9px] font-mono font-bold rounded-[2px] border border-[#CBD5E1]">
-                          प्रमाणित / VALID
+                          {isHi ? "वैध" : "VALID"}
                         </span>
                       </td>
                     </tr>
@@ -710,17 +713,17 @@ export default function AICTEControlTowerClient({
         </div>
       </div>
 
-      {/* 4. Dynamic Flag Discrepancy Queue & Anomaly Inspector (Maharashtra Portal GR Table Style) */}
+      {/* 5. Dynamic Flag Discrepancy Queue & Anomaly Inspector */}
       <div className="bg-white border border-[#CBD5E1] rounded-[2px] shadow-xs overflow-hidden">
         {/* Table Header & Interactive Filter Bar */}
         <div className="p-4 border-b border-[#CBD5E1] bg-[#EAEFF5] space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#205081]">
-                केंद्रीय तपासणी व पडताळणी नोंदवही / Central Verification Register
+                {isHi ? "केंद्रीय सत्यापन एवं विसंगति रजिस्टर" : "Central Verification Register"}
               </div>
               <h2 className="text-sm sm:text-base font-bold text-[#102A43] mt-0.5">
-                पडताळणी प्रलंबित प्रकरणे / Discrepancy Records ({filteredFlags.length} / {flags.length})
+                {isHi ? `विसंगति रिकॉर्ड (${filteredFlags.length} / ${flags.length})` : `Discrepancy Records (${filteredFlags.length} / ${flags.length})`}
               </h2>
             </div>
 
@@ -735,7 +738,7 @@ export default function AICTEControlTowerClient({
                     : "bg-white border-[#CBD5E1] text-[#475569] hover:bg-[#F4F6F9]"
                 }`}
               >
-                सर्व / All ({flags.length})
+                {isHi ? `सभी (${flags.length})` : `All (${flags.length})`}
               </button>
               <button
                 type="button"
@@ -746,7 +749,7 @@ export default function AICTEControlTowerClient({
                     : "bg-white border-[#FECDCA] text-[#B42318] hover:bg-[#FEF2F2]"
                 }`}
               >
-                अतिगंभीर / Critical ({criticalFlags})
+                {isHi ? `अति-गंभीर (${criticalFlags})` : `Critical (${criticalFlags})`}
               </button>
               <button
                 type="button"
@@ -757,7 +760,7 @@ export default function AICTEControlTowerClient({
                     : "bg-white border-[#FEDF89] text-[#D97706] hover:bg-[#FFFBEB]"
                 }`}
               >
-                गंभीर / High ({highFlags})
+                {isHi ? `गंभीर (${highFlags})` : `High (${highFlags})`}
               </button>
               <button
                 type="button"
@@ -768,7 +771,7 @@ export default function AICTEControlTowerClient({
                     : "bg-white border-[#CBD5E1] text-[#475569] hover:bg-[#F4F6F9]"
                 }`}
               >
-                मध्यम / Medium ({mediumFlags})
+                {isHi ? `मध्यम (${mediumFlags})` : `Medium (${mediumFlags})`}
               </button>
             </div>
           </div>
@@ -780,7 +783,7 @@ export default function AICTEControlTowerClient({
               <input
                 id="flag-search-input"
                 type="text"
-                placeholder="नाव, रोल नंबर, अपार आयडी, किंवा महाविद्यालयाचे नाव शोधा..."
+                placeholder={isHi ? "नाम, रोल नंबर, अपार आईडी, या कॉलेज का नाम खोजें..." : "Search by student name, roll no, APAAR ID, or college..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-1.5 border border-[#CBD5E1] bg-white text-xs text-[#102A43] rounded-[2px] focus:outline-none focus:border-[#205081]"
@@ -792,34 +795,34 @@ export default function AICTEControlTowerClient({
               onChange={(e) => setSelectedRuleCode(e.target.value)}
               className="w-full sm:w-auto px-3 py-1.5 border border-[#CBD5E1] bg-white text-xs font-semibold text-[#102A43] rounded-[2px] focus:outline-none focus:border-[#205081] cursor-pointer"
             >
-              <option value="ALL">सर्व नियम / All Inspection Rules</option>
-              <option value="DUPLICATE_ENROLMENT">दुहेरी प्रवेश / Duplicate Admission (Cross-State)</option>
-              <option value="INTAKE_LIMIT_EXCEEDED">मंजूर जागा पेक्षा जास्त / Intake Over Capacity</option>
-              <option value="INVALID_APAAR_FORMAT">अवैध अपार रचना / Invalid APAAR Syntax</option>
+              <option value="ALL">{isHi ? "सभी निरीक्षण नियम" : "All Inspection Rules"}</option>
+              <option value="DUPLICATE_ENROLMENT">{isHi ? "दोहरा नामांकन (अंतर-राज्य)" : "Duplicate Admission (Cross-State)"}</option>
+              <option value="INTAKE_LIMIT_EXCEEDED">{isHi ? "स्वीकृत क्षमता से अधिक" : "Intake Over Capacity"}</option>
+              <option value="INVALID_APAAR_FORMAT">{isHi ? "अमान्य अपार संरचना" : "Invalid APAAR Syntax"}</option>
             </select>
           </div>
         </div>
 
-        {/* Dynamic Interactive Data Table (Maharashtra GR Format) */}
+        {/* Dynamic Interactive Data Table */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[950px] border-collapse text-left text-xs">
             <thead className="bg-[#205081] text-white uppercase text-[10px] font-bold">
               <tr>
-                <th scope="col" className="w-12 px-3 py-2.5 border-r border-[#112D4E] text-center">क्र.</th>
-                <th scope="col" className="w-24 px-3 py-2.5 border-r border-[#112D4E]">गंभीरता / Level</th>
-                <th scope="col" className="px-3 py-2.5 border-r border-[#112D4E]">तपासणी नियम / Discrepancy Rule</th>
-                <th scope="col" className="px-3 py-2.5 border-r border-[#112D4E]">विद्यार्थी / Student Details</th>
-                <th scope="col" className="px-3 py-2.5 border-r border-[#112D4E] font-mono">अपार आयडी / APAAR ID</th>
-                <th scope="col" className="px-3 py-2.5 border-r border-[#112D4E]">नोंदणीकृत महाविद्यालय / College</th>
-                <th scope="col" className="px-3 py-2.5 text-center border-r border-[#112D4E]">अंक / Score</th>
-                <th scope="col" className="px-3 py-2.5 text-center w-24">तपशील / Action</th>
+                <th scope="col" className="w-12 px-3 py-2.5 border-r border-[#112D4E] text-center">{isHi ? "क्र." : "Sr."}</th>
+                <th scope="col" className="w-24 px-3 py-2.5 border-r border-[#112D4E]">{isHi ? "गंभीरता" : "Severity"}</th>
+                <th scope="col" className="px-3 py-2.5 border-r border-[#112D4E]">{isHi ? "निरीक्षण नियम" : "Discrepancy Rule"}</th>
+                <th scope="col" className="px-3 py-2.5 border-r border-[#112D4E]">{isHi ? "छात्र विवरण" : "Student Details"}</th>
+                <th scope="col" className="px-3 py-2.5 border-r border-[#112D4E] font-mono">{isHi ? "अपार आईडी" : "APAAR ID"}</th>
+                <th scope="col" className="px-3 py-2.5 border-r border-[#112D4E]">{isHi ? "पंजीकृत कॉलेज" : "College"}</th>
+                <th scope="col" className="px-3 py-2.5 text-center border-r border-[#112D4E]">{isHi ? "अंक" : "Score"}</th>
+                <th scope="col" className="px-3 py-2.5 text-center w-24">{isHi ? "कार्रवाई" : "Action"}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#CBD5E1] text-[#102A43]">
               {filteredFlags.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="px-4 py-8 text-center text-xs text-[#64748B]">
-                    शोध निकषानुसार कोणतीही विसंगती नोंद आढळली नाही. / No records match criteria.
+                    {isHi ? "खोज मानदंडों के अनुसार कोई विसंगति रिकॉर्ड नहीं मिला।" : "No records match criteria."}
                   </td>
                 </tr>
               ) : (
@@ -859,7 +862,7 @@ export default function AICTEControlTowerClient({
                                 : "bg-[#F4F6F8] border-[#CBD5E1] text-[#344054]"
                             }`}
                           >
-                            {isCrit ? "अतिगंभीर" : isHigh ? "गंभीर" : "मध्यम"}
+                            {isCrit ? (isHi ? "अति-गंभीर" : "Critical") : isHigh ? (isHi ? "गंभीर" : "High") : (isHi ? "मध्यम" : "Medium")}
                           </span>
                         </td>
 
@@ -869,7 +872,7 @@ export default function AICTEControlTowerClient({
                             {isSimFlag && (
                               <span className="inline-flex items-center gap-0.5 px-1 py-0.2 text-[9px] font-mono font-bold bg-[#FF9933] text-white rounded-[2px]">
                                 <Zap className="w-2.5 h-2.5 fill-current" />
-                                थेट चाचणी
+                                {isHi ? "लाइव टेस्ट" : "LIVE SIM"}
                               </span>
                             )}
                             {isExpanded ? (
@@ -888,7 +891,7 @@ export default function AICTEControlTowerClient({
                             {flag.students?.full_name || t("Name unavailable")}
                           </div>
                           <div className="font-mono text-[10px] text-[#64748B]">
-                            रोल: {flag.students?.institutional_student_id || flag.student_id}
+                            {isHi ? "रोल: " : "Roll: "}{flag.students?.institutional_student_id || flag.student_id}
                           </div>
                         </td>
 
@@ -922,7 +925,7 @@ export default function AICTEControlTowerClient({
                             href={`/aicte/students/${flag.student_id}`}
                             className="inline-flex items-center gap-1 bg-[#205081] text-white hover:bg-[#112D4E] px-2.5 py-1 text-xs font-bold rounded-[2px] transition-colors"
                           >
-                            <span>पहा</span>
+                            <span>{isHi ? "देखें" : "Inspect"}</span>
                             <ExternalLink className="w-3 h-3" />
                           </Link>
                         </td>
@@ -935,7 +938,7 @@ export default function AICTEControlTowerClient({
                             <div className="bg-white border border-[#CBD5E1] p-3 sm:p-4 rounded-[2px] space-y-2 text-xs">
                               <div className="flex items-center justify-between pb-2 border-b border-[#CBD5E1]">
                                 <span className="font-bold text-[#102A43] text-xs flex items-center gap-1.5">
-                                  <span>दोषारोप तपशील / Case Dossier: {flag.rule_code}</span>
+                                  <span>{isHi ? `केस डोजियर: ${flag.rule_code}` : `Case Dossier: ${flag.rule_code}`}</span>
                                   {isSimFlag && (
                                     <span className="text-[10px] font-mono text-[#FF9933] font-bold">
                                       [SIH-2026-LIVE-SCENARIO]
@@ -943,7 +946,7 @@ export default function AICTEControlTowerClient({
                                   )}
                                 </span>
                                 <span className="text-[11px] font-mono text-[#64748B]">
-                                  प्रकरण क्र. / Flag ID: {flag.id}
+                                  {isHi ? `प्रकरण क्र.: ${flag.id}` : `Flag ID: ${flag.id}`}
                                 </span>
                               </div>
                               <p className="text-[#334155] leading-relaxed">
@@ -951,7 +954,7 @@ export default function AICTEControlTowerClient({
                               </p>
                               {flag.recommended_action && (
                                 <p className="text-[11px] text-[#B42318] bg-[#FEF2F2] border border-[#FECDCA] p-2 rounded-[2px]">
-                                  <strong>शिफारस केलेली कारवाई / Recommended Action:</strong> {flag.recommended_action}
+                                  <strong>{isHi ? "सिफारिश की गई कार्रवाई: " : "Recommended Action: "}</strong> {flag.recommended_action}
                                 </p>
                               )}
 
@@ -978,18 +981,18 @@ export default function AICTEControlTowerClient({
 
                               <div className="flex flex-wrap items-center gap-3 pt-2 text-[11px]">
                                 <span className="text-[#64748B]">
-                                  Reporting College: <strong className="text-[#102A43]">{flag.institutions?.name}</strong>
+                                  {isHi ? "रिपोर्टिंग कॉलेज: " : "Reporting College: "}<strong className="text-[#102A43]">{flag.institutions?.name}</strong>
                                 </span>
                                 <span className="text-slate-300">|</span>
                                 <span className="text-[#64748B]">
-                                  Jurisdiction: <strong className="text-[#102A43]">{flag.institutions?.state}</strong>
+                                  {isHi ? "क्षेत्राधिकार: " : "Jurisdiction: "}<strong className="text-[#102A43]">{flag.institutions?.state}</strong>
                                 </span>
                                 <span className="text-slate-300">|</span>
                                 <Link
                                   href={`/aicte/students/${flag.student_id}`}
                                   className="text-[#2563EB] font-bold hover:underline"
                                 >
-                                  Open Full Dossier &rarr;
+                                  {isHi ? "पूरा डोजियर खोलें →" : "Open Full Dossier →"}
                                 </Link>
                               </div>
                             </div>
