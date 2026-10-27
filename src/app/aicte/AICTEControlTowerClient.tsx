@@ -6,17 +6,13 @@ import { NationalSummary, StateSummary, ValidationFlag } from "@/lib/types";
 import { formatMaskedApaar } from "@/lib/security";
 import { useLanguage } from "@/components/LanguageProvider";
 import {
-  BarChart3,
   Search,
   RotateCw,
   ChevronDown,
   ChevronUp,
-  Layers,
-  Globe2,
   ExternalLink,
   ShieldAlert,
   Zap,
-  AlertTriangle,
 } from "lucide-react";
 
 interface Props {
@@ -187,10 +183,6 @@ export default function AICTEControlTowerClient({
       ? Math.max(0, Math.round((baseIntegrityScore - 6.2) * 10) / 10)
       : baseIntegrityScore;
 
-  // Circular gauge math: radius 38 -> circumference = 2 * PI * 38 ≈ 238.76
-  const gaugeCircumference = 238.76;
-  const gaugeOffset = gaugeCircumference - (integrityScore / 100) * gaugeCircumference;
-
   // Breakdown counts
   const effectiveNriStudents =
     simulationMode === "quota_breach" ? national.nri_students + 4 : national.nri_students;
@@ -232,20 +224,17 @@ export default function AICTEControlTowerClient({
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-8 sm:py-8">
       {/* 1. Executive National Command Header */}
-      <div className="bg-white border border-[#CBD5E1] p-6 rounded-[6px] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white border border-[#CBD5E1] p-5 rounded-[4px] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse" aria-hidden="true" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" aria-hidden="true" />
             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#10B981]">
               Live Multi-State Registry Connected
             </span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#102A43] mt-1.5">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#102A43] mt-1">
             National Admission Overview &amp; Verification
           </h1>
-          <p className="mt-1 text-xs sm:text-sm text-[#5B6573] max-w-2xl leading-relaxed">
-            Real-time technical education admissions monitoring, state-level intake compliance, and cross-state duplicate reconciliation.
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
@@ -253,7 +242,7 @@ export default function AICTEControlTowerClient({
             type="button"
             onClick={handleRefresh}
             disabled={isRunning}
-            className="inline-flex items-center gap-1.5 border border-[#CBD5E1] bg-white px-3.5 py-2 text-xs font-semibold text-[#17365D] hover:bg-[#F8FAFC] disabled:opacity-50 rounded-[3px] transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 border border-[#CBD5E1] bg-white px-3.5 py-2 text-xs font-semibold text-[#17365D] hover:bg-[#F8FAFC] disabled:opacity-50 rounded-[2px] transition-colors cursor-pointer"
           >
             <RotateCw className={`w-3.5 h-3.5 ${isRunning ? "animate-spin" : ""}`} />
             <span>{isRunning ? t("Refreshing…") : "Refresh"}</span>
@@ -262,7 +251,7 @@ export default function AICTEControlTowerClient({
             type="button"
             onClick={handleRunIntegrity}
             disabled={isRunning}
-            className="inline-flex items-center gap-1.5 bg-[#17365D] hover:bg-[#102A43] px-4 py-2 text-xs font-bold text-white disabled:opacity-50 rounded-[3px] transition-colors cursor-pointer shadow-xs"
+            className="inline-flex items-center gap-1.5 bg-[#17365D] hover:bg-[#102A43] px-4 py-2 text-xs font-bold text-white disabled:opacity-50 rounded-[2px] transition-colors cursor-pointer shadow-xs"
           >
             <ShieldAlert className="w-3.5 h-3.5 text-[#F59E0B]" />
             <span>{isRunning ? "Checking Records…" : "Run Record Check"}</span>
@@ -270,334 +259,234 @@ export default function AICTEControlTowerClient({
         </div>
       </div>
 
-      {/* 2. SIH Live Collision Simulation Lab (The Jury Showstopper) */}
-      <div className="bg-[#102A43] border border-[#1E3A8A] rounded-[6px] shadow-sm text-white overflow-hidden">
-        <div className="p-5 sm:p-6 space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1 bg-[#F59E0B] text-[#102A43] text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-[2px]">
-                  <Zap className="w-3 h-3 fill-current" />
-                  SIH Innovation Lab
-                </span>
-                <span className="text-slate-300 text-xs font-semibold">
-                  Live Anomaly &amp; Fraud Collision Simulator
-                </span>
-              </div>
-              <h2 className="text-base sm:text-lg font-bold tracking-tight text-white">
-                One-Click Multi-State Conflict &amp; Quota Breach Engine
-              </h2>
-              <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
-                Demonstrate SATYAPAN&apos;s real-time detection of concurrent seat allotments across state counseling bodies and statutory quota over-allocation without manual audits.
-              </p>
-            </div>
-
-            {/* Simulation Action Buttons */}
-            <div className="flex flex-wrap items-center gap-2 shrink-0">
-              <button
-                type="button"
-                onClick={handleSimulateCrossState}
-                disabled={isSimulating}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-[3px] transition-all cursor-pointer shadow-xs ${
-                  simulationMode === "cross_state"
-                    ? "bg-[#E11D48] text-white ring-2 ring-white/50"
-                    : "bg-[#2563EB] hover:bg-[#1D4ED8] text-white"
-                } disabled:opacity-50`}
-              >
-                <Zap className={`w-3.5 h-3.5 ${isSimulating ? "animate-spin" : ""}`} />
-                <span>Simulate Cross-State Collision (Pune vs Bengaluru)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleSimulateQuotaBreach}
-                disabled={isSimulating}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-[3px] transition-all cursor-pointer shadow-xs ${
-                  simulationMode === "quota_breach"
-                    ? "bg-[#D97706] text-white ring-2 ring-white/50"
-                    : "bg-[#334155] hover:bg-[#475569] text-white border border-slate-600"
-                } disabled:opacity-50`}
-              >
-                <AlertTriangle className="w-3.5 h-3.5 text-[#F59E0B]" />
-                <span>Simulate Quota Breach (NRI Quota)</span>
-              </button>
-
-              {simulationMode !== "idle" && (
-                <button
-                  type="button"
-                  onClick={handleResetSimulation}
-                  className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white px-3 py-2 text-xs font-semibold rounded-[3px] border border-white/20 transition-colors cursor-pointer"
-                >
-                  <RotateCw className="w-3 h-3" />
-                  <span>Reset Simulation</span>
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Active Simulation Dossier Panel: Cross-State */}
-          {simulationMode === "cross_state" && (
-            <div className="p-4.5 bg-[#0B1E33] border-l-4 border-[#E11D48] border-y border-r border-[#1E3A8A] rounded-[4px] space-y-3.5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-700/60 pb-3">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#E11D48] animate-ping" />
-                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#FDA29B]">
-                    Critical Concurrency Collision Active (Rule: DUP_001)
-                  </span>
-                </div>
-                <div className="text-[11px] font-mono text-slate-300">
-                  Candidate: <strong className="text-white">Rahul S. Verma</strong> | Masked APAAR: <strong className="text-[#F59E0B]">XXXX-XXXX-0020</strong>
-                </div>
-              </div>
-
-              {/* Side-by-Side College Conflict Comparison */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                {/* College A */}
-                <div className="bg-[#102A43] p-3.5 border border-slate-700 rounded-[3px] space-y-1.5">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="font-bold text-[#93C5FD] uppercase tracking-wider">Primary Allotment (Maharashtra)</span>
-                    <span className="font-mono text-[10px] text-slate-400">Round 1 CAP</span>
-                  </div>
-                  <div className="font-bold text-white text-sm">
-                    Government College of Engineering, Pune (COEP)
-                  </div>
-                  <div className="text-slate-300 text-[11px]">
-                    Programme: <strong className="text-white">B.Tech Computer Engineering</strong>
-                  </div>
-                  <div className="text-[11px] font-mono text-slate-400">
-                    Admission Timestamp: 14-Jul-2026 10:24 IST (State Quota Verified)
-                  </div>
-                </div>
-
-                {/* College B */}
-                <div className="bg-[#102A43] p-3.5 border border-[#E11D48]/50 rounded-[3px] space-y-1.5">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="font-bold text-[#FDA29B] uppercase tracking-wider">Conflicting Claim (Karnataka)</span>
-                    <span className="font-mono text-[10px] text-[#FDA29B]">Overlapping Quota</span>
-                  </div>
-                  <div className="font-bold text-white text-sm">
-                    RV College of Engineering, Bengaluru (RVCE)
-                  </div>
-                  <div className="text-slate-300 text-[11px]">
-                    Programme: <strong className="text-white">B.E. Computer Science &amp; Engineering</strong>
-                  </div>
-                  <div className="text-[11px] font-mono text-slate-400">
-                    Admission Timestamp: 18-Jul-2026 15:42 IST (+96 Hrs Concurrency Delta)
-                  </div>
-                </div>
-              </div>
-
-              {/* Statutory Enforcement Resolution */}
-              <div className="bg-slate-900/60 p-3 rounded-[3px] border border-slate-700/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                <div className="space-y-0.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#F59E0B] block">
-                    Automated AICTE Regulatory Resolution Engine
-                  </span>
-                  <p className="text-slate-300 text-[11px] leading-snug">
-                    AICTE Approval Process Handbook (APH) Clause 12.4 violation detected. Automatic seat reclamation notice generated for Maharashtra DTE and Karnataka KEA.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const el = document.getElementById("flag-search-input");
-                    if (el) el.scrollIntoView({ behavior: "smooth" });
-                  }}
-                  className="shrink-0 bg-[#E11D48] hover:bg-[#BE123C] text-white px-3 py-1.5 text-xs font-bold rounded-[2px] transition-colors cursor-pointer"
-                >
-                  View Discrepancy Record &darr;
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Active Quota Breach Dossier Panel */}
-          {simulationMode === "quota_breach" && (
-            <div className="p-4.5 bg-[#0B1E33] border-l-4 border-[#D97706] border-y border-r border-[#1E3A8A] rounded-[4px] space-y-3.5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-700/60 pb-3">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#D97706] animate-ping" />
-                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#FDBA74]">
-                    Supernumerary Quota Ceiling Exceeded (Rule: CAP_002)
-                  </span>
-                </div>
-                <div className="text-[11px] font-mono text-slate-300">
-                  Institution: <strong className="text-white">Apex Institute of Technology, Mumbai</strong> (AICTE Code: 1-1003921)
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                <div className="bg-[#102A43] p-3 rounded-[3px] border border-slate-700">
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Sanctioned NRI Ceiling</span>
-                  <span className="font-mono text-lg font-bold text-white mt-0.5 block">15 Seats</span>
-                  <span className="text-[10px] text-slate-400">Statutory AICTE APH Limit</span>
-                </div>
-                <div className="bg-[#102A43] p-3 rounded-[3px] border border-[#D97706]/60">
-                  <span className="text-[10px] text-[#FDBA74] uppercase font-bold block">Enrolled Candidates</span>
-                  <span className="font-mono text-lg font-bold text-[#F59E0B] mt-0.5 block">19 Admissions</span>
-                  <span className="text-[10px] text-[#FDA29B] font-bold">+4 Unauthorized Admissions (126.7%)</span>
-                </div>
-                <div className="bg-[#102A43] p-3 rounded-[3px] border border-slate-700">
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Regulatory Action</span>
-                  <span className="font-bold text-white mt-0.5 block">Section 10(k) Notice</span>
-                  <span className="text-[10px] text-slate-400">Admissions Portal Frozen</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* 3. Dynamic Executive Health Cockpit & Metrics (Replaces rigid boxes) */}
-      <div className="bg-white border border-[#CBD5E1] rounded-[6px] shadow-xs overflow-hidden">
-        {/* Cockpit Header Banner */}
-        <div className="bg-[#102A43] text-white px-6 py-3 flex flex-wrap items-center justify-between text-xs">
+      {/* 2. SIH Live Collision Simulation Controls */}
+      <div className="bg-white border border-[#CBD5E1] rounded-[4px] shadow-xs overflow-hidden">
+        <div className="bg-[#102A43] text-white px-5 py-2.5 flex flex-wrap items-center justify-between text-xs gap-3">
           <div className="flex items-center gap-2">
-            <Layers className="w-4 h-4 text-[#F59E0B]" />
-            <span className="font-bold uppercase tracking-wider text-[11px] text-[#F59E0B]">
-              National Enrolment Command Ledger
+            <Zap className="w-3.5 h-3.5 text-[#F59E0B]" />
+            <span className="font-bold uppercase tracking-wider text-[11px] text-white">
+              Real-Time Fraud &amp; Anomaly Simulator
             </span>
           </div>
-          <div className="text-slate-300 text-[11px] font-mono">
-            Reporting Jurisdictions: {states.length} States | Updated Live
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={handleSimulateCrossState}
+              disabled={isSimulating}
+              className={`px-3 py-1.5 text-xs font-bold rounded-[2px] transition-colors cursor-pointer ${
+                simulationMode === "cross_state"
+                  ? "bg-[#E11D48] text-white"
+                  : "bg-[#2563EB] hover:bg-[#1D4ED8] text-white"
+              } disabled:opacity-50`}
+            >
+              Simulate Cross-State Collision (Pune vs Bengaluru)
+            </button>
+            <button
+              type="button"
+              onClick={handleSimulateQuotaBreach}
+              disabled={isSimulating}
+              className={`px-3 py-1.5 text-xs font-bold rounded-[2px] transition-colors cursor-pointer ${
+                simulationMode === "quota_breach"
+                  ? "bg-[#D97706] text-white"
+                  : "bg-[#334155] hover:bg-[#475569] text-white border border-slate-600"
+              } disabled:opacity-50`}
+            >
+              Simulate Quota Ceiling Breach
+            </button>
+            {simulationMode !== "idle" && (
+              <button
+                type="button"
+                onClick={handleResetSimulation}
+                className="px-2.5 py-1.5 text-xs font-semibold bg-white/10 hover:bg-white/20 text-white rounded-[2px] border border-white/30 transition-colors cursor-pointer"
+              >
+                Reset
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Dynamic Interactive Analytics Bar */}
-        <div className="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-          {/* Section A: Circular Integrity Health Dial (Cols 1-4) */}
-          <div className="lg:col-span-4 flex items-center gap-5 pr-0 lg:pr-6 border-b lg:border-b-0 lg:border-r border-[#E2E8F0] pb-6 lg:pb-0">
-            {/* SVG Ring Gauge */}
-            <div className="relative w-24 h-24 shrink-0 flex items-center justify-center">
-              <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="transparent"
-                  stroke="#E2E8F0"
-                  strokeWidth="8"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="transparent"
-                  stroke={integrityScore >= 90 ? "#059669" : integrityScore >= 70 ? "#D97706" : "#E11D48"}
-                  strokeWidth="8"
-                  strokeDasharray={gaugeCircumference}
-                  strokeDashoffset={gaugeOffset}
-                  strokeLinecap="round"
-                  className="transition-all duration-1000 ease-out"
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                <span className="font-mono text-xl font-black text-[#102A43] leading-none">
-                  {integrityScore}
-                </span>
-                <span className="text-[9px] font-mono text-[#64748B] mt-0.5">/ 100</span>
-              </div>
+        {/* Tabular Collision Finding (When Simulation Active) */}
+        {simulationMode === "cross_state" && (
+          <div className="p-4 bg-[#FEF2F2] border-t border-[#FECDCA]">
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-[#FECDCA] text-[10px] font-bold uppercase text-[#991B1B]">
+                    <th className="py-1.5 px-3 text-left">Incident Finding</th>
+                    <th className="py-1.5 px-3 text-left">Primary Seat (Maharashtra)</th>
+                    <th className="py-1.5 px-3 text-left">Conflicting Claim (Karnataka)</th>
+                    <th className="py-1.5 px-3 text-left">Regulatory Finding</th>
+                    <th className="py-1.5 px-3 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#FECDCA] text-[#7F1D1D]">
+                  <tr>
+                    <td className="py-2.5 px-3 font-bold font-mono">
+                      Candidate: Rahul S. Verma<br />
+                      <span className="text-[10px] font-mono text-[#991B1B]">APAAR: 1000 0000 0020</span>
+                    </td>
+                    <td className="py-2.5 px-3">
+                      <strong>COEP Pune</strong> (1-3327145) • B.Tech CSE<br />
+                      <span className="font-mono text-[10px] text-[#991B1B]">Allotted: 14-Jul-2026 10:24 IST (CAP Round 1)</span>
+                    </td>
+                    <td className="py-2.5 px-3">
+                      <strong>RVCE Bengaluru</strong> (1-4569123) • B.E. CS<br />
+                      <span className="font-mono text-[10px] text-[#991B1B]">Allotted: 18-Jul-2026 15:42 IST (+96h Concurrency)</span>
+                    </td>
+                    <td className="py-2.5 px-3">
+                      AICTE APH Clause 12.4 Breach<br />
+                      <span className="text-[10px] font-semibold text-[#991B1B]">Automated Vacancy Re-allocation Triggered</span>
+                    </td>
+                    <td className="py-2.5 px-3 text-right">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const el = document.getElementById("flag-search-input");
+                          if (el) el.scrollIntoView({ behavior: "smooth" });
+                        }}
+                        className="px-2.5 py-1 bg-[#B91C1C] hover:bg-[#991B1B] text-white text-xs font-bold rounded-[2px] transition-colors cursor-pointer"
+                      >
+                        Inspect Row &darr;
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+          </div>
+        )}
 
-            {/* Dial Legend & Description */}
-            <div className="space-y-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-                National Integrity Index
-              </span>
-              <div className="text-xs font-bold text-[#102A43]">
-                {integrityScore >= 90
-                  ? "High Compliance Standing"
+        {simulationMode === "quota_breach" && (
+          <div className="p-4 bg-[#FFFBEB] border-t border-[#FEDF89]">
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-[#FEDF89] text-[10px] font-bold uppercase text-[#92400E]">
+                    <th className="py-1.5 px-3 text-left">Reporting Institution</th>
+                    <th className="py-1.5 px-3 text-left">Quota Category</th>
+                    <th className="py-1.5 px-3 text-center">Approved Ceiling</th>
+                    <th className="py-1.5 px-3 text-center">Enrolled Candidates</th>
+                    <th className="py-1.5 px-3 text-left">Statutory Finding</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#FEDF89] text-[#78350F]">
+                  <tr>
+                    <td className="py-2.5 px-3 font-bold">Apex Institute of Technology, Mumbai (1-1003921)</td>
+                    <td className="py-2.5 px-3">Non-Resident Indian (NRI Quota)</td>
+                    <td className="py-2.5 px-3 text-center font-mono font-bold">15 Seats</td>
+                    <td className="py-2.5 px-3 text-center font-mono font-bold text-[#B91C1C]">19 Admissions (+4)</td>
+                    <td className="py-2.5 px-3">
+                      <span className="px-2 py-0.5 bg-[#FEF2F2] border border-[#FECDCA] text-[#991B1B] text-[10px] font-bold uppercase rounded-[2px]">
+                        AICTE Section 10(k) Notice Issued
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 3. Unified Government National Executive Summary Ledger */}
+      <div className="bg-white border border-[#CBD5E1] rounded-[4px] shadow-xs overflow-hidden">
+        <div className="bg-[#102A43] text-white px-5 py-2.5 flex items-center justify-between text-xs">
+          <span className="font-bold uppercase tracking-wider text-[11px] text-[#F59E0B]">
+            National Admission Executive Status Ledger
+          </span>
+          <span className="font-mono text-slate-300 text-[11px]">
+            Reporting Jurisdictions: {states.length} States • Updated Live
+          </span>
+        </div>
+
+        {/* Flat horizontal government ledger */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] text-xs">
+          <div className="p-4 bg-[#F8FAFC]">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
+              Integrity Standing
+            </span>
+            <div className="flex items-baseline gap-1 mt-1">
+              <span className="font-mono text-2xl font-black text-[#102A43]">{integrityScore}</span>
+              <span className="text-[10px] font-mono text-[#64748B]">/ 100</span>
+            </div>
+            <span
+              className={`inline-block mt-1 text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-[2px] ${
+                integrityScore >= 90
+                  ? "bg-[#ECFDF5] text-[#059669]"
                   : integrityScore >= 70
-                  ? "Moderate Reconciliation State"
-                  : "Audit Reconciliation Active"}
-              </div>
-              <p className="text-[11px] text-[#64748B] leading-snug">
-                Computed across duplicate admissions, quota limits, and APAAR syntax.
-              </p>
-            </div>
+                  ? "bg-[#FFFBEB] text-[#D97706]"
+                  : "bg-[#FEF2F2] text-[#E11D48]"
+              }`}
+            >
+              {integrityScore >= 90 ? "High Compliance" : integrityScore >= 70 ? "Moderate" : "Reconciliation Active"}
+            </span>
           </div>
 
-          {/* Section B: Dual Ratio Adherence Spectrum (Cols 5-8) */}
-          <div className="lg:col-span-5 px-0 lg:px-4 space-y-3 border-b lg:border-b-0 lg:border-r border-[#E2E8F0] pb-6 lg:pb-0">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-[#102A43] text-xs">Admission Verification Status</span>
-              <span className="text-[11px] font-mono font-semibold text-[#64748B]">
-                {totalStudents.toLocaleString()} Total Records
-              </span>
+          <div className="p-4">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
+              Total Admissions
+            </span>
+            <div className="font-mono text-2xl font-black text-[#102A43] mt-1">
+              {totalStudents.toLocaleString()}
             </div>
-
-            {/* Proportional Segmented Progress Track */}
-            <div className="h-3.5 w-full bg-[#F1F5F9] rounded-full overflow-hidden flex border border-[#CBD5E1]">
-              <div
-                style={{ width: `${Math.max(verifiedPct, verifiedCount > 0 ? 3 : 0)}%` }}
-                className="bg-[#059669] transition-all duration-500"
-                title={`Verified: ${verifiedCount} (${verifiedPct}%)`}
-              />
-              <div
-                style={{ width: `${Math.max(flaggedPct, flaggedCount > 0 ? 3 : 0)}%` }}
-                className="bg-[#E11D48] transition-all duration-500"
-                title={`Flagged: ${flaggedCount} (${flaggedPct}%)`}
-              />
-            </div>
-
-            {/* Dual Legend */}
-            <div className="flex items-center justify-between text-[11px]">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#059669]" />
-                <span className="text-[#334155] font-semibold">
-                  Verified: <strong className="font-mono text-[#059669]">{verifiedCount}</strong> ({verifiedPct}%)
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#E11D48]" />
-                <span className="text-[#334155] font-semibold">
-                  Review Queue: <strong className="font-mono text-[#E11D48]">{flaggedCount}</strong> ({flaggedPct}%)
-                </span>
-              </div>
-            </div>
+            <span className="text-[10px] text-[#64748B]">Sanctioned Enrolment</span>
           </div>
 
-          {/* Section C: Institutional Counters (Cols 9-12) */}
-          <div className="lg:col-span-3 pl-0 lg:pl-4 grid grid-cols-2 gap-4 text-xs">
-            <div className="p-3 bg-[#F8FAFC] border border-[#CBD5E1] rounded-[4px]">
-              <span className="text-[10px] uppercase font-bold text-[#64748B] block">Colleges</span>
-              <span className="font-mono text-xl font-black text-[#102A43] block mt-0.5">
-                {national.institutions_reporting}
-              </span>
-              <span className="text-[10px] text-[#64748B]">Reporting data</span>
+          <div className="p-4">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
+              Verified Admissions
+            </span>
+            <div className="font-mono text-2xl font-black text-[#059669] mt-1">
+              {verifiedCount.toLocaleString()}
             </div>
-            <div className="p-3 bg-[#F8FAFC] border border-[#CBD5E1] rounded-[4px]">
-              <span className="text-[10px] uppercase font-bold text-[#64748B] block">States</span>
-              <span className="font-mono text-xl font-black text-[#102A43] block mt-0.5">
-                {states.length}
-              </span>
-              <span className="text-[10px] text-[#64748B]">Jurisdictions</span>
+            <span className="text-[10px] font-mono font-bold text-[#059669]">{verifiedPct}% Compliant</span>
+          </div>
+
+          <div className="p-4">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
+              Review Queue
+            </span>
+            <div className="font-mono text-2xl font-black text-[#E11D48] mt-1">
+              {flaggedCount.toLocaleString()}
             </div>
+            <span className="text-[10px] font-mono font-bold text-[#E11D48]">{flaggedPct}% Discrepancies</span>
+          </div>
+
+          <div className="p-4">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
+              Reporting Colleges
+            </span>
+            <div className="font-mono text-2xl font-black text-[#102A43] mt-1">
+              {national.institutions_reporting}
+            </div>
+            <span className="text-[10px] text-[#64748B]">Approved Institutions</span>
+          </div>
+
+          <div className="p-4">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
+              States / UTs
+            </span>
+            <div className="font-mono text-2xl font-black text-[#102A43] mt-1">
+              {states.length}
+            </div>
+            <span className="text-[10px] text-[#64748B]">Reporting Regions</span>
           </div>
         </div>
       </div>
 
-      {/* 3. Interactive Analytics Suite (Replaces disjointed bar chart box and table box) */}
-      <div className="bg-white border border-[#CBD5E1] rounded-[6px] shadow-xs overflow-hidden">
-        {/* Navigation & Controls */}
-        <div className="border-b border-[#E2E8F0] bg-[#F8FAFC] px-6 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h2 className="text-sm font-bold text-[#102A43] uppercase tracking-wider">
-              Enrolment Distribution &amp; Intake Metrics
-            </h2>
-            <p className="text-xs text-[#5B6573] mt-0.5">
-              Interactive geographic breakdown and quota allocation analysis.
-            </p>
-          </div>
+      {/* 4. State Intake & Statutory Quota Ledgers (Pure Tabular Government Layout) */}
+      <div className="bg-white border border-[#CBD5E1] rounded-[4px] shadow-xs overflow-hidden">
+        <div className="bg-[#F8FAFC] border-b border-[#CBD5E1] px-5 py-3 flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-[#102A43]">
+            State Intake &amp; Statutory Quota Ledgers
+          </h2>
 
-          <div className="flex items-center gap-1 bg-white border border-[#CBD5E1] p-0.5 rounded-[4px] self-start sm:self-auto text-xs">
+          <div className="flex items-center gap-1 bg-white border border-[#CBD5E1] p-0.5 rounded-[2px] text-xs">
             <button
               type="button"
               onClick={() => setActiveTab("both")}
-              className={`px-3 py-1 font-semibold rounded-[3px] transition-colors cursor-pointer ${
-                activeTab === "both"
-                  ? "bg-[#17365D] text-white"
-                  : "text-[#5B6573] hover:text-[#17365D]"
+              className={`px-3 py-1 font-semibold rounded-[2px] transition-colors cursor-pointer ${
+                activeTab === "both" ? "bg-[#17365D] text-white" : "text-[#5B6573] hover:text-[#17365D]"
               }`}
             >
               Unified View
@@ -605,10 +494,8 @@ export default function AICTEControlTowerClient({
             <button
               type="button"
               onClick={() => setActiveTab("states")}
-              className={`px-3 py-1 font-semibold rounded-[3px] transition-colors cursor-pointer ${
-                activeTab === "states"
-                  ? "bg-[#17365D] text-white"
-                  : "text-[#5B6573] hover:text-[#17365D]"
+              className={`px-3 py-1 font-semibold rounded-[2px] transition-colors cursor-pointer ${
+                activeTab === "states" ? "bg-[#17365D] text-white" : "text-[#5B6573] hover:text-[#17365D]"
               }`}
             >
               State-Wise
@@ -616,10 +503,8 @@ export default function AICTEControlTowerClient({
             <button
               type="button"
               onClick={() => setActiveTab("categories")}
-              className={`px-3 py-1 font-semibold rounded-[3px] transition-colors cursor-pointer ${
-                activeTab === "categories"
-                  ? "bg-[#17365D] text-white"
-                  : "text-[#5B6573] hover:text-[#17365D]"
+              className={`px-3 py-1 font-semibold rounded-[2px] transition-colors cursor-pointer ${
+                activeTab === "categories" ? "bg-[#17365D] text-white" : "text-[#5B6573] hover:text-[#17365D]"
               }`}
             >
               Quota Distribution
@@ -627,156 +512,146 @@ export default function AICTEControlTowerClient({
           </div>
         </div>
 
-        {/* Content Panels */}
-        <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Panel 1: State & Geographic Intake Visualizer */}
+        <div className="p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* State Table */}
           {(activeTab === "both" || activeTab === "states") && (
-            <div className={`space-y-4 ${activeTab === "states" ? "lg:col-span-2" : ""}`}>
-              <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
-                <div className="flex items-center gap-2">
-                  <Globe2 className="w-4 h-4 text-[#17365D]" />
-                  <span className="font-bold text-xs uppercase tracking-wider text-[#102A43]">
-                    Admissions by State or Territory
-                  </span>
-                </div>
-                <span className="text-[11px] font-mono text-[#64748B]">
-                  Click a state to filter review queue
+            <div className={`space-y-3 ${activeTab === "states" ? "lg:col-span-2" : ""}`}>
+              <div className="flex items-center justify-between pb-1.5 border-b border-[#CBD5E1]">
+                <span className="font-bold text-xs uppercase tracking-wider text-[#102A43]">
+                  Admissions by State Jurisdiction
                 </span>
-              </div>
-
-              {/* Dynamic State Progress Rows */}
-              <div className="space-y-3 pt-1">
-                {states.map((st) => {
-                  const stateShare = Math.round((st.students / totalStudents) * 100);
-                  const isFiltered = selectedStateFilter === st.state;
-
-                  return (
-                    <div
-                      key={st.state}
-                      onClick={() => setSelectedStateFilter(isFiltered ? "ALL" : st.state)}
-                      className={`p-3 rounded-[4px] border transition-all cursor-pointer ${
-                        isFiltered
-                          ? "bg-[#EFF6FF] border-[#2563EB] shadow-xs"
-                          : "bg-[#F8FAFC] border-[#E2E8F0] hover:border-[#17365D] hover:bg-white"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between text-xs mb-1.5">
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-[#102A43]">{st.state}</span>
-                          {isFiltered && (
-                            <span className="text-[10px] bg-[#2563EB] text-white px-1.5 py-0.2 rounded font-semibold">
-                              Active Filter
-                            </span>
-                          )}
-                        </div>
-                        <div className="font-mono text-xs font-bold text-[#17365D]">
-                          {st.students.toLocaleString()} students ({stateShare}%)
-                        </div>
-                      </div>
-
-                      {/* Dynamic Proportional Progress Bar */}
-                      <div className="h-2 w-full bg-[#E2E8F0] rounded-full overflow-hidden">
-                        <div
-                          style={{ width: `${Math.max(stateShare, st.students > 0 ? 4 : 0)}%` }}
-                          className={`h-full rounded-full transition-all duration-500 ${
-                            isFiltered ? "bg-[#2563EB]" : "bg-[#17365D]"
-                          }`}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {selectedStateFilter !== "ALL" && (
-                <div className="flex items-center justify-between text-xs pt-1">
-                  <span className="text-[#2563EB] font-semibold">
-                    Filtering table by: <strong>{selectedStateFilter}</strong>
-                  </span>
+                {selectedStateFilter !== "ALL" && (
                   <button
                     type="button"
                     onClick={() => setSelectedStateFilter("ALL")}
-                    className="text-xs font-bold text-[#17365D] hover:underline"
+                    className="text-[11px] font-bold text-[#2563EB] hover:underline cursor-pointer"
                   >
-                    Clear State Filter
+                    Clear Filter ({selectedStateFilter})
                   </button>
-                </div>
-              )}
+                )}
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-[#F8FAFC] text-[#64748B] uppercase text-[10px] font-bold border-b border-[#CBD5E1]">
+                    <tr>
+                      <th className="py-2 px-3">State / UT</th>
+                      <th className="py-2 px-3 text-right">Admitted Students</th>
+                      <th className="py-2 px-3 text-right">National Share</th>
+                      <th className="py-2 px-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#E2E8F0] text-[#1E293B]">
+                    {states.map((st) => {
+                      const share = Math.round((st.students / totalStudents) * 100);
+                      const isFiltered = selectedStateFilter === st.state;
+                      return (
+                        <tr
+                          key={st.state}
+                          onClick={() => setSelectedStateFilter(isFiltered ? "ALL" : st.state)}
+                          className={`cursor-pointer transition-colors ${
+                            isFiltered ? "bg-[#EFF6FF] font-semibold" : "hover:bg-[#F8FAFC]"
+                          }`}
+                        >
+                          <td className="py-2.5 px-3">
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-[#102A43]">{st.state}</span>
+                              {isFiltered && (
+                                <span className="text-[9px] bg-[#2563EB] text-white px-1.5 py-0.2 rounded font-mono">
+                                  FILTERED
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="py-2.5 px-3 text-right font-mono font-bold text-[#102A43]">
+                            {st.students.toLocaleString()}
+                          </td>
+                          <td className="py-2.5 px-3 text-right font-mono text-[#475569]">
+                            {share}%
+                          </td>
+                          <td className="py-2.5 px-3 text-right">
+                            <span className="text-[11px] text-[#2563EB] font-bold hover:underline">
+                              {isFiltered ? "Reset" : "Filter"}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 
-          {/* Panel 2: Quota & Category Breakdown Visualizer */}
+          {/* Quota Table */}
           {(activeTab === "both" || activeTab === "categories") && (
-            <div className={`space-y-4 ${activeTab === "categories" ? "lg:col-span-2" : ""}`}>
-              <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4 text-[#17365D]" />
-                  <span className="font-bold text-xs uppercase tracking-wider text-[#102A43]">
-                    Admission Quota &amp; Category Breakdown
-                  </span>
-                </div>
-                <span className="text-[11px] font-mono text-[#64748B]">
-                  Statutory Intake Limits
+            <div className={`space-y-3 ${activeTab === "categories" ? "lg:col-span-2" : ""}`}>
+              <div className="flex items-center justify-between pb-1.5 border-b border-[#CBD5E1]">
+                <span className="font-bold text-xs uppercase tracking-wider text-[#102A43]">
+                  Statutory Quota Allocation
                 </span>
+                <span className="text-[10px] font-mono text-[#64748B]">AICTE APH Limits</span>
               </div>
 
-              {/* Visual Distribution Rows */}
-              <div className="space-y-3 pt-1">
-                {/* Domestic */}
-                <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-[4px]">
-                  <div className="flex items-center justify-between text-xs mb-1.5">
-                    <span className="font-bold text-[#102A43]">Indian Domestic General / Reserved</span>
-                    <span className="font-mono text-xs font-bold text-[#17365D]">
-                      {domesticCount.toLocaleString()} ({domesticPct}%)
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-[#E2E8F0] rounded-full overflow-hidden">
-                    <div style={{ width: `${domesticPct}%` }} className="h-full bg-[#102A43] rounded-full" />
-                  </div>
-                </div>
-
-                {/* NRI */}
-                <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-[4px]">
-                  <div className="flex items-center justify-between text-xs mb-1.5">
-                    <span className="font-bold text-[#102A43]">Non-Resident Indian (NRI Quota)</span>
-                    <span className="font-mono text-xs font-bold text-[#D97706]">
-                      {national.nri_students.toLocaleString()} ({nriPct}%)
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-[#E2E8F0] rounded-full overflow-hidden">
-                    <div style={{ width: `${Math.max(Number(nriPct), national.nri_students > 0 ? 3 : 0)}%` }} className="h-full bg-[#D97706] rounded-full" />
-                  </div>
-                </div>
-
-                {/* OCI */}
-                <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-[4px]">
-                  <div className="flex items-center justify-between text-xs mb-1.5">
-                    <span className="font-bold text-[#102A43]">Overseas Citizen of India (OCI / PIO)</span>
-                    <span className="font-mono text-xs font-bold text-[#64748B]">
-                      {national.oci_students.toLocaleString()} ({ociPct}%)
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-[#E2E8F0] rounded-full overflow-hidden">
-                    <div style={{ width: `${ociPct}%` }} className="h-full bg-[#64748B] rounded-full" />
-                  </div>
-                </div>
-
-                {/* Foreign Nationals */}
-                <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-[4px]">
-                  <div className="flex items-center justify-between text-xs mb-1.5">
-                    <span className="font-bold text-[#102A43]">Foreign Nationals / Supernumerary</span>
-                    <span className="font-mono text-xs font-bold text-[#64748B]">
-                      {national.fn_students.toLocaleString()} ({fnPct}%)
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-[#E2E8F0] rounded-full overflow-hidden">
-                    <div style={{ width: `${fnPct}%` }} className="h-full bg-[#64748B] rounded-full" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="text-[11px] text-[#64748B] leading-relaxed pt-1">
-                All supernumerary intake quotas are validated against AICTE Approval Process Handbook (APH) ceilings.
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-[#F8FAFC] text-[#64748B] uppercase text-[10px] font-bold border-b border-[#CBD5E1]">
+                    <tr>
+                      <th className="py-2 px-3">Quota Category</th>
+                      <th className="py-2 px-3 text-right">Admitted</th>
+                      <th className="py-2 px-3 text-right">Share %</th>
+                      <th className="py-2 px-3 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#E2E8F0] text-[#1E293B]">
+                    <tr>
+                      <td className="py-2.5 px-3 font-semibold text-[#102A43]">Indian Domestic (General / Reserved)</td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold">{domesticCount.toLocaleString()}</td>
+                      <td className="py-2.5 px-3 text-right font-mono">{domesticPct}%</td>
+                      <td className="py-2.5 px-3 text-center">
+                        <span className="px-1.5 py-0.5 bg-[#ECFDF5] text-[#059669] text-[9px] font-mono font-bold rounded-[2px]">
+                          NORMAL
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-3 font-semibold text-[#102A43]">Non-Resident Indian (NRI Quota)</td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold">{effectiveNriStudents.toLocaleString()}</td>
+                      <td className="py-2.5 px-3 text-right font-mono">{nriPct}%</td>
+                      <td className="py-2.5 px-3 text-center">
+                        <span
+                          className={`px-1.5 py-0.5 text-[9px] font-mono font-bold rounded-[2px] ${
+                            simulationMode === "quota_breach"
+                              ? "bg-[#FEF2F2] text-[#B91C1C]"
+                              : "bg-[#FFFBEB] text-[#D97706]"
+                          }`}
+                        >
+                          {simulationMode === "quota_breach" ? "OVER CEILING" : "WITHIN LIMIT"}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-3 font-semibold text-[#102A43]">Overseas Citizen of India (OCI / PIO)</td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold">{national.oci_students.toLocaleString()}</td>
+                      <td className="py-2.5 px-3 text-right font-mono">{ociPct}%</td>
+                      <td className="py-2.5 px-3 text-center">
+                        <span className="px-1.5 py-0.5 bg-[#F1F5F9] text-[#475569] text-[9px] font-mono font-bold rounded-[2px]">
+                          COMPLIANT
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-3 font-semibold text-[#102A43]">Foreign Nationals / Supernumerary</td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold">{national.fn_students.toLocaleString()}</td>
+                      <td className="py-2.5 px-3 text-right font-mono">{fnPct}%</td>
+                      <td className="py-2.5 px-3 text-center">
+                        <span className="px-1.5 py-0.5 bg-[#F1F5F9] text-[#475569] text-[9px] font-mono font-bold rounded-[2px]">
+                          COMPLIANT
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           )}

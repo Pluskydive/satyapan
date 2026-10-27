@@ -77,14 +77,11 @@ export default function InstitutionClient({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 space-y-6">
       {/* Page Title & Institution Switcher */}
-      <div className="bg-white border border-[#D8DEE6] p-6 rounded-[6px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
+      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#102A43]">
-            College Seats & Enrolment
+            College Seats &amp; Enrolment
           </h1>
-          <p className="text-xs sm:text-sm text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
-            Monitor approved intake seats, view quota breakdown, and review admitted students.
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -117,10 +114,10 @@ export default function InstitutionClient({
       </div>
 
       {/* Sample Data Informational Banner */}
-      <div className="bg-[#F8FAFC] border-l-4 border-[#17365D] border border-[#CBD5E1] p-3.5 rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#334155]">
+      <div className="bg-[#F8FAFC] border-l-4 border-[#17365D] border border-[#CBD5E1] p-3 rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#334155]">
         <div className="flex items-center gap-2">
           <span className="font-semibold text-[#102A43]">Notice:</span>
-          <span>Showing placeholder college records for demonstration. You can upload a new student admissions CSV at any time to replace this with your institution&apos;s live data.</span>
+          <span>Sample institutional records active. Upload student CSV to refresh live data.</span>
         </div>
         <Link
           href={`/institution/upload?instId=${currentInst.id}`}

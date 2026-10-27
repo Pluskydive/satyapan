@@ -17,37 +17,34 @@ export default async function AuditPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-6">
       {/* Header */}
-      <div className="bg-white border border-[#D8DEE6] p-6 rounded-[6px] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[4px] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#102A43]">
             System Activity Log
           </h1>
-          <p className="text-xs sm:text-sm text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
-            Record of student admission uploads, quota verifications, and system events.
-          </p>
         </div>
 
-        <div className="text-xs font-semibold text-[#059669] bg-[#ECFDF5] border border-[#A7F3D0] px-3 py-1.5 rounded-[4px] self-start sm:self-auto">
-          ● System Logging Active
+        <div className="text-xs font-semibold text-[#059669] bg-[#ECFDF5] border border-[#A7F3D0] px-3 py-1.5 rounded-[2px] self-start sm:self-auto font-mono">
+          System Logging Active
         </div>
       </div>
 
-      {/* System Audit Status Bar */}
-      <div className="bg-white border border-[#CBD5E1] rounded-[6px] p-4 shadow-xs divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0">
+      {/* System Audit Status Ledger Ribbon */}
+      <div className="bg-white border border-[#CBD5E1] rounded-[4px] p-4 shadow-xs divide-y sm:divide-y-0 sm:divide-x divide-[#CBD5E1] grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0">
         <div className="sm:px-4">
-          <div className="text-xs text-[#64748B] font-semibold">Total Logged Events</div>
-          <div className="text-2xl font-bold text-[#102A43] mt-1 font-mono">{logs.length} entries</div>
+          <div className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider">Total Logged Events</div>
+          <div className="text-xl font-bold text-[#102A43] mt-0.5 font-mono">{logs.length} entries</div>
         </div>
         <div className="sm:px-4 pt-3 sm:pt-0">
-          <div className="text-xs text-[#64748B] font-semibold">Security Integrity State</div>
-          <div className="text-2xl font-bold text-[#102A43] mt-1 flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" aria-hidden="true" />
-            <span>Normal & Active</span>
+          <div className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider">Security Standing</div>
+          <div className="text-xl font-bold text-[#102A43] mt-0.5 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#10B981]" aria-hidden="true" />
+            <span>Normal &amp; Active</span>
           </div>
         </div>
         <div className="sm:px-4 pt-3 sm:pt-0">
-          <div className="text-xs text-[#64748B] font-semibold">System Synchronization Time</div>
-          <div className="text-base font-bold text-[#102A43] mt-1 font-mono">
+          <div className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider">Synchronization Timestamp</div>
+          <div className="text-xl font-bold text-[#102A43] mt-0.5 font-mono">
             {new Date().toLocaleTimeString()} IST
           </div>
         </div>

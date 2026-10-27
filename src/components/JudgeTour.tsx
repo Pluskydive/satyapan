@@ -20,14 +20,14 @@ export default function JudgeTour() {
   const steps = [
     {
       stepNumber: 1,
-      badge: "Phase 1: Apex National Command & Radial Health",
+      badge: "Phase 1: National Admission Status Ledger",
       title: "Real-Time Multi-State Enrolment Ledger",
       icon: Layers,
       description:
-        "Replaces outdated annual physical audits with a continuous, real-time national admission intelligence dashboard. Features an SVG radial health dial computing the National Integrity Index (0–100), state-by-state intake distribution, and statutory quota validation.",
+        "Continuous national admission intelligence ledger computing the National Integrity Index, state-by-state intake distribution tables, and statutory quota validation against AICTE APH ceilings.",
       keyInnovations: [
         "Live National Integrity Index with dynamic status transitions",
-        "Geographic intake tracking across Indian states with 1-click review filtering",
+        "Tabular state-wise intake tracking across Indian jurisdictions with 1-click review filtering",
         "Statutory quota enforcement (Domestic, NRI, OCI, Foreign Nationals) against AICTE APH ceilings",
       ],
       actionHref: "/aicte",

@@ -176,14 +176,11 @@ function UploadContent() {
       </div>
 
       {/* Page Title & Action Bar */}
-      <div className="bg-white border border-[#D8DEE6] p-6 rounded-[6px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[4px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#102A43]">
             Upload Student Admission List
           </h1>
-          <p className="text-xs sm:text-sm text-[#5B6573] mt-1 max-w-xl leading-relaxed">
-            Upload new student admissions in CSV format. The system automatically checks student APAAR IDs and seat limits.
-          </p>
         </div>
 
         <button

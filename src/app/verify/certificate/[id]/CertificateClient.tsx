@@ -160,10 +160,7 @@ export default function CertificateClient({ student }: Props) {
             </div>
 
             {/* Print-hidden offline verification trigger */}
-            <div className="pt-2 border-t border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs print:hidden">
-              <span className="text-[11px] text-[#64748B]">
-                Independent offline SHA-256 computation proves record integrity mathematically.
-              </span>
+            <div className="pt-2 border-t border-[#E2E8F0] flex items-center justify-end text-xs print:hidden">
               <button
                 type="button"
                 onClick={handleVerifyOffline}
