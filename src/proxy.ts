@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getRuntimeMode, getSupabasePublicConfig } from "@/lib/runtime-mode";
 
 const PUBLIC_LIVE_PATHS = [
+  "/",
   "/login",
   "/forgot-password",
   "/auth/callback",
@@ -97,9 +98,12 @@ function redirectWithCookies(request: NextRequest, destination: URL, source: Nex
 export async function proxy(request: NextRequest) {
   const nonce = btoa(crypto.randomUUID());
   const mode = getRuntimeMode();
-  if (mode === "disabled") return disabledResponse(request, nonce);
+  if (mode === "disabled" && request.nextUrl.pathname !== "/") return disabledResponse(request, nonce);
 
   const requestHeaders = makeRequestHeaders(request, nonce);
+  if (mode === "disabled") {
+    return addSecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }), nonce);
+  }
   if (request.nextUrl.pathname.startsWith("/api/") && !["GET", "HEAD", "OPTIONS"].includes(request.method)) {
     const origin = request.headers.get("origin");
     if (!origin) {

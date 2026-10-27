@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useLanguage } from "@/components/LanguageProvider";
 import { InstitutionSummary, StudentRosterRecord } from "@/lib/types";
 
 interface Props {
@@ -15,6 +16,7 @@ export default function InstitutionClient({
   initialStudents,
   initialTotal,
 }: Props) {
+  const { t } = useLanguage();
   const [selectedInstId, setSelectedInstId] = useState<string>(
     initialInstitutions[0]?.id || "inst-1001"
   );
@@ -59,11 +61,11 @@ export default function InstitutionClient({
         setTotalStudents(payload.total);
       })
       .catch((error) => {
-        if (error.name !== "AbortError") setLoadError("We couldn't load these records. Please try again.");
+        if (error.name !== "AbortError") setLoadError(t("We couldn't load these records. Please try again."));
       })
       .finally(() => setIsLoading(false));
     return () => controller.abort();
-  }, [selectedInstId, page, debouncedSearch, statusFilter]);
+  }, [selectedInstId, page, debouncedSearch, statusFilter, t]);
 
   const currentInst =
     initialInstitutions.find((i) => i.id === selectedInstId) || initialInstitutions[0];
@@ -78,20 +80,24 @@ export default function InstitutionClient({
       <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">
-            Institutional Compliance Terminal
+            {t("Institutional Compliance Terminal")}
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-0.5">
-            Institution Sanctioned Seat Ledger & Enrolment Roster
+            {t("Institution Sanctioned Seat Ledger & Enrolment Roster")}
           </h1>
           <p className="text-xs text-[#5B6573] mt-1 max-w-2xl leading-relaxed">
-            Monitor approved intake thresholds, supernumerary quotas (FW/NRI), and address student admission flags.
+            {t("Monitor approved intake thresholds, supernumerary quotas (FW/NRI), and address student admission flags.")}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center space-x-2">
-            <label className="text-xs font-semibold text-[#5B6573]">Select Institution:</label>
+            <label htmlFor="inst-select" className="text-xs font-semibold text-[#5B6573]">
+              {t("Select Institution:")}
+            </label>
             <select
+              id="inst-select"
+              aria-label={t("Select Institution:")}
               value={selectedInstId}
               onChange={(e) => { setSelectedInstId(e.target.value); setPage(0); }}
               className="px-3 py-1.5 bg-white border border-[#D8DEE6] text-xs font-semibold text-[#17365D] rounded-[2px] focus:outline-none focus:border-[#17365D] cursor-pointer"
@@ -108,7 +114,7 @@ export default function InstitutionClient({
             href={`/institution/upload?instId=${currentInst.id}`}
             className="px-3.5 py-1.5 bg-[#C87524] hover:bg-[#a65f1a] text-white text-xs font-semibold rounded-[2px] transition-colors"
           >
-            Upload Admission CSV
+            {t("Upload Admission CSV")}
           </Link>
         </div>
       </div>
@@ -124,8 +130,8 @@ export default function InstitutionClient({
             <div className="text-xs text-[#5B6573]">{currentInst.state} Technical Education Board</div>
           </div>
 
-          <div className="text-right font-mono">
-            <div className="text-[10px] text-[#5B6573] uppercase">Seat Utilization Rate</div>
+          <div className="text-left sm:text-right font-mono">
+            <div className="text-[10px] text-[#5B6573] uppercase">{t("Seat Utilization Rate")}</div>
             <div
               className={`text-xl font-bold ${
                 isOverCapacity ? "text-[#B42318]" : "text-[#237A52]"
@@ -150,29 +156,29 @@ export default function InstitutionClient({
               style={{ width: `${Math.min(enrolmentPct, 100)}%` }}
             />
           </div>
-          <div className="flex justify-between text-[11px] text-[#5B6573] font-mono">
-            <span>Sanctioned Intake: {currentInst.approved_intake}</span>
-            <span>Supernumerary Capacity: +{currentInst.supernumerary_capacity}</span>
-            <span>Total Ceiling: {totalCap}</span>
+          <div className="flex flex-wrap justify-between gap-1 text-[11px] text-[#5B6573] font-mono">
+            <span>{t("Sanctioned Intake:")} {currentInst.approved_intake}</span>
+            <span>{t("Supernumerary Capacity:")} +{currentInst.supernumerary_capacity}</span>
+            <span>{t("Total Ceiling:")} {totalCap}</span>
           </div>
         </div>
 
         {/* 4-Column Breakdown Table */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 text-xs">
           <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-            <div className="text-[#5B6573] text-[10px] uppercase font-semibold">Approved Intake</div>
+            <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Approved intake reference")}</div>
             <div className="text-lg font-bold font-mono text-[#17365D] mt-0.5">{currentInst.approved_intake}</div>
           </div>
           <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-            <div className="text-[#5B6573] text-[10px] uppercase font-semibold">Actual Admissions</div>
+            <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Actual Admissions")}</div>
             <div className="text-lg font-bold font-mono text-[#237A52] mt-0.5">{currentInst.actual_enrolment}</div>
           </div>
           <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-            <div className="text-[#5B6573] text-[10px] uppercase font-semibold">Flagged Admissions</div>
+            <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Flagged Admissions")}</div>
             <div className="text-lg font-bold font-mono text-[#B42318] mt-0.5">{currentInst.flagged_students}</div>
           </div>
           <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-            <div className="text-[#5B6573] text-[10px] uppercase font-semibold">Integrity Index</div>
+            <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Integrity Index")}</div>
             <div className="text-lg font-bold font-mono text-[#17365D] mt-0.5">{currentInst.avg_integrity_score} / 100</div>
           </div>
         </div>
@@ -183,53 +189,55 @@ export default function InstitutionClient({
         <div className="p-4 border-b border-[#D8DEE6] flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#F4F6F8]">
           <div>
             <h3 className="text-sm font-bold text-[#17365D] uppercase tracking-wider">
-              Enrolment Admission Roster ({totalStudents} Records)
+              {t("Enrolment Admission Roster")} ({totalStudents})
             </h3>
             <p className="text-xs text-[#5B6573]">
-              Records on file for {currentInst.name}
+              {currentInst.name}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
             <input
               type="text"
-              placeholder="Filter by Student Name or Roll..."
+              aria-label={t("Filter by Student Name or Roll...")}
+              placeholder={t("Filter by Student Name or Roll...")}
               value={searchQuery}
               onChange={(e) => { setSearchQuery(e.target.value); setPage(0); }}
-              className="px-3 py-1.5 bg-white border border-[#D8DEE6] text-xs text-[#202B36] rounded-[2px] focus:outline-none focus:border-[#17365D] w-56 sm:w-64"
+              className="px-3 py-1.5 bg-white border border-[#D8DEE6] text-xs text-[#202B36] rounded-[2px] focus:outline-none focus:border-[#17365D] w-full sm:w-64"
             />
 
             <select
+              aria-label={t("Compliance Status")}
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setPage(0); }}
               className="px-3 py-1.5 bg-white border border-[#D8DEE6] text-xs text-[#202B36] rounded-[2px] focus:outline-none focus:border-[#17365D] cursor-pointer"
             >
-              <option value="ALL">All Statuses</option>
-              <option value="VERIFIED">Verified Records</option>
-              <option value="FLAGGED">Flagged Records</option>
+              <option value="ALL">{t("All Statuses")}</option>
+              <option value="VERIFIED">{t("Verified Records")}</option>
+              <option value="FLAGGED">{t("Flagged Records")}</option>
             </select>
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
+          <table className="w-full text-left text-xs border-collapse min-w-[800px]">
             <thead className="bg-[#F4F6F8] text-[#5B6573] uppercase text-[10px] tracking-wider font-semibold border-b border-[#D8DEE6]">
               <tr>
-                <th className="py-2.5 px-4 font-mono">Roll / Student ID</th>
-                <th className="py-2.5 px-4">Student Name</th>
-                <th className="py-2.5 px-4 font-mono">Masked APAAR ID</th>
-                <th className="py-2.5 px-4">Degree Program</th>
-                <th className="py-2.5 px-4">Quota / Category</th>
-                <th className="py-2.5 px-4 font-mono text-center">Score</th>
-                <th className="py-2.5 px-4">Compliance Status</th>
-                <th className="py-2.5 px-4 text-right">Action</th>
+                <th scope="col" className="py-2.5 px-4 font-mono">{t("Roll / Student ID")}</th>
+                <th scope="col" className="py-2.5 px-4">{t("Student Name")}</th>
+                <th scope="col" className="py-2.5 px-4 font-mono">{t("Masked APAAR ID")}</th>
+                <th scope="col" className="py-2.5 px-4">{t("Degree Program")}</th>
+                <th scope="col" className="py-2.5 px-4">{t("Quota / Category")}</th>
+                <th scope="col" className="py-2.5 px-4 font-mono text-center">{t("Score")}</th>
+                <th scope="col" className="py-2.5 px-4">{t("Compliance Status")}</th>
+                <th scope="col" className="py-2.5 px-4 text-right">{t("Actions")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#D8DEE6] text-[#202B36]">
               {students.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-8 text-center text-[#5B6573]">
-                    {loadError || (isLoading ? "Loading records…" : "No student records match the search criteria.")}
+                    {loadError || (isLoading ? t("Loading…") : t("No accounts match your search."))}
                   </td>
                 </tr>
               ) : (
@@ -286,7 +294,7 @@ export default function InstitutionClient({
                         href={`/aicte/students/${stu.id}`}
                         className="text-xs font-semibold text-[#17365D] hover:underline"
                       >
-                        Inspect &rarr;
+                        {t("Inspect")} &rarr;
                       </Link>
                     </td>
                   </tr>
@@ -296,10 +304,28 @@ export default function InstitutionClient({
           </table>
         </div>
         <div className="p-3 bg-[#F4F6F8] border-t border-[#D8DEE6] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-[11px] text-[#5B6573]">
-          <span aria-live="polite">{isLoading ? "Loading records…" : `Showing ${totalStudents === 0 ? 0 : page * 50 + 1}–${Math.min((page + 1) * 50, totalStudents)} of ${totalStudents} records`}</span>
+          <span aria-live="polite">
+            {isLoading
+              ? t("Loading…")
+              : `${t("Page")} ${page + 1} (${totalStudents === 0 ? 0 : page * 50 + 1}–${Math.min((page + 1) * 50, totalStudents)} / ${totalStudents})`}
+          </span>
           <div className="flex gap-2">
-            <button type="button" disabled={page === 0 || isLoading} onClick={() => setPage((value) => Math.max(0, value - 1))} className="border border-[#8B95A1] px-3 py-2 disabled:opacity-50">Previous</button>
-            <button type="button" disabled={(page + 1) * 50 >= totalStudents || isLoading} onClick={() => setPage((value) => value + 1)} className="border border-[#8B95A1] px-3 py-2 disabled:opacity-50">Next</button>
+            <button
+              type="button"
+              disabled={page === 0 || isLoading}
+              onClick={() => setPage((value) => Math.max(0, value - 1))}
+              className="border border-[#8B95A1] px-3 py-1.5 font-semibold text-[#17365D] bg-white hover:bg-[#F4F6F8] disabled:opacity-50 cursor-pointer"
+            >
+              {t("Previous")}
+            </button>
+            <button
+              type="button"
+              disabled={(page + 1) * 50 >= totalStudents || isLoading}
+              onClick={() => setPage((value) => value + 1)}
+              className="border border-[#8B95A1] px-3 py-1.5 font-semibold text-[#17365D] bg-white hover:bg-[#F4F6F8] disabled:opacity-50 cursor-pointer"
+            >
+              {t("Next")}
+            </button>
           </div>
         </div>
       </div>

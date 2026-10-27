@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { dataProvider } from "@/lib/supabase";
+import { AuthorizationError, requireRole } from "@/lib/authz";
+import { getRuntimeMode } from "@/lib/runtime-mode";
 import { formatMaskedApaar, getScoreStyle, getSeverityStyle } from "@/lib/security";
 import type { ValidationFlag } from "@/lib/types";
 
@@ -10,6 +12,18 @@ interface PageProps {
 
 export default async function StudentRiskPage({ params }: PageProps) {
   const { id } = await params;
+
+  if (getRuntimeMode() === "live") {
+    try {
+      await requireRole("platform_admin", "institution_admin", "institution_staff", "reviewer");
+    } catch (error) {
+      if (error instanceof AuthorizationError && error.status === 401) {
+        redirect(`/login?next=%2Faicte%2Fstudents%2F${encodeURIComponent(id)}`);
+      }
+      redirect("/aicte");
+    }
+  }
+
   const { data: student, mode } = await dataProvider.getStudentById(id);
 
   if (!student) {

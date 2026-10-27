@@ -21,6 +21,7 @@ export default function Navbar({ mode, viewer }: Props) {
   const [notice, setNotice] = useState("");
 
   const isDemo = mode === "demo";
+  const isLive = mode === "live";
   const isAuthScreen = ["/login", "/forgot-password", "/account/password", "/access-pending"].some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
@@ -72,7 +73,13 @@ export default function Navbar({ mode, viewer }: Props) {
           <div className="flex items-center space-x-3">
             <span className="font-semibold text-slate-200">{t("SATYAPAN · SIH 2026 PROTOTYPE")}</span>
             <span className="text-slate-500" aria-hidden="true">|</span>
-            <span className="text-slate-300">{isDemo ? t("Synthetic demonstration data only") : t("Authenticated access · institution-scoped records")}</span>
+            <span className="text-slate-300">
+              {isDemo
+                ? t("Synthetic demonstration data only")
+                : isLive
+                  ? t("Authenticated access · institution-scoped records")
+                  : t("Administrative access unavailable in this environment")}
+            </span>
           </div>
           <div className="flex items-center space-x-3 text-slate-300">
             <span>{t("Not an official AICTE service")}</span>
@@ -153,7 +160,7 @@ export default function Navbar({ mode, viewer }: Props) {
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
                   aria-current={isActive ? "page" : undefined}
-                  className={`px-4 py-3 md:py-2.5 text-xs font-medium whitespace-nowrap border-b-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white ${
+                  className={`px-4 py-3 md:py-2.5 text-xs sm:text-sm font-medium whitespace-nowrap border-b-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white ${
                     isActive ? "text-white border-[#C87524] bg-[#102A43]/50 font-semibold" : "text-slate-200 border-transparent hover:text-white hover:bg-[#102A43]/30"
                   }`}
                 >

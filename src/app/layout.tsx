@@ -20,7 +20,7 @@ const publicSans = Public_Sans({
 
 export const metadata: Metadata = {
   title: "Satyapan | SIH 2026 Prototype",
-  description: "A synthetic-data prototype for exploring enrolment integrity workflows.",
+  description: "An SIH 2026 prototype for enrolment integrity review, institutional data reconciliation, and consent-based APAAR verification.",
   robots: { index: false, follow: false },
 };
 

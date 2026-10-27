@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Papa from "papaparse";
+import { useLanguage } from "@/components/LanguageProvider";
 import { sanitizeRecordRow, isValidApaar } from "@/lib/security";
 import type { InstitutionSummary } from "@/lib/types";
 
@@ -18,6 +19,7 @@ const SAMPLE_CSV_CONTENT = `apaar_id,institutional_student_id,full_name,dob_year
 99999,STU-505,Arjun Mehta,2005,Male,General,indian,B.Tech Mechanical,2026,2026-11-20`;
 
 function UploadContent() {
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -169,7 +171,7 @@ function UploadContent() {
           href="/institution"
           className="text-xs font-semibold text-[#17365D] hover:underline"
         >
-          &larr; Return to Institution Seat Ledgers
+          &larr; {t("Seat Ledgers")}
         </Link>
       </div>
 
@@ -177,30 +179,33 @@ function UploadContent() {
       <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">
-            Data Ingestion Terminal
+            {t("Data Ingestion Terminal")}
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-0.5">
-            Bulk Student Admission CSV Ingestion
+            {t("Bulk Student Admission CSV Ingestion")}
           </h1>
           <p className="text-xs text-[#5B6573] mt-1 max-w-xl leading-relaxed">
-            Ingest official technical admission batches. Includes automated CWE-1236 spreadsheet formula sanitization and APAAR ID syntax validation.
+            {t("Ingest official technical admission batches. Includes automated CWE-1236 spreadsheet formula sanitization and APAAR ID syntax validation.")}
           </p>
         </div>
 
         <button
+          type="button"
           onClick={handleDownloadTemplate}
           className="px-3 py-1.5 bg-white border border-[#D8DEE6] hover:bg-[#F4F6F8] text-[#17365D] text-xs font-semibold rounded-[2px] transition-colors cursor-pointer self-start sm:self-auto"
         >
-          Download Standard CSV Template
+          {t("Download Standard CSV Template")}
         </button>
       </div>
 
       {/* Step 1: Target Institution */}
       <div className="bg-white border border-[#D8DEE6] p-4 rounded-[2px] space-y-2">
-        <label className="text-xs font-bold text-[#17365D] uppercase tracking-wider block">
-          Step 1: Select Target Reporting Institution
+        <label htmlFor="upload-inst-select" className="text-xs font-bold text-[#17365D] uppercase tracking-wider block">
+          {t("Step 1: Select Target Reporting Institution")}
         </label>
         <select
+          id="upload-inst-select"
+          aria-label={t("Step 1: Select Target Reporting Institution")}
           value={selectedInstId}
           onChange={(e) => setSelectedInstId(e.target.value)}
           className="w-full px-3 py-2 bg-white border border-[#D8DEE6] text-xs font-semibold text-[#202B36] rounded-[2px] focus:outline-none focus:border-[#17365D] cursor-pointer"
@@ -215,22 +220,30 @@ function UploadContent() {
 
       {/* Step 2: Upload Dropzone */}
       <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <label className="text-xs font-bold text-[#17365D] uppercase tracking-wider block">
-            Step 2: Upload Structured Admission File
+            {t("Step 2: Upload Structured Admission File")}
           </label>
           <button
             type="button"
             onClick={handleLoadSample}
-            className="text-xs font-semibold text-[#17365D] hover:underline cursor-pointer"
+            className="text-xs font-semibold text-[#17365D] hover:underline cursor-pointer text-left sm:text-right"
           >
-            Load Sample Verification Batch (5 Records with Anomalies)
+            {t("Load Sample Verification Batch (5 Records with Anomalies)")}
           </button>
         </div>
 
         <div
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              fileInputRef.current?.click();
+            }
+          }}
           onClick={() => fileInputRef.current?.click()}
-          className="border border-dashed border-[#D8DEE6] hover:border-[#17365D] p-8 text-center bg-[#F4F6F8] hover:bg-slate-100 transition-colors cursor-pointer rounded-[2px] space-y-1"
+          className="border border-dashed border-[#D8DEE6] hover:border-[#17365D] p-8 text-center bg-[#F4F6F8] hover:bg-slate-100 transition-colors cursor-pointer rounded-[2px] space-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#17365D]"
         >
           <input
             type="file"
@@ -238,16 +251,17 @@ function UploadContent() {
             onChange={handleFileChange}
             accept=".csv"
             className="hidden"
+            aria-label={t("Click to select admission CSV file, or drag and drop file here")}
           />
           <div className="text-sm font-semibold text-[#17365D]">
-            Click to select admission CSV file, or drag and drop file here
+            {t("Click to select admission CSV file, or drag and drop file here")}
           </div>
           <div className="text-xs text-[#5B6573]">
-            Accepts UTF-8 encoded CSV files conforming to AICTE APH data specification
+            {t("Accepts UTF-8 encoded CSV files conforming to AICTE APH data specification")}
           </div>
           {fileName && (
             <div className="inline-block mt-2 px-2.5 py-0.5 bg-white border border-[#17365D] text-[#17365D] font-mono text-xs font-semibold">
-              Selected File: {fileName}
+              {t("Selected File:")} {fileName}
             </div>
           )}
         </div>
@@ -255,7 +269,7 @@ function UploadContent() {
 
       {/* Error state */}
       {errorMessage && (
-        <div className="p-3 bg-white border-l-4 border-[#B42318] text-xs text-[#B42318]">
+        <div role="alert" className="p-3 bg-white border-l-4 border-[#B42318] text-xs text-[#B42318] border border-[#D8DEE6]">
           <strong>Validation Error:</strong> {errorMessage}
         </div>
       )}
@@ -265,42 +279,42 @@ function UploadContent() {
         <div className="bg-white border border-[#D8DEE6] rounded-[2px] p-5 space-y-4">
           <div className="pb-3 border-b border-[#D8DEE6] flex items-center justify-between">
             <h3 className="text-sm font-bold text-[#17365D] uppercase tracking-wider">
-              Pre-Flight Cybersecurity & Syntax Audit
+              {t("Pre-Flight Cybersecurity & Syntax Audit")}
             </h3>
             <span className="text-xs font-mono text-[#237A52] font-semibold">
-              Security Inspection Cleared
+              {t("Security Inspection Cleared")}
             </span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
             <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">Total Records</div>
+              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Total Records")}</div>
               <div className="text-lg font-bold font-mono text-[#17365D] mt-0.5">{validationStats.total}</div>
             </div>
             <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">Valid APAARs</div>
+              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Valid APAARs")}</div>
               <div className="text-lg font-bold font-mono text-[#237A52] mt-0.5">{validationStats.validApaar}</div>
             </div>
             <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">Invalid APAARs</div>
+              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("Invalid APAARs")}</div>
               <div className="text-lg font-bold font-mono text-[#B42318] mt-0.5">{validationStats.invalidApaar}</div>
             </div>
             <div className="p-3 bg-[#F4F6F8] border border-[#D8DEE6]">
-              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">CWE-1236 Neutralized</div>
+              <div className="text-[#5B6573] text-[10px] uppercase font-semibold">{t("CWE-1236 Neutralized")}</div>
               <div className="text-lg font-bold font-mono text-[#17365D] mt-0.5">{validationStats.sanitizedFormulas}</div>
             </div>
           </div>
 
           {/* Record table preview */}
           <div className="border border-[#D8DEE6] overflow-x-auto max-h-52">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left text-xs border-collapse min-w-[650px]">
               <thead className="bg-[#F4F6F8] text-[#5B6573] uppercase text-[10px] font-semibold sticky top-0 border-b border-[#D8DEE6]">
                 <tr>
-                  <th className="py-2 px-3 font-mono">Roll ID</th>
-                  <th className="py-2 px-3">Student Name</th>
-                  <th className="py-2 px-3 font-mono">APAAR ID</th>
-                  <th className="py-2 px-3">Program</th>
-                  <th className="py-2 px-3">Admission Date</th>
+                  <th scope="col" className="py-2 px-3 font-mono">{t("Roll / Student ID")}</th>
+                  <th scope="col" className="py-2 px-3">{t("Student Name")}</th>
+                  <th scope="col" className="py-2 px-3 font-mono">{t("Masked APAAR ID")}</th>
+                  <th scope="col" className="py-2 px-3">{t("Degree Program")}</th>
+                  <th scope="col" className="py-2 px-3">{t("Intake reference")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#D8DEE6] text-[#202B36] font-mono text-[11px]">
@@ -324,21 +338,22 @@ function UploadContent() {
           </div>
 
           <button
+            type="button"
             onClick={handleUploadSubmit}
             disabled={isUploading}
             className="w-full py-2.5 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-bold rounded-[2px] transition-colors cursor-pointer disabled:opacity-50"
           >
-            {isUploading ? "Ingesting & Executing Integrity Engine..." : `Commit Ingestion of ${parsedRows.length} Records`}
+            {isUploading ? t("Running sample checks…") : `${t("Save changes")} (${parsedRows.length})`}
           </button>
         </div>
       )}
 
       {/* Success notification */}
       {uploadResult && (
-        <div className="bg-white border-l-4 border-[#237A52] p-4 border border-[#D8DEE6] rounded-[2px] space-y-3">
+        <div role="status" className="bg-white border-l-4 border-[#237A52] p-4 border border-[#D8DEE6] rounded-[2px] space-y-3">
           <div>
             <div className="text-xs font-bold text-[#237A52] uppercase">
-              Batch Ingestion Completed Successfully
+              {t("Batch Ingestion Completed Successfully")}
             </div>
             <div className="text-xs text-[#5B6573] mt-1">
               Synchronized {uploadResult.inserted} admission records into the institutional roster.
@@ -350,14 +365,14 @@ function UploadContent() {
               href="/institution"
               className="text-xs font-semibold text-[#17365D] hover:underline"
             >
-              &rarr; View Updated Seat Ledger
+              &rarr; {t("Seat Ledgers")}
             </Link>
             <span className="text-[#D8DEE6]">|</span>
             <Link
               href="/aicte"
               className="text-xs font-semibold text-[#17365D] hover:underline"
             >
-              &rarr; Inspect National Control Tower
+              &rarr; {t("Control Tower")}
             </Link>
           </div>
         </div>

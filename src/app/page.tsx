@@ -1,292 +1,201 @@
 import Link from "next/link";
-import { dataProvider } from "@/lib/supabase";
+import { getRuntimeMode } from "@/lib/runtime-mode";
+import { getServerLocale, serverTranslate } from "@/lib/i18n-server";
 
 export default async function HomePage() {
-  const [nationalRes, flagsRes] = await Promise.all([
-    dataProvider.getNationalSummary(),
-    dataProvider.getOpenFlags(),
-  ]);
+  const [locale, mode] = await Promise.all([getServerLocale(), getRuntimeMode()]);
+  const t = (text: string) => serverTranslate(locale, text);
 
-  const stats = nationalRes.data || {
-    institutions_reporting: 5,
-    total_students: 301,
-    verified_students: 297,
-    flagged_students: 4,
-    avg_integrity_score: 98.4,
-  };
-
-  const openFlags = flagsRes.data || [];
+  const environmentNote =
+    mode === "demo"
+      ? "Demonstration mode uses synthetic records only. No live institution integrations or real consent collection are enabled."
+      : mode === "live"
+        ? "Live mode requires an assigned account for administrative areas. Public credential verification is disabled."
+        : "Administrative workflows require a configured demonstration or authenticated live environment.";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 space-y-6">
-      {/* Official Page Banner */}
-      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px]">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="text-[11px] font-semibold text-[#5B6573] uppercase tracking-wider">
-              Executive Dashboard
+    <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-8 sm:py-12">
+      {/* Hero Banner: Institutional Header */}
+      <section className="border border-[#D8DEE6] bg-white p-6 sm:p-10 rounded-[2px] shadow-xs">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#D8DEE6] pb-3 mb-5">
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#5B6573]">
+            {t("SMART INDIA HACKATHON 2026 · AICTE PROBLEM STATEMENT SOLVED")}
+          </p>
+          <span className="font-mono text-[11px] px-2.5 py-0.5 bg-[#F4F6F8] border border-[#D8DEE6] text-[#17365D] font-semibold">
+            {mode === "demo" ? "DEMO MODE · SYNTHETIC REGISTRY" : "LIVE MODE · SUPABASE RLS"}
+          </span>
+        </div>
+
+        <div className="max-w-4xl">
+          <h1 className="text-3xl font-extrabold tracking-tight text-[#17365D] sm:text-4xl">
+            SATYAPAN <span className="font-normal text-[#5B6573]">(सत्यापन)</span>
+          </h1>
+          <p className="mt-1 text-base sm:text-lg font-semibold text-[#C87524]">
+            {t("National Student Enrolment Integrity & APAAR Registry Platform")}
+          </p>
+          <p className="mt-4 text-sm sm:text-base leading-relaxed text-[#384656]">
+            {t("A centralized verification framework enabling AICTE-approved institutions to submit authenticated student-level admissions linked with APAAR (Automated Permanent Academic Account Registry) identifiers, preventing seat inflation and duplicate enrolments across states.")}
+          </p>
+          <div className="mt-5 border-l-4 border-[#C87524] bg-[#F4F6F8] p-3 text-xs sm:text-sm text-[#5B6573]">
+            <strong>{t("SIH 2026 · Prototype")}:</strong> {t("This is a demonstration project, not an official AICTE or government service.")}
+          </div>
+        </div>
+      </section>
+
+      {/* Stakeholder Entry Portals Grid */}
+      <section aria-labelledby="entry-points">
+        <div className="mb-5">
+          <h2 id="entry-points" className="text-xl font-bold text-[#17365D]">
+            {t("Choose an entry point")}
+          </h2>
+          <p className="mt-1 text-xs sm:text-sm text-[#5B6573]">
+            {t("Administrative access follows the account roles and route permissions configured for the application.")}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {/* Portal 1: Institutional Registrars */}
+          <article className="flex min-h-full flex-col border border-[#D8DEE6] bg-white p-6 rounded-[2px] border-t-4 border-t-[#17365D] hover:border-[#17365D] transition-colors">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#5B6573]">
+              {t("Institutional administrators")}
+            </span>
+            <h3 className="mt-2 text-lg font-bold text-[#17365D]">
+              {t("Institution records")}
+            </h3>
+            <p className="text-xs font-semibold text-[#C87524] mt-0.5">
+              {t("Approved Intake Compliance & Student Roster")}
+            </p>
+            <p className="mt-3 flex-1 text-xs leading-relaxed text-[#5B6573]">
+              {t("Review institution-scoped enrolment records, intake references, and submitted data.")}
+            </p>
+
+            <div className="mt-6 space-y-3 pt-4 border-t border-[#D8DEE6]">
+              <Link
+                href="/institution"
+                className="w-full inline-flex min-h-10 items-center justify-center border border-[#17365D] bg-[#17365D] px-4 py-2 text-xs font-bold text-white hover:bg-[#102A43] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#17365D] rounded-[2px] transition-colors"
+              >
+                {t("Open institution workspace")} &rarr;
+              </Link>
+              <div className="flex flex-col gap-1.5 text-xs">
+                <Link href="/institution/upload" className="font-semibold text-[#17365D] hover:underline flex items-center justify-between">
+                  <span>&bull; {t("CSV Ingestion")}</span>
+                  <span className="text-[10px] text-[#5B6573]">CWE-1236 Defense</span>
+                </Link>
+                <Link href="/institution/api" className="font-semibold text-[#17365D] hover:underline flex items-center justify-between">
+                  <span>&bull; {t("ERP System Connection")}</span>
+                  <span className="text-[10px] text-[#5B6573]">API Sync</span>
+                </Link>
+              </div>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-0.5">
-              National Technical Education Enrolment Overview
-            </h1>
-            <p className="text-xs text-[#5B6573] mt-1 max-w-3xl leading-relaxed">
-              Automated continuous verification system linking institutional admissions to national APAAR identifiers,
-              tracking sanctioned seat capacities, and resolving enrolment anomalies in technical institutions.
+          </article>
+
+          {/* Portal 2: AICTE Regulatory Officials */}
+          <article className="flex min-h-full flex-col border border-[#D8DEE6] bg-white p-6 rounded-[2px] border-t-4 border-t-[#C87524] hover:border-[#17365D] transition-colors">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#5B6573]">
+              {t("AICTE officials")}
+            </span>
+            <h3 className="mt-2 text-lg font-bold text-[#17365D]">
+              {t("Enrolment review dashboard")}
+            </h3>
+            <p className="text-xs font-semibold text-[#C87524] mt-0.5">
+              {t("National Oversight & Integrity Monitoring")}
+            </p>
+            <p className="mt-3 flex-1 text-xs leading-relaxed text-[#5B6573]">
+              {t("Review national and state summaries alongside the application’s enrolment discrepancy queue.")}
+            </p>
+
+            <div className="mt-6 space-y-3 pt-4 border-t border-[#D8DEE6]">
+              <Link
+                href="/aicte"
+                className="w-full inline-flex min-h-10 items-center justify-center border border-[#C87524] bg-[#C87524] px-4 py-2 text-xs font-bold text-white hover:bg-[#a65f1a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C87524] rounded-[2px] transition-colors"
+              >
+                {t("Open AICTE dashboard")} &rarr;
+              </Link>
+              <div className="flex flex-col gap-1.5 text-xs">
+                <Link href="/aicte/reports" className="font-semibold text-[#17365D] hover:underline flex items-center justify-between">
+                  <span>&bull; {t("NIRF/NAAC Reports")}</span>
+                  <span className="text-[10px] text-[#5B6573]">CSV & Print</span>
+                </Link>
+                <Link href="/audit" className="font-semibold text-[#17365D] hover:underline flex items-center justify-between">
+                  <span>&bull; {t("Audit Trail Ledger")}</span>
+                  <span className="text-[10px] text-[#5B6573]">System Log</span>
+                </Link>
+              </div>
+            </div>
+          </article>
+
+          {/* Portal 3: Employers & Background Verifiers */}
+          <article className="flex min-h-full flex-col border border-[#D8DEE6] bg-white p-6 rounded-[2px] border-t-4 border-t-[#237A52] hover:border-[#17365D] transition-colors">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#5B6573]">
+              {t("Public and employer verification")}
+            </span>
+            <h3 className="mt-2 text-lg font-bold text-[#17365D]">
+              {t("Verification workflow")}
+            </h3>
+            <p className="text-xs font-semibold text-[#237A52] mt-0.5">
+              {t("DPDP Act 2023 Consent-Gated Verification")}
+            </p>
+            <p className="mt-3 flex-1 text-xs leading-relaxed text-[#5B6573]">
+              {t("Explore the consent-based verification workflow. Demo interactions use synthetic data; live credential verification is disabled.")}
+            </p>
+
+            <div className="mt-6 space-y-3 pt-4 border-t border-[#D8DEE6]">
+              <Link
+                href="/verify"
+                className="w-full inline-flex min-h-10 items-center justify-center border border-[#237A52] bg-[#237A52] px-4 py-2 text-xs font-bold text-white hover:bg-[#1b5e3f] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#237A52] rounded-[2px] transition-colors"
+              >
+                {t("Open verification")} &rarr;
+              </Link>
+              <div className="flex flex-col gap-1.5 text-xs">
+                <Link href="/verify/certificate/stu-1" className="font-semibold text-[#17365D] hover:underline flex items-center justify-between">
+                  <span>&bull; {t("Printable Sample Credential")}</span>
+                  <span className="text-[10px] text-[#5B6573]">Signed QR</span>
+                </Link>
+                <Link href="/login" className="font-semibold text-[#17365D] hover:underline flex items-center justify-between">
+                  <span>&bull; {t("Simulated Role Switcher")}</span>
+                  <span className="text-[10px] text-[#5B6573]">Evaluators</span>
+                </Link>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* Technical Architecture & Scope Section */}
+      <section className="border border-[#D8DEE6] bg-white rounded-[2px] overflow-hidden">
+        <div className="border-b border-[#D8DEE6] bg-[#F4F6F8] px-5 py-3.5 flex items-center justify-between">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-[#17365D]">
+            {t("Prototype scope")}
+          </h2>
+          <span className="font-mono text-xs text-[#5B6573]">SIH 2026 Core Pillars</span>
+        </div>
+        <div className="grid grid-cols-1 divide-y divide-[#D8DEE6] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <div className="p-5">
+            <div className="text-[10px] font-mono uppercase font-bold text-[#17365D] mb-1">Pillar 1</div>
+            <h3 className="text-sm font-bold text-[#202B36]">{t("Enrolment integrity")}</h3>
+            <p className="mt-2 text-xs leading-relaxed text-[#5B6573]">
+              {t("Apply configured checks to identify enrolment records that may need review.")} Automated detection of duplicate APAAR admissions and intake breaches.
             </p>
           </div>
-
-          <div className="flex items-center space-x-2 self-start sm:self-auto">
-            <Link
-              href="/aicte"
-              className="px-4 py-2 bg-[#17365D] hover:bg-[#102A43] text-white text-xs font-semibold rounded-[2px] transition-colors"
-            >
-              Open Control Tower
-            </Link>
+          <div className="p-5">
+            <div className="text-[10px] font-mono uppercase font-bold text-[#17365D] mb-1">Pillar 2</div>
+            <h3 className="text-sm font-bold text-[#202B36]">{t("Institutional data reconciliation")}</h3>
+            <p className="mt-2 text-xs leading-relaxed text-[#5B6573]">
+              {t("Review institution-submitted records against the data and intake references held in the application.")} Row-Level Security ensures strict institutional privacy.
+            </p>
+          </div>
+          <div className="p-5">
+            <div className="text-[10px] font-mono uppercase font-bold text-[#17365D] mb-1">Pillar 3</div>
+            <h3 className="text-sm font-bold text-[#202B36]">{t("Consent-based APAAR verification")}</h3>
+            <p className="mt-2 text-xs leading-relaxed text-[#5B6573]">
+              {t("The demo flow is simulated. Live credential verification is not enabled.")} DPDP Act 2023 compliant tokenized verification with offline verifiable QR payloads.
+            </p>
           </div>
         </div>
-      </div>
-
-      {/* Primary Operational Metric Ledger */}
-      <div className="bg-white border border-[#D8DEE6] rounded-[2px] overflow-hidden">
-        <div className="bg-[#F4F6F8] px-4 py-2.5 border-b border-[#D8DEE6] flex items-center justify-between">
-          <span className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
-            National Operational Metrics (Academic Year 2026-27)
-          </span>
-          <span className="text-[11px] font-mono text-[#5B6573]">
-            Status: All Systems Verified
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-[#D8DEE6]">
-          <div className="p-4">
-            <div className="text-[11px] font-semibold text-[#5B6573] uppercase">
-              Reporting Institutions
-            </div>
-            <div className="text-2xl font-bold text-[#17365D] mt-1">
-              {stats.institutions_reporting}
-            </div>
-            <div className="text-[11px] text-[#5B6573] mt-0.5">
-              Accredited Technical Colleges
-            </div>
-          </div>
-
-          <div className="p-4">
-            <div className="text-[11px] font-semibold text-[#5B6573] uppercase">
-              Total Admissions Logged
-            </div>
-            <div className="text-2xl font-bold text-[#17365D] mt-1">
-              {stats.total_students}
-            </div>
-            <div className="text-[11px] text-[#5B6573] mt-0.5">
-              Student Records Synchronized
-            </div>
-          </div>
-
-          <div className="p-4">
-            <div className="text-[11px] font-semibold text-[#5B6573] uppercase">
-              Verified Compliant
-            </div>
-            <div className="text-2xl font-bold text-[#237A52] mt-1">
-              {stats.verified_students}
-            </div>
-            <div className="text-[11px] text-[#237A52] mt-0.5">
-              {Math.round((stats.verified_students / (stats.total_students || 1)) * 100)}% Verified Valid
-            </div>
-          </div>
-
-          <div className="p-4">
-            <div className="text-[11px] font-semibold text-[#5B6573] uppercase">
-              Regulatory Discrepancies
-            </div>
-            <div className="text-2xl font-bold text-[#B42318] mt-1">
-              {openFlags.length}
-            </div>
-            <div className="text-[11px] text-[#B42318] mt-0.5">
-              Action Required
-            </div>
-          </div>
-
-          <div className="p-4 col-span-2 md:col-span-1">
-            <div className="text-[11px] font-semibold text-[#5B6573] uppercase">
-              National Integrity Index
-            </div>
-            <div className="text-2xl font-bold text-[#17365D] mt-1">
-              {stats.avg_integrity_score} / 100
-            </div>
-            <div className="text-[11px] text-[#5B6573] mt-0.5">
-              Council Benchmark Average
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Directory of Administrative Modules */}
-      <div className="bg-white border border-[#D8DEE6] rounded-[2px] overflow-hidden">
-        <div className="bg-[#F4F6F8] px-4 py-2.5 border-b border-[#D8DEE6]">
-          <span className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
-            Administrative Modules & Stakeholder Terminals
-          </span>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
-            <thead className="border-b border-[#D8DEE6] bg-slate-50 text-[#5B6573] uppercase text-[10px] tracking-wider font-semibold">
-              <tr>
-                <th className="py-2.5 px-4 w-1/4">Module Name</th>
-                <th className="py-2.5 px-4 w-1/4">Primary Stakeholder</th>
-                <th className="py-2.5 px-4 w-1/3">Statutory Scope & Purpose</th>
-                <th className="py-2.5 px-4 text-right">Access</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#D8DEE6] text-[#202B36]">
-              <tr className="hover:bg-slate-50">
-                <td className="py-3 px-4 font-semibold text-[#17365D]">
-                  National Control Tower
-                </td>
-                <td className="py-3 px-4 text-[#5B6573]">
-                  AICTE Central Secretariat / Regulators
-                </td>
-                <td className="py-3 px-4 text-[#5B6573]">
-                  Real-time monitoring of duplicate cross-institutional enrolments, regional capacity compliance, and active flag queue.
-                </td>
-                <td className="py-3 px-4 text-right">
-                  <Link href="/aicte" className="text-[#17365D] font-semibold hover:underline">
-                    Open Terminal &rarr;
-                  </Link>
-                </td>
-              </tr>
-
-              <tr className="hover:bg-slate-50">
-                <td className="py-3 px-4 font-semibold text-[#17365D]">
-                  Institution Seat Ledgers
-                </td>
-                <td className="py-3 px-4 text-[#5B6573]">
-                  College Registrars & Admissions Deans
-                </td>
-                <td className="py-3 px-4 text-[#5B6573]">
-                  Tracking sanctioned vs. actual admissions intake, supernumerary quotas (FW/NRI), and institutional student rosters.
-                </td>
-                <td className="py-3 px-4 text-right">
-                  <Link href="/institution" className="text-[#17365D] font-semibold hover:underline">
-                    Open Terminal &rarr;
-                  </Link>
-                </td>
-              </tr>
-
-              <tr className="hover:bg-slate-50">
-                <td className="py-3 px-4 font-semibold text-[#17365D]">
-                  CSV Batch Ingestion Center
-                </td>
-                <td className="py-3 px-4 text-[#5B6573]">
-                  College Data Operators & Registrars
-                </td>
-                <td className="py-3 px-4 text-[#5B6573]">
-                  Bulk upload of student admission rosters with CWE-1236 formula sanitization and instant APAAR syntax validation.
-                </td>
-                <td className="py-3 px-4 text-right">
-                  <Link href="/institution/upload" className="text-[#17365D] font-semibold hover:underline">
-                    Open Terminal &rarr;
-                  </Link>
-                </td>
-              </tr>
-
-              <tr className="hover:bg-slate-50">
-                <td className="py-3 px-4 font-semibold text-[#17365D]">
-                  Employer Credential Verification
-                </td>
-                <td className="py-3 px-4 text-[#5B6573]">
-                  Industry Employers & Verifiers
-                </td>
-                <td className="py-3 px-4 text-[#5B6573]">
-                  DPDP Act 2023 compliant background verification with digital student consent gate and selective attribute disclosure.
-                </td>
-                <td className="py-3 px-4 text-right">
-                  <Link href="/verify" className="text-[#17365D] font-semibold hover:underline">
-                    Open Terminal &rarr;
-                  </Link>
-                </td>
-              </tr>
-
-              <tr className="hover:bg-slate-50">
-                <td className="py-3 px-4 font-semibold text-[#17365D]">
-                  Regulatory Audit Ledger
-                </td>
-                <td className="py-3 px-4 text-[#5B6573]">
-                  Internal Audit & Vigilance Officers
-                </td>
-                <td className="py-3 px-4 text-[#5B6573]">
-                  Cryptographic, immutable audit log of all admissions, flag modifications, rule executions, and verifier queries.
-                </td>
-                <td className="py-3 px-4 text-right">
-                  <Link href="/audit" className="text-[#17365D] font-semibold hover:underline">
-                    Open Terminal &rarr;
-                  </Link>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Autonomous Integrity Rules Specification */}
-      <div className="bg-white border border-[#D8DEE6] rounded-[2px] overflow-hidden">
-        <div className="bg-[#F4F6F8] px-4 py-2.5 border-b border-[#D8DEE6]">
-          <span className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
-            Autonomous Integrity Engine: Detection Heuristics Matrix
-          </span>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
-            <thead className="border-b border-[#D8DEE6] bg-slate-50 text-[#5B6573] uppercase text-[10px] tracking-wider font-semibold">
-              <tr>
-                <th className="py-2.5 px-4">Rule Code</th>
-                <th className="py-2.5 px-4">Severity Penalty</th>
-                <th className="py-2.5 px-4">Violation Definition</th>
-                <th className="py-2.5 px-4">Council Recommended Enforcement</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#D8DEE6] text-[#202B36] font-mono text-[11px]">
-              <tr>
-                <td className="py-2.5 px-4 font-bold text-[#B42318]">CROSS_INSTITUTION_OVERLAP</td>
-                <td className="py-2.5 px-4 font-semibold text-[#B42318]">CRITICAL (-50)</td>
-                <td className="py-2.5 px-4 font-sans text-xs">Identical APAAR ID active across multiple institutions concurrently</td>
-                <td className="py-2.5 px-4 font-sans text-xs">Classify as Allowed, Review, or Violation after physical verification</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 px-4 font-bold text-[#B42318]">EXCESS_ENROLMENT</td>
-                <td className="py-2.5 px-4 font-semibold text-[#B42318]">CRITICAL (-50)</td>
-                <td className="py-2.5 px-4 font-sans text-xs">Active admissions exceed approved intake + supernumerary capacity</td>
-                <td className="py-2.5 px-4 font-sans text-xs">Seat freeze: Institution must justify excess intake before AICTE Executive Committee</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 px-4 font-bold text-[#B42318]">INVALID_APAAR</td>
-                <td className="py-2.5 px-4 font-semibold text-[#B42318]">HIGH (-30)</td>
-                <td className="py-2.5 px-4 font-sans text-xs">APAAR ID missing or does not conform to 12-digit numeric standard</td>
-                <td className="py-2.5 px-4 font-sans text-xs">Institution must correct APAAR or initiate creation via APAAR Portal</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 px-4 font-bold text-[#B42318]">DUPLICATE_APAAR_IN_INSTITUTION</td>
-                <td className="py-2.5 px-4 font-semibold text-[#B42318]">HIGH (-30)</td>
-                <td className="py-2.5 px-4 font-sans text-xs">Same APAAR ID entered multiple times within the same institution roster</td>
-                <td className="py-2.5 px-4 font-sans text-xs">Merge duplicate records after institutional identity verification</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 px-4 font-bold text-[#986500]">NATIONALITY_INCONSISTENCY</td>
-                <td className="py-2.5 px-4 font-semibold text-[#986500]">MEDIUM (-15)</td>
-                <td className="py-2.5 px-4 font-sans text-xs">Student marked as NRI/OCI/FN without valid category documentation</td>
-                <td className="py-2.5 px-4 font-sans text-xs">Request corrected category and quota documentation from registrar</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 px-4 font-bold text-[#986500]">LATE_ADMISSION</td>
-                <td className="py-2.5 px-4 font-semibold text-[#986500]">MEDIUM (-15)</td>
-                <td className="py-2.5 px-4 font-sans text-xs">Admission date recorded after October 15 cutoff deadline</td>
-                <td className="py-2.5 px-4 font-sans text-xs">Institution must provide approved late admission sanction or correction</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+        <p className="border-t border-[#D8DEE6] px-5 py-3.5 text-xs leading-relaxed text-[#5B6573] bg-[#F4F6F8]">
+          <strong>Notice:</strong> {t(environmentNote)}
+        </p>
+      </section>
     </div>
   );
 }

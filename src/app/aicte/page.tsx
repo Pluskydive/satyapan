@@ -24,6 +24,7 @@ export default async function AICTEPage() {
 
   return (
     <AICTEControlTowerClient
+      isDemo={getRuntimeMode() === "demo"}
       initialNational={natRes.data}
       initialStates={stateRes.data || []}
       initialFlags={flagsRes.data || []}

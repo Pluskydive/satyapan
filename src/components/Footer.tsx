@@ -7,6 +7,7 @@ import { useLanguage } from "@/components/LanguageProvider";
 export default function Footer({ mode }: { mode: RuntimeMode }) {
   const { t } = useLanguage();
   const isDemo = mode === "demo";
+  const isLive = mode === "live";
 
   return (
     <footer className="w-full bg-[#102A43] text-slate-300 text-xs border-t border-[#17365D] mt-auto">
@@ -17,9 +18,17 @@ export default function Footer({ mode }: { mode: RuntimeMode }) {
             <p className="text-slate-300 leading-relaxed text-[11px] max-w-lg">
               {isDemo
                 ? t("A demonstration of enrolment review and consent-based verification workflows. All displayed records are synthetic. This is not an official AICTE or government service and must not be used to submit real student information.")
-                : t("An institutional enrolment review prototype using authenticated accounts. This is not an official AICTE or government service; use only under your organization’s approved data governance process.")}
+                : isLive
+                  ? t("An institutional enrolment review prototype using authenticated accounts. This is not an official AICTE or government service; use only under your organization’s approved data governance process.")
+                  : t("This prototype is not configured for data access. Administrative workflows require demonstration mode or authenticated live mode.")}
             </p>
-            <div className="text-[10px] text-slate-400 pt-1">{isDemo ? t("Demonstration environment · Data is held in temporary application memory only") : t("Live mode · Access is controlled by assigned account permissions")}</div>
+            <div className="pt-1 text-[10px] text-slate-400">
+              {isDemo
+                ? t("Demonstration environment · Data is held in temporary application memory only")
+                : isLive
+                  ? t("Live mode · Access is controlled by assigned account permissions")
+                  : t("Service disabled · No record access")}
+            </div>
           </div>
 
           <div>
@@ -41,10 +50,13 @@ export default function Footer({ mode }: { mode: RuntimeMode }) {
                 <li>{t("No live institution integrations are enabled")}</li>
                 <li>{t("No real consent is collected or stored")}</li>
                 <li>{t("Authentication and production data access are not implemented")}</li>
-              </> : <>
+              </> : isLive ? <>
                 <li>{t("Users are provisioned by a platform administrator")}</li>
                 <li>{t("Database access is limited by account role and institution")}</li>
                 <li>{t("Credential verification is disabled in live mode")}</li>
+              </> : <>
+                <li>{t("Configure a runtime environment to access administrative workflows")}</li>
+                <li>{t("Public project information remains available")}</li>
               </>}
             </ul>
           </div>
@@ -52,7 +64,13 @@ export default function Footer({ mode }: { mode: RuntimeMode }) {
 
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-between text-[10px] text-slate-400 gap-2">
           <div>{t("Student Innovation · Smart India Hackathon 2026 prototype")}</div>
-          <div>{isDemo ? t("Demo mode · Sample data is not durable") : t("Live mode · Keep account credentials private")}</div>
+          <div>
+            {isDemo
+              ? t("Demo mode · Sample data is not durable")
+              : isLive
+                ? t("Live mode · Keep account credentials private")
+                : t("Service disabled · Configure an application environment")}
+          </div>
         </div>
       </div>
     </footer>
