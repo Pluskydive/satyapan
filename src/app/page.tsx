@@ -37,9 +37,14 @@ export default async function HomePage() {
 
           {/* Banner Content Overlay */}
           <div className="absolute inset-0 p-6 sm:p-10 flex flex-col justify-between max-w-2xl">
-            {/* Top Tag */}
-            <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" aria-hidden="true" />
+            {/* Top Tag & Team Logo */}
+            <div className="flex items-center space-x-3">
+              <img
+                src="/pramaanit-logo.jpg"
+                alt="PRAMAANIT Logo"
+                className="h-7 w-auto rounded-[3px] bg-white p-0.5 object-contain shadow-xs"
+              />
+              <span className="w-2 h-2 rounded-full bg-[#10B981]" aria-hidden="true" />
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-200">
                 {isHi ? "छात्र नामांकन सत्यनिष्ठा एवं अपार पोर्टल" : "Student Admission Integrity & APAAR Portal"}
               </span>
