@@ -88,16 +88,21 @@ export default function AICTEControlTowerClient({
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-8 sm:py-8">
       {/* Top Context & Action Bar */}
-      <div className="flex flex-col gap-4 border border-[#D8DEE6] bg-white p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6 rounded-[2px]">
+      <div className="flex flex-col gap-4 border-2 border-[#1E3A5F] bg-white p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6 rounded-[4px] shadow-xs">
         <div>
-          <div className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#5B6573]">
-            {t("SIH 2026 · Demonstration project")} · {t("Enrolment review workspace")}
+          <div className="flex items-center space-x-2">
+            <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#5B6573]">
+              {t("Enrolment review workspace")}
+            </span>
+            <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
+              Team PRAMAANIT
+            </span>
           </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-[#17365D] sm:text-3xl">
-            {t("AICTE enrolment review dashboard")}
+          <h1 className="mt-1 text-2xl font-black tracking-tight text-[#102A43] sm:text-3xl">
+            AICTE राष्ट्रीय नियंत्रण कक्ष <span className="text-xl sm:text-2xl font-bold text-[#17365D]">| National Control Tower</span>
           </h1>
           <p className="mt-1.5 max-w-3xl text-xs sm:text-sm leading-relaxed text-[#5B6573]">
-            {t("Review enrolment summaries, configured discrepancy checks, and institution-submitted records in this prototype.")}
+            {t("Review national enrolment summaries, cross-state duplicate flags, and sanctioned intake adherence.")}
           </p>
         </div>
 
@@ -114,7 +119,7 @@ export default function AICTEControlTowerClient({
             type="button"
             onClick={handleRunIntegrity}
             disabled={isRunning}
-            className="min-h-10 border border-[#C87524] bg-[#C87524] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[#a65f1a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C87524] disabled:opacity-50 rounded-[2px] cursor-pointer"
+            className="min-h-10 border border-[#C87524] bg-[#C87524] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[#a65f1a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C87524] disabled:opacity-50 rounded-[2px] cursor-pointer shadow-xs"
           >
             {isRunning ? t("Running checks…") : t("Run integrity checks")}
           </button>
@@ -122,8 +127,8 @@ export default function AICTEControlTowerClient({
       </div>
 
       {isDemo && (
-        <div className="border-l-4 border-[#C87524] bg-[#FFF8E8] px-4 py-3 text-xs leading-relaxed text-[#5B4A1C] rounded-[2px]" role="note">
-          <strong>{t("SIH 2026 · Prototype")}:</strong> {t("Demonstration mode: all displayed records are synthetic. Do not enter real student information.")}
+        <div className="border-l-4 border-[#17365D] bg-[#F0F7FF] px-4 py-3 text-xs leading-relaxed text-[#1E3A8A] rounded-[2px]" role="note">
+          <strong>SATYAPAN Active Sandbox:</strong> Cross-state duplicate APAAR detection and sanctioned seat ceiling reconciliation active.
         </div>
       )}
 

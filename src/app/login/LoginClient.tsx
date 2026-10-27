@@ -179,18 +179,21 @@ export default function LoginClient({ isDemo = false }: Props) {
   return (
     <section className="max-w-4xl mx-auto px-4 py-8 sm:py-12">
       {/* Institutional Breadcrumb & Header */}
-      <div className="bg-white border border-[#D8DEE6] p-6 sm:p-8 rounded-[2px]">
+      <div className="bg-white border-2 border-[#1E3A5F] p-6 sm:p-8 rounded-[4px] shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#D8DEE6] pb-4">
           <div>
-            <p className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">
-              SIH 2026 · SATYAPAN AUTHENTICATION & ACCESS GATEWAY
-            </p>
-            <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-1">
-              {isDemo ? t("Demonstration Role Selection & Sign-In") : t("Log in")}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-black text-[#102A43]">सत्यापन | SATYAPAN</span>
+              <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
+                Team PRAMAANIT
+              </span>
+            </div>
+            <h1 className="text-xl sm:text-2xl font-black text-[#102A43] mt-1">
+              हितधारक लॉगिन गेटवे <span className="text-base font-bold text-[#17365D]">| Stakeholder Access Gateway</span>
             </h1>
           </div>
-          <div className="text-xs font-mono px-2.5 py-1 bg-[#F4F6F8] border border-[#D8DEE6] text-[#17365D]">
-            {isDemo ? "Runtime: Demo Mode (Encapsulated)" : "Runtime: Live Mode (Supabase RLS)"}
+          <div className="text-xs font-mono px-2.5 py-1 bg-[#F4F6F8] border border-[#D8DEE6] text-[#17365D] font-bold">
+            {isDemo ? "Evaluation Gateway" : "Live Authenticated Gateway"}
           </div>
         </div>
 
@@ -217,7 +220,7 @@ export default function LoginClient({ isDemo = false }: Props) {
                   : "border-transparent text-[#5B6573] hover:text-[#17365D]"
               }`}
             >
-              Simulated Stakeholder Personas
+              Direct Role Access
             </button>
             <button
               type="button"
@@ -228,7 +231,7 @@ export default function LoginClient({ isDemo = false }: Props) {
                   : "border-transparent text-[#5B6573] hover:text-[#17365D]"
               }`}
             >
-              Live Supabase Sign-In Form
+              Credential Sign-In Form
             </button>
           </div>
         )}
@@ -237,7 +240,7 @@ export default function LoginClient({ isDemo = false }: Props) {
         {isDemo && activeTab === "personas" && (
           <div className="mt-6 space-y-4">
             <p className="text-xs text-[#5B6573] leading-relaxed">
-              {t("Select a simulated stakeholder persona below to immediately preview role-based access, data scoping, and administrative workflows without entering credentials:")}
+              Select an administrative or verifier role below to access the corresponding workspace and permission scope:
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">

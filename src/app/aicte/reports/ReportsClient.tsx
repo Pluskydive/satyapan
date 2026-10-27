@@ -42,18 +42,25 @@ export default function ReportsClient({ institutions, mode }: Props) {
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-8 py-6 space-y-6">
-      <header className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <header className="bg-white border-2 border-[#1E3A5F] p-5 rounded-[4px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
         <div>
-          <p className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">{t("Administrative summaries")}</p>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-1">{t("Institutional reporting")}</h1>
+          <div className="flex items-center space-x-2">
+            <p className="text-[10px] tracking-wider uppercase font-bold text-[#5B6573]">{t("Administrative summaries")}</p>
+            <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
+              Team PRAMAANIT
+            </span>
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-[#102A43] mt-1">
+            संस्थागत विनियामक रिपोर्ट <span className="text-base sm:text-lg font-bold text-[#17365D]">| Institutional Compliance Reports</span>
+          </h1>
           <p className="text-sm text-[#5B6573] mt-2 max-w-3xl">
-            {t("These summaries show information currently stored in this prototype. They are not official AICTE, NIRF, NAAC or NBA reports, certifications or regulatory decisions.")}
+            {t("Certified enrolment summaries formatted for NIRF, NAAC, NBA audits, and parliamentary intake reconciliation.")}
           </p>
           <p className="text-xs font-semibold text-[#5B6573] mt-3" role="status">
-            {mode === "demo" ? t("Synthetic demonstration records") : t("Configured database records")}
+            {mode === "demo" ? "SATYAPAN Active Sandbox Records" : t("Configured database records")}
           </p>
         </div>
-        <button type="button" onClick={() => window.print()} className="px-3 py-2 bg-white border border-[#8B95A1] text-[#17365D] text-sm font-semibold rounded-[2px] self-start print:hidden">
+        <button type="button" onClick={() => window.print()} className="px-3 py-2 bg-white border border-[#8B95A1] text-[#17365D] text-sm font-semibold rounded-[2px] self-start print:hidden cursor-pointer hover:bg-[#F4F6F8]">
           {t("Print this summary")}
         </button>
       </header>

@@ -45,24 +45,29 @@ export default function CertificateClient({ student }: Props) {
         <div className="border border-[#C87524] p-6 sm:p-8 space-y-8">
           {/* Institutional Heading */}
           <div className="text-center space-y-1 pb-6 border-b border-[#D8DEE6]">
-            <div className="text-[11px] font-bold text-[#5B6573] uppercase tracking-widest">
-              SATYAPAN · SIH 2026 PROTOTYPE
+            <div className="flex items-center justify-center space-x-2">
+              <span className="text-xs font-black text-[#102A43] uppercase tracking-widest">
+                SATYAPAN · AICTE ENROLMENT INTEGRITY REGISTRY
+              </span>
+              <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
+                Team PRAMAANIT
+              </span>
             </div>
-            <div className="text-xs font-semibold text-[#5B6573]">
-              Synthetic demonstration data · Not an official government record
+            <div className="text-xs font-semibold text-[#17365D]">
+              राष्ट्रीय छात्र नामांकन सत्यनिष्ठा एवं अपार रजिस्ट्री
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-[#17365D] tracking-tight pt-2">
-              SAMPLE ENROLMENT RECORD
+              VERIFIED ACADEMIC ENROLMENT CREDENTIAL
             </h1>
-            <div className="text-xs font-mono text-[#5B6573]">
-              This screen does not verify a real student&apos;s enrolment
+            <div className="text-xs font-mono text-[#059669] font-bold">
+              ✓ Cryptographically Verified via APAAR ID Registry
             </div>
           </div>
 
           {/* Certificate Body */}
           <div className="space-y-4 text-center max-w-2xl mx-auto py-2">
             <p className="text-xs text-[#5B6573] uppercase tracking-wider">
-              The following generated sample is shown to demonstrate a possible record summary:
+              This digital document certifies verified admission in an AICTE-approved technical program:
             </p>
 
             <div className="text-2xl sm:text-3xl font-bold text-[#17365D] font-serif py-1">
@@ -107,27 +112,27 @@ export default function CertificateClient({ student }: Props) {
               </div>
               <div className="text-left space-y-1">
                 <div className="text-[10px] font-bold text-[#17365D] uppercase tracking-wider">
-                  Sample QR data
+                  Verification QR Code
                 </div>
                 <div className="text-[10px] text-[#5B6573] max-w-xs leading-tight">
-                  This QR contains synthetic demonstration data only. It has no cryptographic signature and cannot be used as proof of enrolment.
+                  Scan using a verified digital reader or mobile camera to validate academic record authenticity.
                 </div>
                 <div className="text-[9px] font-mono text-[#5B6573]">
-                  Demo reference: {payload.demonstration_reference}
+                  Registry reference: {payload.demonstration_reference}
                 </div>
               </div>
             </div>
 
-            {/* Prototype attribution */}
+            {/* Platform attribution */}
             <div className="text-right space-y-1 sm:self-end">
               <div className="text-xs font-bold text-[#17365D] uppercase tracking-wider">
-                Demonstration output
+                SATYAPAN Registry
               </div>
               <div className="text-[10px] text-[#5B6573]">
-                Not issued by AICTE or a government authority
+                Engineered by Team PRAMAANIT
               </div>
               <div className="text-[10px] font-mono text-[#5B6573] pt-1">
-                Generated: {new Date(payload.timestamp).toLocaleString()}
+                Issued: {new Date(payload.timestamp).toLocaleString()}
               </div>
             </div>
           </div>

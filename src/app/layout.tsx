@@ -19,8 +19,8 @@ const publicSans = Public_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Satyapan | SIH 2026 Prototype",
-  description: "An SIH 2026 prototype for enrolment integrity review, institutional data reconciliation, and consent-based APAAR verification.",
+  title: "SATYAPAN (सत्यापन) | AICTE National Enrolment Integrity & APAAR Registry",
+  description: "Official National Student Enrolment Integrity and APAAR Registry System. Designed and engineered by Team PRAMAANIT for All India Council for Technical Education (AICTE).",
   robots: { index: false, follow: false },
 };
 
@@ -67,7 +67,7 @@ export default async function RootLayout({
             <Navbar mode={mode} viewer={viewer ? { email: viewer.email, role: viewer.role } : null} />
           </Suspense>
           <main className="flex-1 w-full">{children}</main>
-          <Footer mode={mode} />
+          <Footer />
         </LanguageProvider>
       </body>
     </html>

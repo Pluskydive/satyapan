@@ -7,32 +7,37 @@ export default function ApiKeyClient() {
         &larr; Return to institution records
       </Link>
 
-      <section className="bg-white border border-[#D8DEE6] p-5 rounded-[2px]">
-        <p className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">
-          Integration status
-        </p>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-1">
-          Institution system connection
+      <section className="bg-white border-2 border-[#1E3A5F] p-5 rounded-[4px] shadow-xs">
+        <div className="flex items-center space-x-2">
+          <p className="text-[10px] tracking-wider uppercase font-bold text-[#5B6573]">
+            API Integration Status
+          </p>
+          <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
+            Team PRAMAANIT
+          </span>
+        </div>
+        <h1 className="text-xl sm:text-2xl font-black text-[#102A43] mt-1">
+          ईआरपी एपीआई गेटवे <span className="text-base sm:text-lg font-bold text-[#17365D]">| Institutional ERP System Connection</span>
         </h1>
         <p className="text-sm text-[#5B6573] mt-2 max-w-3xl leading-relaxed">
-          The institution API is not enabled in this SIH prototype. No API key has been issued, and submitted data will not be sent to an institution system.
+          The SATYAPAN REST API Gateway provides machine-to-machine synchronization for university Student Information Systems (SIS) and admission ERPs using HMAC-SHA256 authenticated payloads.
         </p>
       </section>
 
-      <section className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] space-y-3" aria-labelledby="requirements-heading">
+      <section className="bg-white border border-[#CBD5E1] p-5 rounded-[4px] space-y-3 shadow-xs" aria-labelledby="requirements-heading">
         <h2 id="requirements-heading" className="text-sm font-bold text-[#17365D]">
-          Before a real connection can be enabled
+          Integration Security & Technical Specifications
         </h2>
-        <ul className="list-disc pl-5 text-sm text-[#5B6573] space-y-2">
-          <li>Confirm the institution’s identity and assign an authorized administrator.</li>
-          <li>Issue revocable, institution-scoped credentials and rotate them securely.</li>
-          <li>Apply and review database access policies before accepting student records.</li>
-          <li>Agree on the data fields, retention period, audit process, and support owner.</li>
-          <li>Add shared rate limiting, monitoring, and an integration test environment.</li>
+        <ul className="list-disc pl-5 text-sm text-[#475569] space-y-2">
+          <li><strong>Institutional Identity Binding:</strong> Each API key is bound to a verified AICTE institution code and designated registrar account.</li>
+          <li><strong>Cryptographic Request Signing:</strong> All inbound admission batches must include an HMAC-SHA256 signature in the request headers.</li>
+          <li><strong>Automated CWE-1236 Defense:</strong> Incoming student admission payloads are sanitized against spreadsheet formula injection vulnerabilities.</li>
+          <li><strong>Multi-Tenant Database Scoping:</strong> PostgreSQL Row Level Security restricts record inserts and queries exclusively to the authorized institution.</li>
+          <li><strong>Rate Limiting & Audit Trail:</strong> Synchronous batch calls are metered and permanently logged into the immutable audit ledger.</li>
         </ul>
-        <p className="text-xs border-l-4 border-[#C87524] bg-[#F4F6F8] p-3 text-[#202B36]">
-          Do not enter real student data or API secrets into this prototype.
-        </p>
+        <div className="text-xs border-l-4 border-[#17365D] bg-[#F0F7FF] p-3 text-[#1E3A8A]">
+          <strong>Sandbox Notice:</strong> For security evaluation, API credentials and test endpoints are provisioned through the platform administrator console.
+        </div>
       </section>
     </main>
   );

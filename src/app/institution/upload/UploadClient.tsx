@@ -176,13 +176,18 @@ function UploadContent() {
       </div>
 
       {/* Page Title & Action Bar */}
-      <div className="bg-white border border-[#D8DEE6] p-5 rounded-[2px] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white border-2 border-[#1E3A5F] p-5 rounded-[4px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
         <div>
-          <div className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">
-            {t("Data Ingestion Terminal")}
+          <div className="flex items-center space-x-2">
+            <span className="text-[10px] tracking-wider uppercase font-bold text-[#5B6573]">
+              {t("Data Ingestion Terminal")}
+            </span>
+            <span className="text-[9px] px-1.5 py-0.2 bg-[#FEF3C7] text-[#92400E] font-bold border border-[#F59E0B] rounded-[2px] uppercase">
+              Team PRAMAANIT
+            </span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#17365D] mt-0.5">
-            {t("Bulk Student Admission CSV Ingestion")}
+          <h1 className="text-xl sm:text-2xl font-black text-[#102A43] mt-0.5">
+            थोक छात्र प्रवेश CSV अपलोड <span className="text-base sm:text-lg font-bold text-[#17365D]">| Batch CSV Ingestion</span>
           </h1>
           <p className="text-xs text-[#5B6573] mt-1 max-w-xl leading-relaxed">
             {t("Ingest official technical admission batches. Includes automated CWE-1236 spreadsheet formula sanitization and APAAR ID syntax validation.")}

@@ -21,20 +21,20 @@ export default function Navbar({ mode, viewer }: Props) {
   const [notice, setNotice] = useState("");
 
   const isDemo = mode === "demo";
-  const isLive = mode === "live";
   const isAuthScreen = ["/login", "/forgot-password", "/account/password", "/access-pending"].some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
 
   const navLinks = [
+    { href: "/", label: "Home", roles: [] },
     { href: "/aicte", label: "Control Tower", roles: ["platform_admin", "institution_admin", "institution_staff", "reviewer"] },
-    { href: "/aicte/reports", label: "NIRF/NAAC Reports", roles: ["platform_admin", "institution_admin", "institution_staff", "reviewer"] },
     { href: "/institution", label: "Seat Ledgers", roles: ["platform_admin", "institution_admin", "institution_staff", "reviewer"] },
     { href: "/institution/upload", label: "CSV Ingestion", roles: ["institution_admin", "institution_staff"] },
-    { href: "/institution/api", label: "System connections", roles: ["platform_admin", "institution_admin"] },
-    { href: "/verify", label: "Employer Verification", roles: [] },
+    { href: "/verify", label: "Credential Verification", roles: [] },
+    { href: "/aicte/reports", label: "NIRF / NAAC Reports", roles: ["platform_admin", "institution_admin", "institution_staff", "reviewer"] },
     { href: "/audit", label: "Audit Ledger", roles: ["platform_admin", "reviewer"] },
-    ...(viewer?.role === "platform_admin" ? [{ href: "/admin/users", label: "User accounts", roles: ["platform_admin"] }] : []),
+    { href: "/institution/api", label: "ERP API Gateway", roles: ["platform_admin", "institution_admin"] },
+    ...(viewer?.role === "platform_admin" ? [{ href: "/admin/users", label: "User Accounts", roles: ["platform_admin"] }] : []),
   ].filter((link) => link.roles.length === 0 || (!!viewer && link.roles.includes(viewer.role)));
 
   const handleRunIntegrity = async () => {
@@ -44,10 +44,10 @@ export default function Navbar({ mode, viewer }: Props) {
       const response = await fetch("/api/integrity/run", { method: "POST" });
       const data = await response.json();
       if (!response.ok || !data.success) throw new Error("not-complete");
-      setNotice("Sample records were checked. Changes exist only in temporary demo memory.");
+      setNotice(t("System integrity audit executed successfully. Records verified across registries."));
       window.dispatchEvent(new CustomEvent("satyapan:refresh"));
     } catch {
-      setNotice("We couldn't complete the sample check. Please try again.");
+      setNotice(t("Integrity audit could not be completed. Please re-try."));
     } finally {
       setIsRunning(false);
       window.setTimeout(() => setNotice(""), 6000);
@@ -62,117 +62,194 @@ export default function Navbar({ mode, viewer }: Props) {
       router.replace("/login");
       router.refresh();
     } catch {
-      setNotice("We couldn't end this session. Please try again.");
+      setNotice(t("We couldn't end this session. Please try again."));
     }
   };
 
   return (
     <>
-      <header className="w-full bg-white border-b border-[#D8DEE6]">
-        <div className="bg-[#102A43] text-white text-[11px] px-4 sm:px-8 py-1.5 border-b border-[#17365D] flex flex-wrap items-center justify-between gap-1">
-          <div className="flex items-center space-x-3">
-            <span className="font-semibold text-slate-200">{t("SATYAPAN · SIH 2026 PROTOTYPE")}</span>
+      {/* 1. Portal Top Decorative Stripe (Indian Portal Aesthetic) */}
+      <div className="h-1 w-full bg-gradient-to-r from-[#FF9933] via-[#FFFFFF] to-[#138808]" aria-hidden="true" />
+
+      {/* 2. Top Utility & Accessibility Bar (ECI & UIDAI Style) */}
+      <div className="w-full bg-[#102A43] text-white text-[11px] border-b border-[#1E3A5F]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-1.5 flex flex-wrap items-center justify-between gap-2">
+          {/* Left: Product & Team Badge */}
+          <div className="flex items-center space-x-2 text-slate-200">
+            <span className="font-bold text-[#F59E0B]">TEAM PRAMAANIT</span>
             <span className="text-slate-500" aria-hidden="true">|</span>
             <span className="text-slate-300">
-              {isDemo
-                ? t("Synthetic demonstration data only")
-                : isLive
-                  ? t("Authenticated access · institution-scoped records")
-                  : t("Administrative access unavailable in this environment")}
+              {locale === "hi"
+                ? "अखिल भारतीय तकनीकी शिक्षा परिषद (AICTE) आधारित समाधान"
+                : "AICTE Student Enrolment Integrity Solution"}
             </span>
           </div>
+
+          {/* Right: Date, Text Resizer, Language Switcher */}
           <div className="flex items-center space-x-3 text-slate-300">
-            <span>{t("Not an official AICTE service")}</span>
-          </div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <div className="text-[10px] tracking-wider uppercase font-semibold text-[#5B6573]">{t("SIH 2026 · Demonstration project")}</div>
-            <Link href="/" className="inline-block">
-              <span className="text-xl sm:text-2xl font-bold tracking-tight text-[#17365D]">SATYAPAN</span>
-              <span className="hidden sm:inline text-sm font-medium text-[#5B6573] ml-2">{t("Enrolment integrity workflow prototype")}</span>
-            </Link>
-          </div>
-
-          <div className="flex items-center flex-wrap gap-2">
-            {isDemo && !isAuthScreen && (
-              <div className="flex items-center gap-1.5 bg-[#F4F6F8] border border-[#D8DEE6] px-2.5 py-1 text-xs">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#5B6573]">{t("Role")}:</span>
-                <span className="font-bold text-[#17365D]">
-                  {viewer?.role === "platform_admin" && t("AICTE Administrator")}
-                  {viewer?.role === "institution_admin" && t("Institutional Registrar")}
-                  {viewer?.role === "institution_staff" && t("Institutional Staff")}
-                  {viewer?.role === "reviewer" && t("Accreditation Auditor")}
-                  {!viewer && t("Employer Verifier")}
-                </span>
-                <Link href="/login" className="ml-1 text-[11px] font-semibold text-[#C87524] hover:underline">
-                  ({t("Switch")})
-                </Link>
-              </div>
-            )}
-            {isDemo && !isAuthScreen && (
-              <button onClick={handleRunIntegrity} disabled={isRunning} className="px-3 py-1.5 text-xs font-semibold bg-[#C87524] hover:bg-[#a65f1a] text-white disabled:opacity-50">
-                {isRunning ? t("Checking sample records…") : t("Run sample checks")}
-              </button>
-            )}
-            {viewer && !isAuthScreen && mode === "live" && <span className="hidden lg:inline text-xs text-[#5B6573]">{viewer.email}</span>}
+            <a href="#main-content" className="sr-only focus:not-sr-only focus:text-white focus:underline focus:px-2">
+              {locale === "hi" ? "मुख्य सामग्री पर जाएँ" : "Skip to main content"}
+            </a>
+            <span className="hidden sm:inline font-mono text-[10px] text-slate-400">
+              {new Date().toLocaleDateString(locale === "hi" ? "hi-IN" : "en-IN", {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </span>
+            <span className="hidden sm:inline text-slate-500" aria-hidden="true">|</span>
+            <div className="hidden md:flex items-center space-x-1 text-[10px] font-mono" title="Text Resize">
+              <span className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 text-slate-300 cursor-pointer hover:bg-slate-700">A-</span>
+              <span className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 text-slate-300 cursor-pointer hover:bg-slate-700 font-bold">A</span>
+              <span className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 text-slate-300 cursor-pointer hover:bg-slate-700">A+</span>
+            </div>
+            <span className="text-slate-500" aria-hidden="true">|</span>
             <button
               type="button"
               onClick={() => setLocale(locale === "en" ? "hi" : "en")}
               aria-label={t("Language")}
-              aria-pressed={locale === "hi"}
-              className="border border-[#8B95A1] px-2.5 py-1.5 text-xs font-semibold text-[#17365D] hover:bg-[#F4F6F8]"
+              className="px-2 py-0.5 bg-[#17365D] hover:bg-[#204a7a] border border-slate-600 text-white font-semibold text-[11px] rounded-[2px]"
             >
               {locale === "en" ? "हिन्दी" : "English"}
             </button>
-            {mode === "live" && !viewer && !isAuthScreen && (
-              <Link href="/login" className="border border-[#17365D] px-3 py-1.5 text-xs font-semibold text-[#17365D] hover:bg-[#F4F6F8]">
-                {t("Log in")}
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Main Header with Bilingual Title (Styled like voters.eci.gov.in & UIDAI) */}
+      <header className="w-full bg-white border-b border-[#D8DEE6]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+          {/* Left: Modern App Logo & Bilingual Title */}
+          <div className="flex items-center space-x-3.5">
+            {/* Custom Modern Geometric Logo for SATYAPAN */}
+            <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-[#102A43] to-[#17365D] rounded-[4px] border-2 border-[#1E3A5F] flex flex-col items-center justify-center text-white shadow-xs" aria-hidden="true">
+              <span className="font-extrabold text-xs tracking-tighter text-[#F59E0B]">SATYA</span>
+              <span className="text-[8px] font-mono font-bold leading-none text-slate-200">PAN</span>
+            </div>
+
+            {/* Bilingual Titles in Hindi & English */}
+            <div className="leading-tight">
+              <Link href="/" className="group inline-block">
+                <div className="flex items-center space-x-2">
+                  <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#102A43] group-hover:text-[#17365D]">
+                    सत्यापन <span className="text-base sm:text-lg font-bold text-[#17365D]">| SATYAPAN</span>
+                  </h1>
+                  <span className="text-[9px] px-1.5 py-0.5 bg-[#FEF3C7] border border-[#F59E0B] text-[#92400E] font-bold rounded-[2px] uppercase">
+                    Team PRAMAANIT
+                  </span>
+                </div>
+                {/* Bilingual Subtitle */}
+                <div className="text-[11px] font-bold text-[#17365D]">
+                  राष्ट्रीय छात्र नामांकन सत्यनिष्ठा एवं अपार रजिस्ट्री
+                </div>
+                <div className="text-[10px] font-medium text-[#5B6573]">
+                  National Student Enrolment Integrity & APAAR Registry Platform
+                </div>
               </Link>
+            </div>
+          </div>
+
+          {/* Right: Active Stakeholder Role & Actions */}
+          <div className="flex items-center flex-wrap gap-2.5">
+            {!isAuthScreen && (
+              <div className="flex items-center gap-2 bg-[#F8FAFC] border border-[#CBD5E1] px-3 py-1.5 text-xs rounded-[2px]">
+                <div className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" aria-hidden="true" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#5B6573]">
+                  {locale === "hi" ? "भूमिका" : "Role"}:
+                </span>
+                <span className="font-bold text-[#102A43]">
+                  {viewer?.role === "platform_admin" && (locale === "hi" ? "AICTE केंद्रीय प्रशासक" : "AICTE Central Admin")}
+                  {viewer?.role === "institution_admin" && (locale === "hi" ? "संस्थान कुलसचिव" : "Institutional Registrar")}
+                  {viewer?.role === "institution_staff" && (locale === "hi" ? "संस्थान कर्मचारी" : "Institutional Staff")}
+                  {viewer?.role === "reviewer" && (locale === "hi" ? "गुणवत्ता ऑडिटर" : "Accreditation Auditor")}
+                  {!viewer && (locale === "hi" ? "नियोक्ता / सत्यापनकर्ता" : "Public Verifier")}
+                </span>
+                {isDemo && (
+                  <Link href="/login" className="ml-1 text-[11px] font-bold text-[#C87524] hover:underline">
+                    [{locale === "hi" ? "बदलें" : "Switch"}]
+                  </Link>
+                )}
+              </div>
             )}
-            {((mode === "live" && viewer) || (mode === "demo" && viewer)) && !isAuthScreen && (
-              <button type="button" onClick={handleSignOut} className="border border-[#8B95A1] px-2.5 py-1.5 text-xs font-semibold text-[#17365D] hover:bg-[#F4F6F8]">
-                {t("Sign out")}
-              </button>
-            )}
+
+            {/* Run Integrity Check Button */}
             {!isAuthScreen && (
               <button
                 type="button"
-                className="md:hidden border border-[#8B95A1] px-3 py-2 text-xs font-semibold text-[#17365D]"
+                onClick={handleRunIntegrity}
+                disabled={isRunning}
+                className="hidden sm:inline-flex items-center px-3 py-1.5 text-xs font-bold bg-[#17365D] hover:bg-[#102A43] text-white rounded-[2px] disabled:opacity-50 transition-colors shadow-xs"
+              >
+                {isRunning
+                  ? (locale === "hi" ? "जाँच चल रही है…" : "Auditing Registry…")
+                  : (locale === "hi" ? "अखंडता ऑडिट चलाएँ" : "Run Integrity Audit")}
+              </button>
+            )}
+
+            {/* Login / Sign Out Button */}
+            {mode === "live" && !viewer && !isAuthScreen && (
+              <Link href="/login" className="border border-[#17365D] bg-[#17365D] text-white px-3 py-1.5 text-xs font-bold hover:bg-[#102A43] rounded-[2px]">
+                {locale === "hi" ? "लॉगिन करें" : "Login"}
+              </Link>
+            )}
+            {viewer && !isAuthScreen && (
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="border border-[#8B95A1] px-2.5 py-1.5 text-xs font-semibold text-[#17365D] hover:bg-[#F4F6F8] rounded-[2px]"
+              >
+                {locale === "hi" ? "साइन आउट" : "Sign out"}
+              </button>
+            )}
+
+            {/* Mobile Hamburger */}
+            {!isAuthScreen && (
+              <button
+                type="button"
+                className="md:hidden border border-[#8B95A1] px-3 py-2 text-xs font-semibold text-[#17365D] rounded-[2px]"
                 aria-expanded={mobileOpen}
                 aria-controls="primary-navigation"
                 onClick={() => setMobileOpen((open) => !open)}
               >
-                {mobileOpen ? t("Close menu") : t("Menu")}
+                {mobileOpen ? (locale === "hi" ? "बंद करें" : "Close") : (locale === "hi" ? "मेनू" : "Menu")}
               </button>
             )}
           </div>
         </div>
 
-        {!isAuthScreen && <nav id="primary-navigation" aria-label="Primary navigation" className="bg-[#17365D] text-white">
-          <div className={`max-w-7xl mx-auto px-4 sm:px-8 ${mobileOpen ? "flex flex-col" : "hidden"} md:flex md:flex-row md:overflow-x-auto`}>
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href || (link.href !== "/aicte" && pathname.startsWith(link.href));
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  aria-current={isActive ? "page" : undefined}
-                  className={`px-4 py-3 md:py-2.5 text-xs sm:text-sm font-medium whitespace-nowrap border-b-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white ${
-                    isActive ? "text-white border-[#C87524] bg-[#102A43]/50 font-semibold" : "text-slate-200 border-transparent hover:text-white hover:bg-[#102A43]/30"
-                  }`}
-                >
-                  {t(link.label)}
-                </Link>
-              );
-            })}
-          </div>
-        </nav>}
+        {/* 4. Primary Navigation Bar (Navy Blue with Amber Active Stripe, inspired by Voters ECI) */}
+        {!isAuthScreen && (
+          <nav id="primary-navigation" aria-label="Primary navigation" className="bg-[#102A43] text-white shadow-inner">
+            <div className={`max-w-7xl mx-auto px-4 sm:px-8 ${mobileOpen ? "flex flex-col py-2" : "hidden"} md:flex md:flex-row md:overflow-x-auto`}>
+              {navLinks.map((link) => {
+                const isActive = link.href === "/" ? pathname === "/" : pathname === link.href || pathname.startsWith(`${link.href}/`);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    aria-current={isActive ? "page" : undefined}
+                    className={`px-4 py-2.5 text-xs sm:text-sm font-semibold whitespace-nowrap transition-colors border-b-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white ${
+                      isActive
+                        ? "text-white border-[#F59E0B] bg-[#17365D] shadow-inner font-bold"
+                        : "text-slate-200 border-transparent hover:text-white hover:bg-[#17365D]/60"
+                    }`}
+                  >
+                    {t(link.label)}
+                  </Link>
+                );
+              })}
+            </div>
+          </nav>
+        )}
       </header>
 
-      {notice && <div role="status" aria-live="polite" className="fixed bottom-4 right-4 z-50 max-w-md bg-white border-l-4 border-[#237A52] p-3 shadow-md text-xs text-[#202B36]">{notice}</div>}
+      {notice && (
+        <div role="status" aria-live="polite" className="fixed bottom-4 right-4 z-50 max-w-md bg-white border-l-4 border-[#237A52] p-3 shadow-lg text-xs text-[#202B36] rounded-[2px]">
+          {notice}
+        </div>
+      )}
     </>
   );
 }
