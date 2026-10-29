@@ -1,0 +1,11 @@
+apaar_id,institutional_student_id,full_name,dob_year,gender,social_category,nationality_type,program,admission_year,admission_date
+100000000901,STU-2026-901,Aarav Sharma,2005,Male,General,indian,B.Tech Computer Science,2026,2026-07-10
+100000000902,STU-2026-902,Sneha Patil,2004,Female,OBC,indian,B.Tech Artificial Intelligence,2026,2026-07-12
+100000000903,STU-2026-903,Mohammad Zaid Khan,2005,Male,General,indian,B.Tech Data Science,2026,2026-07-14
+100000000904,STU-2026-904,Ananya Sundaram,2005,Female,General,indian,B.Tech Electronics & Comm,2026,2026-07-15
+100000000905,STU-2026-905,Vikramaditya Rathore,2004,Male,SC,indian,B.Tech Mechanical Engg,2026,2026-07-18
+100000000906,STU-2026-906,Fatima Sheikh,2005,Female,OBC,indian,B.Tech Information Technology,2026,2026-07-20
+100000000907,STU-2026-907,Michael Chang,2003,Male,,foreign_national,B.Tech Civil Engg,2026,2026-08-01
+100000000908,STU-2026-908,Pooja Rajesh Nair,2005,Female,General,nri,B.Tech Computer Science,2026,2026-08-03
+100000000020,STU-2026-909,Rahul S. Deshmukh,2004,Male,General,indian,B.Tech Computer Science,2026,2026-08-10
+=1+1,STU-2026-910,Test Malicious Row,2005,Male,General,indian,B.Tech Robotics,2026,2026-11-28
